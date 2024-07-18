@@ -29,8 +29,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
             City deletedCity;
             try
             {
-                var city = await _repository.GetByIdAsync(request.Id);
-                if (city is null) throw new NotFoundException();
+                var city = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException();
                 deletedCity = await _repository.DeleteAsync(city);
             }
             catch (NotFoundException)
