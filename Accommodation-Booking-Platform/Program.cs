@@ -42,6 +42,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseMiddleware<NotFoundMiddleware>();
+app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapControllers();
 
