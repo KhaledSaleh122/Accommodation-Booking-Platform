@@ -1,4 +1,5 @@
 ﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
+using Application.CommandsAndQueries.CityCQ.Commands.Update;
 using Application.CommandsAndQueries.CityCQ.Query.GetCities;
 using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
@@ -80,6 +81,19 @@ namespace Presentation.Controllers
                 new { cityId = cityDto.Id },
                 cityDto
             );
+        }
+
+        [HttpPut("{cityId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateCity(uint? cityId,UpdateCityCommand? command)
+        {
+            if(cityId is null) throw new NotFoundException("City Not Found");
+            if(command is null) return Ok();
+            command.id = (uint)cityId;
+            await _mediator.Send(command);
+            _logger.LogInformation("City with id '{cityId}' updated.", cityId);
+            return Ok();
         }
     }
 }
