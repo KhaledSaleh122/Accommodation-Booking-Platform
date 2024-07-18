@@ -1,7 +1,7 @@
 ﻿using Application.Exceptions;
 using Presentation.Responses.NotFound;
 
-namespace Booking_API_Project.Middleware { 
+namespace Accommodation_Booking_Platform.Middleware { 
     public class NotFoundMiddleware
     {
         private readonly RequestDelegate _next;

@@ -1,7 +1,7 @@
-using Booking_API_Project.Configurations;
+using Accommodation_Booking_Platform.Configurations;
 using System.Reflection;
 using FluentValidation;
-using Booking_API_Project.Middleware;
+using Accommodation_Booking_Platform.Middleware;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);

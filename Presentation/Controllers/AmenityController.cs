@@ -32,5 +32,7 @@ namespace Presentation.Controllers
             if (amenityDto is null) return NotFound();
             return Ok(amenityDto);
         }
+
+
     }
 }
