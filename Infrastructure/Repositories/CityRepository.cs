@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
         {
             IQueryable<City> query = _dbContext.Cities;
             if(!string.IsNullOrEmpty(country)) query = query.Where(x => x.Country.Contains(country));
-            if(!string.IsNullOrEmpty(city)) query = query.Where(x => x.Country.Contains(city));
+            if(!string.IsNullOrEmpty(city)) query = query.Where(x => x.Name.Contains(city));
             uint totalRecords = (uint) await query.CountAsync();
             return (
                      await query
