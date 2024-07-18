@@ -1,4 +1,6 @@
 using Booking_API_Project.Configurations;
+using System.Reflection;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDBContextConfiguration(builder.Configuration);
+builder.Services.AddValidatorsFromAssembly(Assembly.Load("Application"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
