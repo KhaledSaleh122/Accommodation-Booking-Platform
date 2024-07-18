@@ -30,7 +30,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
             try
             {
                 var amenity = await _repository.GetByIdAsync(request.Id);
-                if (amenity is null) throw new NotFoundException();
+                if (amenity is null) throw new NotFoundException("Amenity not found!");
                 deletedAmenity = await _repository.DeleteAsync(amenity);
             }
             catch (NotFoundException) {
