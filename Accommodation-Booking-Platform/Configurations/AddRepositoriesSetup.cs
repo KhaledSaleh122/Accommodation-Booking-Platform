@@ -8,6 +8,7 @@ namespace Accommodation_Booking_Platform.Configurations
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IAmenityRepository, AmenityRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
             return services;
         }
     }
