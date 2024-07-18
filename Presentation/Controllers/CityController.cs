@@ -1,4 +1,5 @@
-﻿using Application.CommandsAndQueries.CityCQ.Query.GetCities;
+﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
+using Application.CommandsAndQueries.CityCQ.Query.GetCities;
 using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
 using Application.Exceptions;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Pagination;
+using Presentation.Responses.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Controllers
 {
@@ -61,6 +64,22 @@ namespace Presentation.Controllers
                 Results = cities
             };
             return Ok(response);
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType(typeof(CityDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateCity(CreateCityCommand? request)
+        {
+            if (request is null) throw new CustomValidationException("The request must include a body."); 
+            var cityDto = await _mediator.Send(request);
+            _logger.LogInformation("New city created: Id={cityDto.Id}, Name={cityDto.Name}", cityDto.Id, cityDto.Name);
+            return CreatedAtAction(
+                nameof(GetCity),
+                new { cityId = cityDto.Id },
+                cityDto
+            );
         }
     }
 }
