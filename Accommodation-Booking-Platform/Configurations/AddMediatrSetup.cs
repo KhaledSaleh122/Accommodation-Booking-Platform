@@ -1,5 +1,6 @@
 ﻿using Application.CommandsAndQueries.AmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
+using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using System.Reflection;
 
 namespace Accommodation_Booking_Platform.Configurations
@@ -13,6 +14,7 @@ namespace Accommodation_Booking_Platform.Configurations
                 cfg.RegisterServicesFromAssemblies(Assembly.Load("Application"));
                 cfg.RegisterPreProcessor<CreateAmenityCommand>();
                 cfg.RegisterPreProcessor<UpdateAmenityCommand>();
+                cfg.RegisterPreProcessor<CreateCityCommand>();
             });
             return services;
         }
