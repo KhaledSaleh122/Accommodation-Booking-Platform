@@ -3,6 +3,8 @@ using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById;
 using Application.Dtos.AmenityDtos;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Pagination;
 using Presentation.Responses.Validation;
-using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Controllers
 {
@@ -30,8 +31,9 @@ namespace Presentation.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(AmenityDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateAmenity([Required] CreateAmenityCommand request)
+        public async Task<IActionResult> CreateAmenity(CreateAmenityCommand request)
         {
+            if (request is null) throw new ValidationException("The body for this request required");
             var amenityDto = await _mediator.Send(request);
             _logger.LogInformation
             (
@@ -79,13 +81,16 @@ namespace Presentation.Controllers
         [HttpPut("{AmenityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateAmenity(int AmenityId, [Required] UpdateAmenityCommand command)
+        public async Task<IActionResult> UpdateAmenity(int AmenityId, UpdateAmenityCommand? command)
         {
+            if (command is null) return Ok();
             command.id = AmenityId;
             await _mediator.Send(command);
             _logger.LogInformation("Amenity with id '{AmenityId}' updated.", AmenityId);
             return Ok();
         }
+
+
 
     }
 }
