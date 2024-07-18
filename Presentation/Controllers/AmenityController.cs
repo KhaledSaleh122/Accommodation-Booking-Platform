@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Presentation.Responses.NotFound;
 
 namespace Presentation.Controllers
 {
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
 
         [HttpGet("{amenityId}")]
         [ProducesResponseType(typeof(AmenityDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AmenityDto>> GetAmenity(int amenityId)
         {
             var query = new GetAmenityByIdQuery(amenityId);
