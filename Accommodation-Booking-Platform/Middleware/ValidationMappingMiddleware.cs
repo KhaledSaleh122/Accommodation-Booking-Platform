@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Application.Exceptions;
+using FluentValidation;
 using Presentation.Responses.Validation;
 
 namespace Accommodation_Booking_Platform.Middleware
@@ -16,19 +17,28 @@ namespace Accommodation_Booking_Platform.Middleware
             try
             {
                 await _next(context);
-
+            }
+            catch (CustomValidationException exception) {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                var validationFailureResponse = new ValidationFailureResponse() { 
+                    Errors = null,
+                    Title = exception.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    TraceId = context.TraceIdentifier
+                };
+                await context.Response.WriteAsJsonAsync(validationFailureResponse);
             }
             catch (ValidationException exception)
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                context.Response.ContentType = "application/json";
                 var validationFailureResponse = new ValidationFailureResponse()
                 {
-                    Errors = exception.Errors.Select(e => new ValidationResponse() { 
+                    Errors = exception.Errors.Select(e => new ValidationResponse()
+                    {
                         Name = e.PropertyName,
-                        ErrorMessage = e.ErrorMessage 
+                        ErrorMessage = e.ErrorMessage
                     }).ToList(),
-                    Title = exception.Message ?? exception.InnerException?.Message ?? "One or more validation errors occurred.",
+                    Title = "One or more validation errors occurred.",
                     Status = StatusCodes.Status400BadRequest,
                     TraceId = context.TraceIdentifier
                 };
