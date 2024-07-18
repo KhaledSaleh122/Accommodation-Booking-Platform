@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddRepositories();
 builder.Services.AddDBContextConfiguration(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(Assembly.Load("Application"));
 
