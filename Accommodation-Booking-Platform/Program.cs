@@ -1,6 +1,7 @@
 using Booking_API_Project.Configurations;
 using System.Reflection;
 using FluentValidation;
+using Booking_API_Project.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<NotFoundMiddleware>();
 
 app.MapControllers();
 
