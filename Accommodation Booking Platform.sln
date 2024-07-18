@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accommodation Booking Platform", "Accommodation Booking Platform\Accommodation Booking Platform.csproj", "{B87776F6-F0C5-4940-A237-F62FCF2EA08D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accommodation Booking Platform", "Accommodation Booking Platform\Accommodation Booking Platform.csproj", "{B87776F6-F0C5-4940-A237-F62FCF2EA08D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{55E2F81C-0470-49B0-8B0A-C6BA2A532DD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{4A5107DA-30CC-4692-AA11-CF7E7048BDA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{B87776F6-F0C5-4940-A237-F62FCF2EA08D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B87776F6-F0C5-4940-A237-F62FCF2EA08D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B87776F6-F0C5-4940-A237-F62FCF2EA08D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55E2F81C-0470-49B0-8B0A-C6BA2A532DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55E2F81C-0470-49B0-8B0A-C6BA2A532DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55E2F81C-0470-49B0-8B0A-C6BA2A532DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55E2F81C-0470-49B0-8B0A-C6BA2A532DD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A5107DA-30CC-4692-AA11-CF7E7048BDA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A5107DA-30CC-4692-AA11-CF7E7048BDA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A5107DA-30CC-4692-AA11-CF7E7048BDA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A5107DA-30CC-4692-AA11-CF7E7048BDA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
