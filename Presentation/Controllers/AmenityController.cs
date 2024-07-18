@@ -1,4 +1,5 @@
 ﻿using Application.CommandsAndQueries.AmenityCQ.Commands.Create;
+using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById;
 using Application.Dtos.AmenityDtos;
 using MediatR;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
+using Presentation.Responses.Pagination;
 using Presentation.Responses.Validation;
 using System.ComponentModel.DataAnnotations;
 
@@ -56,6 +58,22 @@ namespace Presentation.Controllers
             return Ok(amenityDto);
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(ResultWithPaginationResponse<IEnumerable<AmenityDto>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ResultWithPaginationResponse<IEnumerable<AmenityDto>>>>
+            GetAmenities(int page = 1, int pageSize = 10)
+        {
+            var query = new GetAmenitiesQuery(page, pageSize);
+            var (amenities, totalRecords, thePage, thePageSize) = await _mediator.Send(query);
+            var response = new ResultWithPaginationResponse<IEnumerable<AmenityDto>>()
+            {
+                TotalRecords = totalRecords,
+                Page = thePage,
+                PageSize = thePageSize,
+                Results = amenities
+            };
+            return Ok(response);
+        }
 
     }
 }
