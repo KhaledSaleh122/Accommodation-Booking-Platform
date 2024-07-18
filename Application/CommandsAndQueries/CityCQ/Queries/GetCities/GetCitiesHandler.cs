@@ -30,7 +30,7 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
             uint totalRecords;
             try
             {
-                (cities, totalRecords) = await _cityRepository.GetAsync(page, pageSize, request.Country);
+                (cities, totalRecords) = await _cityRepository.GetAsync(page, pageSize, request.Country,request.City);
             }
             catch (Exception)
             {

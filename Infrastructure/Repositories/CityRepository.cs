@@ -34,10 +34,11 @@ namespace Infrastructure.Repositories
             return city;
         }
 
-        public async Task<(IEnumerable<City>, uint)> GetAsync(uint page, uint pageSize, string? country)
+        public async Task<(IEnumerable<City>, uint)> GetAsync(uint page, uint pageSize, string? country, string? city)
         {
             IQueryable<City> query = _dbContext.Cities;
             if(!string.IsNullOrEmpty(country)) query = query.Where(x => x.Country.Contains(country));
+            if(!string.IsNullOrEmpty(city)) query = query.Where(x => x.Country.Contains(city));
             uint totalRecords = (uint) await query.CountAsync();
             return (
                      await query
