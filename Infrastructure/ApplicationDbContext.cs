@@ -7,6 +7,7 @@ namespace Infrastructure
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Amenity> Amenities { get; set; }
+        public DbSet<City> Cities { get; set; }
 
         public ApplicationDbContext(DbContextOptions options)
             : base(options)
