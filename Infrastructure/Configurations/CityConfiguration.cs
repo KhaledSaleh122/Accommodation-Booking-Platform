@@ -17,7 +17,10 @@ namespace Infrastructure.Configurations
             builder.Property(city => city.PostOffice)
                 .IsRequired(true)
                 .HasMaxLength(20);
-            builder.HasIndex(city => city.PostOffice).IsUnique();
+            builder.HasIndex(city => new { city.Name, city.Country })
+                .IsUnique();
+            builder.HasIndex(city => city.PostOffice)
+                .IsUnique();
         }
     }
 }
