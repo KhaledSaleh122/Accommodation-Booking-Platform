@@ -1,4 +1,5 @@
 ﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
+using Application.CommandsAndQueries.CityCQ.Commands.Delete;
 using Application.CommandsAndQueries.CityCQ.Commands.Update;
 using Application.CommandsAndQueries.CityCQ.Query.GetCities;
 using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
@@ -88,12 +89,24 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateCity(uint? cityId,UpdateCityCommand? command)
         {
-            if(cityId is null) throw new NotFoundException("City Not Found");
+            if(cityId is null) throw new NotFoundException("City not found!");
             if(command is null) return Ok();
             command.id = (uint)cityId;
             await _mediator.Send(command);
             _logger.LogInformation("City with id '{cityId}' updated.", cityId);
             return Ok();
+        }
+
+        [HttpDelete("{cityId}")]
+        [ProducesResponseType(typeof(CityDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CityDto>> DeleteCity(uint? cityId)
+        {
+            if (cityId is null) throw new NotFoundException("City not found!");
+            var deleteCityCommand = new DeleteCityCommand((uint)cityId);
+            var deletedCity = await _mediator.Send(deleteCityCommand);
+            _logger.LogInformation("City with id '{deletedCity.Id}' deleted.", deletedCity.Id);
+            return Ok(deletedCity);
         }
     }
 }
