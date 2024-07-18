@@ -1,4 +1,5 @@
-﻿using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
+﻿using Application.CommandsAndQueries.CityCQ.Query.GetCities;
+using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
 using Application.Exceptions;
 using MediatR;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
+using Presentation.Responses.Pagination;
 
 namespace Presentation.Controllers
 {
@@ -32,6 +34,33 @@ namespace Presentation.Controllers
             var cityDto = await _mediator.Send(query);
             if (cityDto is null) return NotFound();
             return Ok(cityDto);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetCities(
+                string? city,
+                string? country,
+                uint page = 1,
+                uint pageSize = 10
+            )
+        {
+            var query = new GetCitiesQuery()
+            {
+                Page = page,
+                PageSize = pageSize,
+                Country = country,
+                City = city
+            };
+            var (cities, totalRecords, thePage, thePageSize) = await _mediator.Send(query);
+            var response = new ResultWithPaginationResponse<IEnumerable<CityDto>>()
+            {
+                TotalRecords = totalRecords,
+                Page = thePage,
+                PageSize = thePageSize,
+                Results = cities
+            };
+            return Ok(response);
         }
     }
 }

@@ -8,5 +8,6 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
         public uint Page { get; set; }
         public uint PageSize { get; set; }
         public string? Country { get; set; }
+        public string? City { get; set; }
     }
 }
