@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace Booking_API_Project.Configurations
+namespace Accommodation_Booking_Platform.Configurations
 {
     public static class AddDBcontextSetup
     {

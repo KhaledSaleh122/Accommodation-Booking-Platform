@@ -2,7 +2,7 @@
 using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
 using System.Reflection;
 
-namespace Booking_API_Project.Configurations
+namespace Accommodation_Booking_Platform.Configurations
 {
     public static class AddMediatrSetup
     {
