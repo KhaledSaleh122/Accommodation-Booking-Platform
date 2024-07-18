@@ -1,4 +1,5 @@
 ﻿using Application.CommandsAndQueries.AmenityCQ.Commands.Create;
+using Application.CommandsAndQueries.AmenityCQ.Commands.Delete;
 using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById;
@@ -91,6 +92,16 @@ namespace Presentation.Controllers
         }
 
 
+        [HttpDelete("{amenityId}")]
+        [ProducesResponseType(typeof(AmenityDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<AmenityDto>> DeleteAmenity(int amenityId)
+        {
+            var deleteAmenityCommand = new DeleteAmenityCommand(amenityId);
+            var deletedAmenity = await _mediator.Send(deleteAmenityCommand);
+            _logger.LogInformation("Amenity with id '{deletedAmenity.Id}' deleted.", deletedAmenity.Id);
+            return Ok(deletedAmenity);
+        }
 
     }
 }
