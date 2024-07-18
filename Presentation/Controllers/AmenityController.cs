@@ -1,4 +1,5 @@
 ﻿using Application.CommandsAndQueries.AmenityCQ.Commands.Create;
+using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById;
 using Application.Dtos.AmenityDtos;
@@ -73,6 +74,17 @@ namespace Presentation.Controllers
                 Results = amenities
             };
             return Ok(response);
+        }
+
+        [HttpPut("{AmenityId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAmenity(int AmenityId, [Required] UpdateAmenityCommand command)
+        {
+            command.id = AmenityId;
+            await _mediator.Send(command);
+            _logger.LogInformation("Amenity with id '{AmenityId}' updated.", AmenityId);
+            return Ok();
         }
 
     }
