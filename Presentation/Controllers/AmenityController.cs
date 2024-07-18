@@ -53,10 +53,10 @@ namespace Presentation.Controllers
         [HttpGet("{amenityId}")]
         [ProducesResponseType(typeof(AmenityDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<AmenityDto>> GetAmenity(int? amenityId)
+        public async Task<ActionResult<AmenityDto>> GetAmenity(uint? amenityId)
         {
             if (amenityId == null) throw new NotFoundException("Amenity not found");
-            var query = new GetAmenityByIdQuery((int)amenityId);
+            var query = new GetAmenityByIdQuery((uint)amenityId);
             var amenityDto = await _mediator.Send(query);
             if (amenityDto is null) return NotFound();
             return Ok(amenityDto);
@@ -65,7 +65,7 @@ namespace Presentation.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ResultWithPaginationResponse<IEnumerable<AmenityDto>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ResultWithPaginationResponse<IEnumerable<AmenityDto>>>>
-            GetAmenities(int page = 1, int pageSize = 10)
+            GetAmenities(uint page = 1, uint pageSize = 10)
         {
             var query = new GetAmenitiesQuery(page, pageSize);
             var (amenities, totalRecords, thePage, thePageSize) = await _mediator.Send(query);
@@ -82,11 +82,11 @@ namespace Presentation.Controllers
         [HttpPut("{AmenityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateAmenity(int? amenityId, UpdateAmenityCommand? command)
+        public async Task<IActionResult> UpdateAmenity(uint? amenityId, UpdateAmenityCommand? command)
         {
             if (command is null) return Ok();
             if (amenityId == null) throw new NotFoundException("Amenity not found");
-            command.id = (int)amenityId;
+            command.id = (uint)amenityId;
             await _mediator.Send(command);
             _logger.LogInformation("Amenity with id '{AmenityId}' updated.", amenityId);
             return Ok();
@@ -96,10 +96,10 @@ namespace Presentation.Controllers
         [HttpDelete("{amenityId}")]
         [ProducesResponseType(typeof(AmenityDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<AmenityDto>> DeleteAmenity(int? amenityId)
+        public async Task<ActionResult<AmenityDto>> DeleteAmenity(uint? amenityId)
         {
             if (amenityId == null) throw new NotFoundException("Amenity not found");
-            var deleteAmenityCommand = new DeleteAmenityCommand((int)amenityId);
+            var deleteAmenityCommand = new DeleteAmenityCommand((uint)amenityId);
             var deletedAmenity = await _mediator.Send(deleteAmenityCommand);
             _logger.LogInformation("Amenity with id '{deletedAmenity.Id}' deleted.", deletedAmenity.Id);
             return Ok(deletedAmenity);
