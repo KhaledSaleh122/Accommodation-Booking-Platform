@@ -28,7 +28,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
             try
             {
                 var amenity = await _repository.GetByIdAsync(request.id);
-                if (amenity is null) throw new NotFoundException($"Not Found");
+                if (amenity is null) throw new NotFoundException($"Amenity not found!");
                 var updatedAmenity = _mapper.Map<Amenity>(request);
                 await _repository.UpdateAsync(updatedAmenity);
             }
