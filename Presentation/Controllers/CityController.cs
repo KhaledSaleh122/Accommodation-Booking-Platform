@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Pagination;
 using Presentation.Responses.Validation;
-using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Controllers
 {
@@ -74,7 +73,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateCity(CreateCityCommand? request)
         {
-            if (request is null) throw new CustomValidationException("The request must include a body."); 
+            if (request is null) throw new CustomValidationException("The request must include a body.");
             var cityDto = await _mediator.Send(request);
             _logger.LogInformation("New city created: Id={cityDto.Id}, Name={cityDto.Name}", cityDto.Id, cityDto.Name);
             return CreatedAtAction(
@@ -87,10 +86,10 @@ namespace Presentation.Controllers
         [HttpPut("{cityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateCity(uint? cityId,UpdateCityCommand? command)
+        public async Task<IActionResult> UpdateCity(uint? cityId, UpdateCityCommand? command)
         {
-            if(cityId is null) throw new NotFoundException("City not found!");
-            if(command is null) return Ok();
+            if (cityId is null) throw new NotFoundException("City not found!");
+            if (command is null) return Ok();
             command.id = (uint)cityId;
             await _mediator.Send(command);
             _logger.LogInformation("City with id '{cityId}' updated.", cityId);
