@@ -24,8 +24,11 @@ namespace Accommodation_Booking_Platform.Middleware
                 context.Response.ContentType = "application/json";
                 var validationFailureResponse = new ValidationFailureResponse()
                 {
-                    Errors = exception.Errors.Select(e => new ValidationResponse() { Name = e.PropertyName, ErrorMessage = e.ErrorMessage }).ToList(),
-                    Title = exception.InnerException?.Message ?? "One or more validation errors occurred.",
+                    Errors = exception.Errors.Select(e => new ValidationResponse() { 
+                        Name = e.PropertyName,
+                        ErrorMessage = e.ErrorMessage 
+                    }).ToList(),
+                    Title = exception.Message ?? exception.InnerException?.Message ?? "One or more validation errors occurred.",
                     Status = StatusCodes.Status400BadRequest,
                     TraceId = context.TraceIdentifier
                 };
