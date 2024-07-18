@@ -24,11 +24,11 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCityById
         }
         public async Task<CityDto> Handle(GetCityByIdQuery request, CancellationToken cancellationToken)
         {
-            City? city;
             try
             {
-                city = await _cityRepository.GetByIdAsync(request.CityId);
-                if (city is null) throw new NotFoundException("City not found!");
+                var city = await _cityRepository.GetByIdAsync(request.CityId) ??
+                    throw new NotFoundException("City not found!");
+                return _mapper.Map<CityDto>(city);
             }
             catch (NotFoundException)
             {
@@ -39,7 +39,6 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCityById
 
                 throw new ErrorException($"Error during Getting city with id '{request.CityId}'.");
             }
-            return _mapper.Map<CityDto>(city);
         }
     }
 }
