@@ -2,10 +2,19 @@ using Booking_API_Project.Configurations;
 using System.Reflection;
 using FluentValidation;
 using Booking_API_Project.Middleware;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.Configure<ApiBehaviorOptions>(
+    options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+        options.SuppressMapClientErrors = true;
+    }
+);
 
 builder.Services
     .AddControllers()
