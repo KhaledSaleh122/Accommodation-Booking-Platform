@@ -10,6 +10,8 @@ namespace Infrastructure
         public DbSet<City> Cities { get; set; }
         public DbSet<Hotel> Hotels { get; set; }
 
+        public DbSet<HotelAmenity> HotelAmenity { get; set; }
+
         public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
