@@ -19,19 +19,19 @@ namespace Infrastructure.Repositories
             return amenity;
         }
 
-        public async Task<(IEnumerable<Amenity>, uint)> GetAsync(uint page = 1, uint pageSize = 10)
+        public async Task<(IEnumerable<Amenity>, int)> GetAsync(int page = 1, int pageSize = 10)
         {
             int totalRecords = await _dbContext.Amenities.CountAsync();
             return (
                      await _dbContext.Amenities
-                                   .Take((int) (page * pageSize))
-                                   .Skip((int) ((page - 1) * pageSize))
+                                   .Take(page * pageSize)
+                                   .Skip((page - 1) * pageSize)
                                    .ToListAsync()
-                     , (uint)totalRecords
+                     , totalRecords
                    );
         }
 
-        public async Task<Amenity?> GetByIdAsync(uint id)
+        public async Task<Amenity?> GetByIdAsync(int id)
         {
             return await _dbContext.Amenities.FirstOrDefaultAsync(amenity => amenity.Id == id);
         }

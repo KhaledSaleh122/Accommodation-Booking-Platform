@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.AmenityDtos;
+using Application.Exceptions;
 using Application.Execptions;
 using AutoMapper;
 using Domain.Abstractions;
@@ -23,18 +24,19 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
         }
         public async Task<AmenityDto?> Handle(GetAmenityByIdQuery request, CancellationToken cancellationToken)
         {
-            Amenity? amenity;
             try
             {
-                amenity = await _amenityRepository.GetByIdAsync(request.AmenityId);
+                var amenity = await _amenityRepository.GetByIdAsync(request.AmenityId)
+                     ?? throw new NotFoundException("Amenity not found!");
+                return _mapper.Map<AmenityDto>(amenity);
+            }
+            catch (NotFoundException) {
+                throw;
             }
             catch (Exception)
             {
-
                 throw new ErrorException($"Error during Getting amenity with id '{request.AmenityId}'.");
             }
-            if (amenity is null) return null;
-            return _mapper.Map<AmenityDto>(amenity);
         }
     }
 }

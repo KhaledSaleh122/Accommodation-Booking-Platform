@@ -3,10 +3,17 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
-    public class GetCitiesQuery : IRequest<(IEnumerable<CityDto>, uint, uint, uint)>
+    public class GetCitiesQuery : IRequest<(IEnumerable<CityDto>, int, int, int)>
     {
-        public uint Page { get; set; }
-        public uint PageSize { get; set; }
+
+        public GetCitiesQuery(int page, int pageSize)
+        {
+            var pagination = new PaginationParameters(page, pageSize);
+            Page = pagination.Page;
+            PageSize = pagination.pageSize;
+        }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
         public string? Country { get; set; }
         public string? City { get; set; }
     }

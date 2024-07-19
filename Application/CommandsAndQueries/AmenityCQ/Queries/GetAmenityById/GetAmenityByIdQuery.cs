@@ -3,8 +3,8 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
 {
-    public class GetAmenityByIdQuery(uint amenityId) : IRequest<AmenityDto?>
+    public class GetAmenityByIdQuery(int amenityId) : IRequest<AmenityDto?>
     {
-        public uint AmenityId { get; set; } = amenityId;
+        public int AmenityId { get; set; } = amenityId;
     }
 }

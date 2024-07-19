@@ -6,7 +6,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
     public class UpdateAmenityCommand(string name, string description) : IRequest
     {
         [Required]
-        public uint id;
+        public int id;
         [Required]
         public string Name { get; set; } = name;
         [Required]

@@ -34,22 +34,22 @@ namespace Infrastructure.Repositories
             return city;
         }
 
-        public async Task<(IEnumerable<City>, uint)> GetAsync(uint page, uint pageSize, string? country, string? city)
+        public async Task<(IEnumerable<City>, int)> GetAsync(int page, int pageSize, string? country, string? city)
         {
             IQueryable<City> query = _dbContext.Cities;
             if(!string.IsNullOrEmpty(country)) query = query.Where(x => x.Country.Contains(country));
             if(!string.IsNullOrEmpty(city)) query = query.Where(x => x.Name.Contains(city));
-            uint totalRecords = (uint) await query.CountAsync();
+            int totalRecords =  await query.CountAsync();
             return (
                      await query
-                        .Take((int)(page * pageSize))
-                        .Skip((int)((page - 1) * pageSize))
+                        .Take(page * pageSize)
+                        .Skip((page - 1) * pageSize)
                         .ToListAsync()
                      , totalRecords
                    );
         }
 
-        public async Task<City?> GetByIdAsync(uint cityId)
+        public async Task<City?> GetByIdAsync(int cityId)
         {
             return await _dbContext.Cities.FirstOrDefaultAsync(city => city.Id == cityId);
         }
