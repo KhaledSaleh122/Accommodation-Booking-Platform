@@ -43,7 +43,7 @@ namespace ABPIntegrationTests.AmenityTests
         }
 
         [Theory, TestPriority(1)]
-        [MemberData(nameof(AmenityTestData.GetCreateAmenityCommandData), MemberType = typeof(AmenityTestData))]
+        [MemberData(nameof(AmenityTestData.CreateAmenityTestData), MemberType = typeof(AmenityTestData))]
 
         public async Task CreateAmenity_ReturnsBadRequest_WhenInvalidBody(CreateAmenityCommand? command)
         {
@@ -92,7 +92,7 @@ namespace ABPIntegrationTests.AmenityTests
         }
 
         [Theory, TestPriority(2)]
-        [MemberData(nameof(AmenityTestData.GetNotFoundTestData), MemberType = typeof(AmenityTestData))]
+        [MemberData(nameof(AmenityTestData.NotFoundTestData), MemberType = typeof(AmenityTestData))]
         public async Task GetAmenity_ReturnsNotFound_WhenAmenityNotExists(string x)
         {
             //Act
@@ -134,7 +134,7 @@ namespace ABPIntegrationTests.AmenityTests
         }
 
         [Theory, TestPriority(2)]
-        [MemberData(nameof(AmenityTestData.GetUpdateAmenityCommandTestData), MemberType = typeof(AmenityTestData))]
+        [MemberData(nameof(AmenityTestData.UpdateAmenityTestData), MemberType = typeof(AmenityTestData))]
 
         public async Task UpdateAmenity_ReturnsBadRequest_WhenInvalidBody(UpdateAmenityCommand? command)
         {
@@ -149,7 +149,7 @@ namespace ABPIntegrationTests.AmenityTests
         }
 
         [Theory, TestPriority(2)]
-        [MemberData(nameof(AmenityTestData.GetNotFoundTestData), MemberType = typeof(AmenityTestData))]
+        [MemberData(nameof(AmenityTestData.NotFoundTestData), MemberType = typeof(AmenityTestData))]
         public async Task UpdateAmenity_ReturnsNotFound_WhenAmenityNotExists(string id)
         {
             Skip.If(_amenity.Id == 0, skipMessage);
@@ -180,7 +180,7 @@ namespace ABPIntegrationTests.AmenityTests
         }
 
         [Theory, TestPriority(3)]
-        [MemberData(nameof(AmenityTestData.GetNotFoundTestData), MemberType = typeof(AmenityTestData))]
+        [MemberData(nameof(AmenityTestData.NotFoundTestData), MemberType = typeof(AmenityTestData))]
         public async Task DeleteAmenity_ReturnsNotFound_WhenAmenityNotExists(string id)
         {
             //Act
