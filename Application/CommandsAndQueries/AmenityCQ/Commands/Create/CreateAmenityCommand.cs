@@ -3,11 +3,11 @@ using MediatR;
 using System.ComponentModel.DataAnnotations;
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Create
 {
-    public class CreateAmenityCommand(string name, string description) : IRequest<AmenityDto>
+    public class CreateAmenityCommand : IRequest<AmenityDto>
     {
         [Required]
-        public string Name { get; set; } = name;
+        public string Name { get; set; }
         [Required]
-        public string Description { get; set; } = description;
+        public string Description { get; set; }
     }
 }
