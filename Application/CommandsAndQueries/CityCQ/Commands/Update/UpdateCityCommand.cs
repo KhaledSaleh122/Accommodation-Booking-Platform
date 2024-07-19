@@ -6,7 +6,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
     public class UpdateCityCommand : IRequest
     {
         [Required]
-        public uint id;
+        public int id;
         [Required]
         public string Name { get; set; }
         [Required]

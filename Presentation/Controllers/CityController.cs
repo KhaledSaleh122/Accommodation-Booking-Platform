@@ -31,12 +31,11 @@ namespace Presentation.Controllers
         [HttpGet("{cityId}")]
         [ProducesResponseType(typeof(CityDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CityDto>> GetCity(uint? cityId)
+        public async Task<ActionResult<CityDto>> GetCity(int cityId)
         {
-            if (cityId is null) throw new NotFoundException("City not found!");
-            var query = new GetCityByIdQuery((uint)cityId);
+            if (cityId <= 0 ) throw new NotFoundException("City not found!");
+            var query = new GetCityByIdQuery(cityId);
             var cityDto = await _mediator.Send(query);
-            if (cityDto is null) return NotFound();
             return Ok(cityDto);
         }
 
@@ -45,14 +44,12 @@ namespace Presentation.Controllers
         public async Task<ActionResult<IEnumerable<CityDto>>> GetCities(
                 string? city,
                 string? country,
-                uint page = 1,
-                uint pageSize = 10
+                int page = 1,
+                int pageSize = 10
             )
         {
-            var query = new GetCitiesQuery()
+            var query = new GetCitiesQuery(page,pageSize)
             {
-                Page = page,
-                PageSize = pageSize,
                 Country = country,
                 City = city
             };
@@ -86,11 +83,11 @@ namespace Presentation.Controllers
         [HttpPut("{cityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateCity(uint? cityId, UpdateCityCommand? command)
+        public async Task<IActionResult> UpdateCity(int cityId, UpdateCityCommand? command)
         {
-            if (cityId is null) throw new NotFoundException("City not found!");
+            if (cityId <= 0) throw new NotFoundException("City not found!");
             if (command is null) return Ok();
-            command.id = (uint)cityId;
+            command.id = cityId;
             await _mediator.Send(command);
             _logger.LogInformation("City with id '{cityId}' updated.", cityId);
             return Ok();
@@ -99,10 +96,10 @@ namespace Presentation.Controllers
         [HttpDelete("{cityId}")]
         [ProducesResponseType(typeof(CityDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CityDto>> DeleteCity(uint? cityId)
+        public async Task<ActionResult<CityDto>> DeleteCity(int cityId)
         {
-            if (cityId is null) throw new NotFoundException("City not found!");
-            var deleteCityCommand = new DeleteCityCommand((uint)cityId);
+            if (cityId <= 0) throw new NotFoundException("City not found!");
+            var deleteCityCommand = new DeleteCityCommand(cityId);
             var deletedCity = await _mediator.Send(deleteCityCommand);
             _logger.LogInformation("City with id '{deletedCity.Id}' deleted.", deletedCity.Id);
             return Ok(deletedCity);

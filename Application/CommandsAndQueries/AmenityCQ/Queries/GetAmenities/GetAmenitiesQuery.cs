@@ -3,9 +3,14 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
 {
-    public class GetAmenitiesQuery(uint page, uint pageSize) : IRequest<(IEnumerable<AmenityDto>, uint, uint, uint)>
+    public class GetAmenitiesQuery : IRequest<(IEnumerable<AmenityDto>, int, int, int)>
     {
-        public uint Page { get; set; } = page;
-        public uint PageSize { get; set; } = pageSize;
+        public GetAmenitiesQuery(int page, int pageSize) { 
+            var pagination = new PaginationParameters(page, pageSize);
+            Page = pagination.Page;
+            PageSize = pagination.pageSize;
+        }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
     }
 }

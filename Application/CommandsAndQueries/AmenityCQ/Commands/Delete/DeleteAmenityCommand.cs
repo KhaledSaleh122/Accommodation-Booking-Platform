@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
 {
-    public class DeleteAmenityCommand(uint id) : IRequest<AmenityDto>
+    public class DeleteAmenityCommand(int id) : IRequest<AmenityDto>
     {
         [Required]
-        public uint Id { get; set; } = id;
+        public int Id { get; set; } = id;
     }
 }

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
-    public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, (IEnumerable<CityDto>, uint, uint, uint)>
+    public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, (IEnumerable<CityDto>, int, int, int)>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _cityRepository;
@@ -22,23 +22,30 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
             _cityRepository = cityRepository;
         }
 
-        public async Task<(IEnumerable<CityDto>, uint, uint, uint)> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
+        public async Task<(IEnumerable<CityDto>, int, int, int)> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
         {
-            uint page = request.Page > 0 ? request.Page : 1;
-            uint pageSize = request.PageSize > 0 && request.PageSize <= 100 ? request.PageSize : 10;
-            IEnumerable<City> cities;
-            uint totalRecords;
             try
             {
-                (cities, totalRecords) = await _cityRepository.GetAsync(page, pageSize, request.Country,request.City);
+                var (cities, totalRecords) = await _cityRepository.GetAsync
+                    (
+                        request.Page, 
+                        request.PageSize, 
+                        request.Country,
+                        request.City
+                    );
+                return 
+                    (
+                        _mapper.Map<IEnumerable<CityDto>>(cities), 
+                        totalRecords,
+                        request.Page, 
+                        request.PageSize
+                    );
             }
             catch (Exception)
             {
 
                 throw new ErrorException($"Error during Getting cities.");
             }
-
-            return (_mapper.Map<IEnumerable<CityDto>>(cities), totalRecords, page, pageSize);
         }
     }
 }

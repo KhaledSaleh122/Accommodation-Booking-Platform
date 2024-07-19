@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
 {
-    public class GetAmenitiesHandler : IRequestHandler<GetAmenitiesQuery, (IEnumerable<AmenityDto>, uint, uint, uint)>
+    public class GetAmenitiesHandler : IRequestHandler<GetAmenitiesQuery, (IEnumerable<AmenityDto>, int, int, int)>
     {
         private readonly IMapper _mapper;
         private readonly IAmenityRepository _amenityRepository;
@@ -22,23 +22,25 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
             _amenityRepository = amenityRepository ?? throw new ArgumentNullException(nameof(amenityRepository));
         }
 
-        public async Task<(IEnumerable<AmenityDto>, uint, uint, uint)> Handle(GetAmenitiesQuery request, CancellationToken cancellationToken)
+        public async Task<(IEnumerable<AmenityDto>, int, int, int)> Handle(
+            GetAmenitiesQuery request, CancellationToken cancellationToken)
         {
-            uint page = request.Page > 0 ? request.Page : 1;
-            uint pageSize = request.PageSize > 0 && request.PageSize <= 100 ? request.PageSize : 10;
-            IEnumerable<Amenity> amenities;
-            uint totalRecords;
             try
             {
-                (amenities, totalRecords) = await _amenityRepository.GetAsync(page, pageSize);
+                var (amenities, totalRecords) = await _amenityRepository.GetAsync(request.Page, request.PageSize);
+                return 
+                    (
+                        _mapper.Map<IEnumerable<AmenityDto>>(amenities),
+                        totalRecords,
+                        request.Page,
+                        request.PageSize
+                    );
             }
             catch (Exception)
             {
 
                 throw new ErrorException($"Error during Getting amenities.");
             }
-
-            return (_mapper.Map<IEnumerable<AmenityDto>>(amenities),totalRecords,page,pageSize);
         }
     }
 }

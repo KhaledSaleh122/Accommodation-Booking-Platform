@@ -7,11 +7,11 @@ namespace Presentation.Responses.Pagination
         [Required]
         public TData Results { get; set; }
         [Required]
-        public uint Page { get; set; }
+        public int Page { get; set; }
         [Required]
-        public uint PageSize { get; set; }
+        public int PageSize { get; set; }
         [Required]
-        public uint TotalRecords { get; set; }
-        public uint TotalPages { get => (uint)Math.Ceiling((decimal)TotalRecords / PageSize); }
+        public int TotalRecords { get; set; }
+        public int TotalPages { get => (int)Math.Ceiling((decimal)TotalRecords / PageSize); }
     }
 }

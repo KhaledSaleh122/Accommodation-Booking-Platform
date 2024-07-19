@@ -3,8 +3,8 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
 {
-    public class DeleteCityCommand(uint id) : IRequest<CityDto>
+    public class DeleteCityCommand(int id) : IRequest<CityDto>
     {
-        public uint Id { get; set; } = id;
+        public int Id { get; set; } = id;
     }
 }
