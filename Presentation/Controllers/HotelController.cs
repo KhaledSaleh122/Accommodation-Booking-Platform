@@ -1,5 +1,6 @@
 ﻿using Application.CommandsAndQueries.HotelCQ.Query.GetHotelById;
 using Application.Dtos.HotelDtos;
+using Application.Exceptions;
 using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<HotelFullDto>> GetHotel(int hotelId)
         {
+            if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             var query = new GetHotelByIdQuery(hotelId);
             var hotelDto = await _mediator.Send(query);
             return Ok(hotelDto);
