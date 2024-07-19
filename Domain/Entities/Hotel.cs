@@ -16,5 +16,7 @@ namespace Domain.Entities
 
         public decimal PricePerNight { get; set; }
         public HotelType HotelType { get; set; }
+
+        public ICollection<HotelImage> Images { get; set; }
     }
 }
