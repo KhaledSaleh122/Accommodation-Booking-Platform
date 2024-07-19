@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System.Runtime.CompilerServices;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
 {
@@ -36,8 +37,9 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 throw new ErrorException($"Error during updaing amenity with id '{request.id}'.");
             }
         }
