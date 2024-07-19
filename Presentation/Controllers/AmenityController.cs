@@ -78,7 +78,7 @@ namespace Presentation.Controllers
             return Ok(response);
         }
 
-        [HttpPut("{AmenityId}")]
+        [HttpPut("{amenityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAmenity(int amenityId, UpdateAmenityCommand? command)
