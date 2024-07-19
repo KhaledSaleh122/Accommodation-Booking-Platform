@@ -26,6 +26,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
+                    table.CheckConstraint("CK_Hotels_PricePerNight", "PricePerNight >= 0");
                     table.PrimaryKey("PK_Hotels", x => x.Id);
                 });
         }
