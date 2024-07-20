@@ -8,6 +8,20 @@ namespace ABPIntegrationTests.HotelTests
     {
         public static IEnumerable<object?[]> CreateHotelTestData =>
             [
+                [
+                    new CreateHotelCommand
+                    {
+                        Name = "Valid Name",
+                        Description = "Valid Description",
+                        Images = Enumerable.Repeat(new FormFile(new MemoryStream(), 0, 0, "Images", "image.jpg"), 21).ToList<IFormFile>(), // More than 20 images
+                        Thumbnail = new FormFile(new MemoryStream(), 0, 0, "Thumbnail", "thumbnail.jpg"),
+                        Owner = "Valid Owner",
+                        Address = "Valid Address",
+                        HotelType = 1,
+                        CityId = 1,
+                        PricePerNight = 100
+                    }
+                ],
                 [null],
                 // Invalid Name - exceeds maximum length of 50 or is empty
                 [
@@ -140,20 +154,6 @@ namespace ABPIntegrationTests.HotelTests
                         PricePerNight = 100
                     }
                 ],
-                [
-                    new CreateHotelCommand
-                    {
-                        Name = "Valid Name",
-                        Description = "Valid Description",
-                        Images = Enumerable.Repeat(new FormFile(new MemoryStream(), 0, 0, "Images", "image.jpg"), 21).ToList<IFormFile>(), // More than 20 images
-                        Thumbnail = new FormFile(new MemoryStream(), 0, 0, "Thumbnail", "thumbnail.jpg"),
-                        Owner = "Valid Owner",
-                        Address = "Valid Address",
-                        HotelType = 1,
-                        CityId = 1,
-                        PricePerNight = 100
-                    }
-                ],
                 // Invalid Thumbnail - empty
                 [
                     new CreateHotelCommand
@@ -161,7 +161,6 @@ namespace ABPIntegrationTests.HotelTests
                         Name = "Valid Name",
                         Description = "Valid Description",
                         Images = new List<IFormFile> { new FormFile(new MemoryStream(), 0, 0, "Images", "image.jpg") },
-                        Thumbnail = null, // No thumbnail
                         Owner = "Valid Owner",
                         Address = "Valid Address",
                         HotelType = 1,
@@ -324,8 +323,8 @@ namespace ABPIntegrationTests.HotelTests
 
         public static IEnumerable<object[]> PatchUpdateTestData =>
             [
-                [   
-                    new UpdateHotelCommand 
+                [
+                    new UpdateHotelCommand
                     {
                         Name = "Update Name"
                     }
