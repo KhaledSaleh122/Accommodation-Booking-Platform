@@ -50,8 +50,8 @@ namespace Infrastructure.Repositories
             (
                 int page,
                 int pageSize,
-                int minPrice,
-                int? maxPrice,
+                decimal minPrice,
+                decimal? maxPrice,
                 string? city,
                 string? country,
                 HotelType[] hotelType,

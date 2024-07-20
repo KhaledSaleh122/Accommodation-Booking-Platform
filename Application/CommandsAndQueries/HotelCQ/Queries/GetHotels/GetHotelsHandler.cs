@@ -34,8 +34,8 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         {
             int page = request.Page > 0 ? request.Page : 1;
             int pageSize = request.PageSize > 0 && request.PageSize <= 100 ? request.PageSize : 10; 
-            int minPrice = request.MinPrice >= 0 ? request.MinPrice : 0;
-            int? maxPrice = request.MaxPrice >= request.MinPrice ? request.MaxPrice : null;
+            decimal minPrice = request.MinPrice >= 0 ? request.MinPrice : 0;
+            decimal? maxPrice = request.MaxPrice >= request.MinPrice ? request.MaxPrice : null;
             IEnumerable<Hotel> hotels;
             int totalRecords;
             try

@@ -106,8 +106,8 @@ namespace Presentation.Controllers
         string? hotelName,
         string? owner,
         [FromQuery] int[] aminites,
-        int? maxPrice,
-        int minPrice = 0,
+        decimal? maxPrice,
+        decimal minPrice = 0,
         int page = 1,
         int pageSize = 10
     )
