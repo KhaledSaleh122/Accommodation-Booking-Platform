@@ -1,16 +1,22 @@
 ﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.CommandsAndQueries.CityCQ.Commands.Update;
 using Application.CommandsAndQueries.HotelCQ.Commands.Create;
+using Application.CommandsAndQueries.HotelCQ.Query.GetHotels;
 using Application.Dtos.CityDtos;
 using Application.Dtos.HotelDtos;
+using Domain.Entities;
 using Domain.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Presentation.Responses.NotFound;
+using Presentation.Responses.Pagination;
 using Presentation.Responses.Validation;
+using System.Diagnostics.Metrics;
+using System.Drawing.Printing;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using System.Web;
 
 namespace ABPIntegrationTests.HotelTests
 {
@@ -174,7 +180,7 @@ namespace ABPIntegrationTests.HotelTests
             if (command.Address is not null) hotel!.Address.Should().Be(command.Address);
             if (command.PricePerNight is not null) hotel!.PricePerNight.Should().Be(command.PricePerNight);
             if (command.HotelType is not null)
-                hotel!.HotelType.Should().Be( Enum.GetName(typeof(HotelType),command.HotelType));
+                hotel!.HotelType.Should().Be(Enum.GetName(typeof(HotelType), command.HotelType));
 
         }
 
@@ -206,6 +212,77 @@ namespace ABPIntegrationTests.HotelTests
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Fact, TestPriority(2)]
+        public async Task GetHotels_ReturnsOkResponse_WithListOfHotels()
+        {
+            Skip.If(_hotel is null, skipMessage);
+            //Arrange
+            var hotelSQuery = new GetHotelsQuery()
+            {
+                Page = 1,
+                City = _hotel.City,
+                Country = _hotel.Country,
+                HotelName = _hotel.Name,
+                Owner = _hotel.Owner,
+                MinPrice = 0,
+                MaxPrice = _hotel.PricePerNight,
+                HotelType = [(HotelType)Enum.Parse(typeof(HotelType), _hotel.HotelType)],
+                PageSize = 1,
+            };
+
+            string query = $"?page={hotelSQuery.Page}" +
+               $"&city={HttpUtility.UrlEncode(hotelSQuery.City)}" +
+               $"&country={HttpUtility.UrlEncode(hotelSQuery.Country)}" +
+               $"&hotelName={HttpUtility.UrlEncode(hotelSQuery.HotelName)}" +
+               $"&owner={HttpUtility.UrlEncode(hotelSQuery.Owner)}" +
+               $"&minPrice={hotelSQuery.MinPrice}" +
+               $"&maxPrice={hotelSQuery.MaxPrice}" +
+               $"&hotelType={HttpUtility.UrlEncode(string.Join(",", hotelSQuery.HotelType.Select(ht => ht.ToString())))}" +
+               $"&pageSize={hotelSQuery.PageSize}";
+
+
+            // Act
+            var response = await _client.GetAsync($"/api/hotels{query}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var result = await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>();
+            result.Should().NotBeNull();
+            result?.Results.Should().NotBeNull();
+            result?.Results?.Should().Contain(x => x.Id == _hotel.Id);
+            result?.TotalRecords.Should().BeGreaterThanOrEqualTo(1);
+            result?.PageSize.Should().Be(hotelSQuery.PageSize);
+            result?.Page.Should().Be(hotelSQuery.Page);
+        }
+
+        [Fact, TestPriority(4)]
+        public async Task DeleteHotel_ReturnsOkResponse_WhenHotelDeleted()
+        {
+            Skip.If(_hotel is null, skipMessage);
+
+            // Act
+            var response = await _client.DeleteAsync($"/api/hotels/{_hotel.Id}");
+            var deletedHotel = await response.Content.ReadFromJsonAsync<HotelDto>();
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            deletedHotel.Should().NotBeNull();
+            deletedHotel?.Id.Should().Be(_hotel.Id);
+        }
+
+        [Theory, TestPriority(4)]
+        [MemberData(nameof(HotelTestData.NotFoundTestData), MemberType = typeof(HotelTestData))]
+        public async Task DeleteHotel_ReturnsNotFound_WhenHotelNotExists(object id)
+        {
+            // Act
+            var response = await _client.DeleteAsync($"/api/hotels/{id}");
+            var notFound = await response.Content.ReadFromJsonAsync<NotFoundResponse>();
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            notFound.Should().NotBeNull();
         }
 
     }

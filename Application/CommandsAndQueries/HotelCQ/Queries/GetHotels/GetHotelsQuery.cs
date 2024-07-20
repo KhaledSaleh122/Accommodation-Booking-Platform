@@ -9,8 +9,8 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         public GetHotelsQuery(
                 int page, 
                 int pageSize, 
-                int minPrice,
-                int? maxPrice,
+                decimal minPrice,
+                decimal? maxPrice,
                 string? city, 
                 string? country,
                 HotelType[] hotelType, 
@@ -34,13 +34,13 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         }
         public int Page { get; set; }
         public int PageSize { get; set; }
-        public int MinPrice { get; set; }
-        public int? MaxPrice { get; set; }
+        public decimal MinPrice { get; set; }
+        public decimal? MaxPrice { get; set; }
         public string? City { get; set; }
-        public string? Country { get; }
-        public HotelType[] HotelType { get; }
-        public string? HotelName { get; }
-        public string? Owner { get; }
-        public int[] Aminites { get; }
+        public string? Country { get; set; }
+        public HotelType[] HotelType { get; set; }
+        public string? HotelName { get; set; }
+        public string? Owner { get; set; }
+        public int[] Aminites { get; set; }
     }
 }
