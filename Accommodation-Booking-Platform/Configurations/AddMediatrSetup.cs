@@ -19,6 +19,7 @@ namespace Accommodation_Booking_Platform.Configurations
                 cfg.RegisterPreProcessor<CreateCityCommand>();
                 cfg.RegisterPreProcessor<UpdateCityCommand>();
                 cfg.RegisterPreProcessor<CreateHotelCommand>();
+                cfg.RegisterPreProcessor<UpdateHotelCommand>();
             });
             return services;
         }
