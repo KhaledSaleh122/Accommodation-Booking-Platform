@@ -48,7 +48,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(HotelDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(HotelMinDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateHotel([FromForm] CreateHotelCommand request)
         {

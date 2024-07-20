@@ -97,10 +97,12 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
         }
 
-        public async Task InsertAsync(Hotel hotel)
+        public async Task CreateAsync(Hotel hotel)
         {
             await _dbContext.AddAsync(hotel);
             await _dbContext.SaveChangesAsync();
+            var city = await _dbContext.Cities.FirstOrDefaultAsync(x => x.Id == hotel.CityId);
+            hotel.City = city;
         }
 
         public async Task RemoveAmenityAsync(HotelAmenity amenityHotel)
