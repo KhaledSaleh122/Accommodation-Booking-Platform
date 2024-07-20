@@ -4,15 +4,12 @@ using Application.CommandsAndQueries.HotelCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelCQ.Query.GetHotels;
 using Application.Dtos.CityDtos;
 using Application.Dtos.HotelDtos;
-using Domain.Entities;
 using Domain.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Pagination;
 using Presentation.Responses.Validation;
-using System.Diagnostics.Metrics;
-using System.Drawing.Printing;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
@@ -39,7 +36,7 @@ namespace ABPIntegrationTests.HotelTests
             // Arrange
             var imageContent = Encoding.UTF8.GetBytes("fake image content");
             var thumbnailContent = Encoding.UTF8.GetBytes("fake thumbnail content");
-            var newCity = new CreateCityCommand { Name = "Test City", Country = "Test Country", PostOffice = "100" };
+            var newCity = new CreateCityCommand { Name = "Test City-Hotel", Country = "Test Country", PostOffice = "1120" };
             var responseCity = await _client.PostAsJsonAsync("/api/cities", newCity);
             var createdCity = await responseCity.Content.ReadFromJsonAsync<CityDto>();
             Skip.If(createdCity is null);
@@ -108,9 +105,16 @@ namespace ABPIntegrationTests.HotelTests
             if (command?.HotelType is not null)
                 formData.Add(new StringContent(command.HotelType.ToString()), nameof(command.HotelType));
             if (command?.Images is not null && command.Images.Count > 0)
-                formData.Add(
-                    new StreamContent(imageContent), nameof(command.Images), command.Images[0].FileName
-                );
+            {
+                foreach (var image in command.Images)
+                {
+                    formData.Add(
+                        new StreamContent(imageContent),
+                        nameof(command.Images),
+                        image.FileName
+                    );
+                }
+            }
             if (command?.Thumbnail is not null)
                 formData.Add(
                     new StreamContent(thumbnailContent), nameof(command.Thumbnail), command.Thumbnail.FileName
