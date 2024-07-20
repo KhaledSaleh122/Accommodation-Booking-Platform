@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using System.Text;
 using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.Dtos.CityDtos;
+using Domain.Entities;
+using Presentation.Responses.Validation;
 
 namespace ABPIntegrationTests.HotelTests
 {
@@ -17,7 +19,7 @@ namespace ABPIntegrationTests.HotelTests
     public class HotelControllerTests : IClassFixture<ABPWebApplicationFactory>
     {
         private readonly HttpClient _client;
-        private readonly static HotelDto _hotel = new();
+        private static HotelMinDto? _hotel;
         private readonly string skipMessage = "Skipping due to create hotel test failure";
         public HotelControllerTests(ABPWebApplicationFactory factory)
         {
@@ -60,9 +62,7 @@ namespace ABPIntegrationTests.HotelTests
             // Act
             var response = await _client.PostAsync("/api/hotels", formData);
             var createdHotel = await response.Content.ReadFromJsonAsync<HotelMinDto>();
-            _hotel.Id = createdHotel?.Id ?? 0;
-            _hotel.Name = createdHotel?.Name ?? string.Empty;
-            _hotel.Description = createdHotel?.Description ?? string.Empty;
+            _hotel = createdHotel;
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -76,6 +76,46 @@ namespace ABPIntegrationTests.HotelTests
             createdHotel?.Country.Should().Be(createdCity.Country);
             createdHotel?.Thumbnail.Should().NotBeNullOrEmpty();
             createdHotel?.Images.Should().NotBeNullOrEmpty();
+        }
+        [Theory, TestPriority(1)]
+        [MemberData(nameof(HotelTestData.CreateHotelTestData), MemberType = typeof(HotelTestData))]
+        public async Task CreateHotel_ReturnsBadRequest_WhenInvalidBody(
+            CreateHotelCommand? command
+            )
+        {
+            //Arrange
+            var imageContent = new MemoryStream(Encoding.UTF8.GetBytes("fake image content"));
+            var thumbnailContent =  new MemoryStream(Encoding.UTF8.GetBytes("fake thumbnail content"));
+            var formData = new MultipartFormDataContent();
+            if (command?.Name is not null) formData.Add(new StringContent(command.Name), nameof(command.Name));
+            if (command?.Description is not null) 
+                formData.Add(new StringContent(command.Description), nameof(command.Description));            
+            if (command?.Owner is not null) 
+                formData.Add(new StringContent(command.Owner), nameof(command.Owner));            
+            if (command?.Address is not null) 
+                formData.Add(new StringContent(command.Address), nameof(command.Address));      
+            if (command?.PricePerNight is not null) 
+                formData.Add(new StringContent(command.PricePerNight.ToString()), nameof(command.PricePerNight)); 
+            if (command?.CityId is not null) 
+                formData.Add(new StringContent(command.CityId.ToString()), nameof(command.CityId));    
+            if (command?.HotelType is not null) 
+                formData.Add(new StringContent(command.HotelType.ToString()), nameof(command.HotelType));
+            if (command?.Images is not null && command.Images.Count > 0)
+                formData.Add(
+                    new StreamContent(imageContent), nameof(command.Images), command.Images[0].FileName
+                );
+            if (command?.Thumbnail is not null)
+                formData.Add(
+                    new StreamContent(thumbnailContent), nameof(command.Thumbnail), command.Thumbnail.FileName
+                );
+
+            // Act
+            var response = await _client.PostAsync("/api/hotels", formData);
+            var badRequest = await response.Content.ReadFromJsonAsync<ValidationFailureResponse>();
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            badRequest.Should().NotBeNull();
         }
 
         [Theory, TestPriority(2)]
