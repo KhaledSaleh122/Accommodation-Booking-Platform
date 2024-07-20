@@ -207,5 +207,6 @@ namespace ABPIntegrationTests.HotelTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
+
     }
 }
