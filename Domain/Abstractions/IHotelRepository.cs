@@ -24,7 +24,7 @@ namespace Domain.Abstractions
                 int[] aminites
             );
         Task<Hotel?> GetByIdAsync(int hotelId);
-        Task InsertAsync(Hotel hotel);
+        Task CreateAsync(Hotel hotel);
         Task UpdateAsync(Hotel updatedHotel);
         Task AddAmenityAsync(HotelAmenity amenityHotel);
         Task<bool> AmenityExistsAsync(int hotelId, int amenityId);

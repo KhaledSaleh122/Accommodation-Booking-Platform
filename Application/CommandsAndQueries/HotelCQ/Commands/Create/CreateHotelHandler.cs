@@ -22,11 +22,17 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Hotel, HotelMinDto>()
-                   .ForMember(dest => dest.Images, opt =>
-                     opt.MapFrom
-                     (
-                         src => src.Images.Select(x => x.Path).ToList()
-                     )
+                   .ForMember(dest => dest.City,
+                       opt =>
+                            opt.MapFrom(src => src.City.Name)
+                   )
+                   .ForMember(dest => dest.Country,
+                       opt =>
+                            opt.MapFrom(src => src.City.Country)
+                   )
+                   .ForMember(dest => dest.Images, 
+                       opt =>
+                            opt.MapFrom(src => src.Images.Select(x => x.Path).ToList())
                    );
                 cfg.CreateMap<CreateHotelCommand, Hotel>()
                    .ForMember(dest => dest.Images, opt => opt.Ignore())
@@ -68,7 +74,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
             try
             {
                 await _hotelRepository.BeginTransactionAsync();
-                await _hotelRepository.InsertAsync(hotel);
+                await _hotelRepository.CreateAsync(hotel);
                 _imageRepository.UploadFile(request.Thumbnail, $"{storePath}\\{thumbnailPath}", thumnailName);
 
                 for (int i = 0; i < request.Images.Count; i++)
