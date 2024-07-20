@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
 {
@@ -36,10 +37,10 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
                         request.PageSize
                     );
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
-                throw new ErrorException($"Error during Getting amenities.");
+                throw new ErrorException($"Error during Getting amenities.", exception);
             }
         }
     }

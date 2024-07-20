@@ -8,6 +8,6 @@ namespace Domain.Abstractions
         public string UploadFile(IFormFile formFile, string fileStorePath,string fileName);
 
         public bool ValidateFile(IFormFile formFile);
-        public void DeleteFile(string filePath);
+        public void DeleteFile(string filePath, bool isFileExist = false);
     }
 }

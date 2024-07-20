@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCityById
 {
@@ -34,10 +35,10 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCityById
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
-                throw new ErrorException($"Error during Getting city with id '{request.CityId}'.");
+                throw new ErrorException($"Error during Getting city with id '{request.CityId}'.", exception);
             }
         }
     }

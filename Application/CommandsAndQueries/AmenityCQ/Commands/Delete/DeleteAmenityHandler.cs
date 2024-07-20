@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
 {
@@ -35,10 +36,10 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
             catch (NotFoundException) {
                 throw;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
-                throw new ErrorException($"Error during deleting amenity with id '{request.Id}'.");
+                throw new ErrorException($"Error during deleting amenity with id '{request.Id}'.", exception);
             }
             return _mapper.Map<AmenityDto>(deletedAmenity);
         }
