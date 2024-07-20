@@ -31,7 +31,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
               .Custom((images, context) =>
               images.ForEach(
                   (image) => 
-                    imageRepository.ValidateImage<CreateHotelCommand>(image,context,"Images")
+                    imageRepository.ValidateImage(image,context,"Images")
                 )
               );
 
