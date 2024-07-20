@@ -45,7 +45,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Update
             try
             {
                 var hotel = await _repository.GetByIdAsync(request.hotelId) ??
-                    throw new NotFoundException($"Not Found");
+                    throw new NotFoundException($"Hotel not found!");
                 _mapper.Map(request, hotel);
                 await _repository.UpdateAsync(hotel);
             }
