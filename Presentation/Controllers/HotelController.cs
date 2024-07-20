@@ -1,4 +1,5 @@
-﻿using Application.CommandsAndQueries.HotelCQ.Query.GetHotelById;
+﻿using Application.CommandsAndQueries.HotelCQ.Commands.Create;
+using Application.CommandsAndQueries.HotelCQ.Query.GetHotelById;
 using Application.Dtos.HotelDtos;
 using Application.Exceptions;
 using Domain.Enums;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
+using Presentation.Responses.Validation;
 
 namespace Presentation.Controllers
 {
@@ -43,6 +45,24 @@ namespace Presentation.Controllers
             var query = new GetHotelByIdQuery(hotelId);
             var hotelDto = await _mediator.Send(query);
             return Ok(hotelDto);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(HotelDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateHotel([FromForm] CreateHotelCommand request)
+        {
+            if (request is null) throw new CustomValidationException("The request must include a body.");
+            var hotelDto = await _mediator.Send(request);
+            _logger.LogInformation(
+                "New hotel created: Id={hotelDto.Id}, Name={hotelDto.Name}",
+                hotelDto.Id,
+                hotelDto.Name);
+            return CreatedAtAction(
+                nameof(GetHotel),
+                new { hotelId = hotelDto.Id },
+                hotelDto
+            );
         }
     }
 }
