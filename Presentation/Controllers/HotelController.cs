@@ -1,4 +1,5 @@
-﻿using Application.CommandsAndQueries.HotelCQ.Commands.Create;
+﻿using Application.CommandsAndQueries.CityCQ.Commands.Update;
+using Application.CommandsAndQueries.HotelCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelCQ.Query.GetHotelById;
 using Application.Dtos.HotelDtos;
 using Application.Exceptions;
@@ -45,6 +46,20 @@ namespace Presentation.Controllers
             var query = new GetHotelByIdQuery(hotelId);
             var hotelDto = await _mediator.Send(query);
             return Ok(hotelDto);
+        }
+
+
+        [HttpPatch("{hotelId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateHotel(int hotelId, UpdateHotelCommand? command)
+        {
+            if (command is null) return Ok();
+            if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
+            command.hotelId = hotelId;
+            await _mediator.Send(command);
+            _logger.LogInformation("Hotel with id '{hotelId}' updated.", hotelId);
+            return Ok();
         }
 
         [HttpPost]
