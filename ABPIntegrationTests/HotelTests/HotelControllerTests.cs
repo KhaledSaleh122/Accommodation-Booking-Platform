@@ -1,15 +1,16 @@
-﻿using Application.Dtos.HotelDtos;
-using FluentAssertions;
-using Presentation.Responses.NotFound;
-using System.Net.Http.Json;
-using System.Net;
+﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
+using Application.CommandsAndQueries.CityCQ.Commands.Update;
 using Application.CommandsAndQueries.HotelCQ.Commands.Create;
-using Microsoft.AspNetCore.Http;
-using System.Text;
-using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.Dtos.CityDtos;
-using Domain.Entities;
+using Application.Dtos.HotelDtos;
+using Domain.Enums;
+using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Presentation.Responses.NotFound;
 using Presentation.Responses.Validation;
+using System.Net;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace ABPIntegrationTests.HotelTests
 {
@@ -85,20 +86,20 @@ namespace ABPIntegrationTests.HotelTests
         {
             //Arrange
             var imageContent = new MemoryStream(Encoding.UTF8.GetBytes("fake image content"));
-            var thumbnailContent =  new MemoryStream(Encoding.UTF8.GetBytes("fake thumbnail content"));
+            var thumbnailContent = new MemoryStream(Encoding.UTF8.GetBytes("fake thumbnail content"));
             var formData = new MultipartFormDataContent();
             if (command?.Name is not null) formData.Add(new StringContent(command.Name), nameof(command.Name));
-            if (command?.Description is not null) 
-                formData.Add(new StringContent(command.Description), nameof(command.Description));            
-            if (command?.Owner is not null) 
-                formData.Add(new StringContent(command.Owner), nameof(command.Owner));            
-            if (command?.Address is not null) 
-                formData.Add(new StringContent(command.Address), nameof(command.Address));      
-            if (command?.PricePerNight is not null) 
-                formData.Add(new StringContent(command.PricePerNight.ToString()), nameof(command.PricePerNight)); 
-            if (command?.CityId is not null) 
-                formData.Add(new StringContent(command.CityId.ToString()), nameof(command.CityId));    
-            if (command?.HotelType is not null) 
+            if (command?.Description is not null)
+                formData.Add(new StringContent(command.Description), nameof(command.Description));
+            if (command?.Owner is not null)
+                formData.Add(new StringContent(command.Owner), nameof(command.Owner));
+            if (command?.Address is not null)
+                formData.Add(new StringContent(command.Address), nameof(command.Address));
+            if (command?.PricePerNight is not null)
+                formData.Add(new StringContent(command.PricePerNight.ToString()), nameof(command.PricePerNight));
+            if (command?.CityId is not null)
+                formData.Add(new StringContent(command.CityId.ToString()), nameof(command.CityId));
+            if (command?.HotelType is not null)
                 formData.Add(new StringContent(command.HotelType.ToString()), nameof(command.HotelType));
             if (command?.Images is not null && command.Images.Count > 0)
                 formData.Add(
@@ -118,10 +119,34 @@ namespace ABPIntegrationTests.HotelTests
             badRequest.Should().NotBeNull();
         }
 
+        [Fact, TestPriority(2)]
+        public async Task GetHotel_ReturnsOkResponse_WithHotel()
+        {
+            Skip.If(_hotel is null, skipMessage);
+
+            // Act
+            var response = await _client.GetAsync($"/api/hotels/{_hotel.Id}");
+            var hotel = await response.Content.ReadFromJsonAsync<HotelFullDto>();
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            hotel.Should().NotBeNull();
+            hotel?.Id.Should().BeGreaterThanOrEqualTo(1);
+            hotel?.Name.Should().Be(_hotel.Name);
+            hotel?.Description.Should().Be(_hotel.Description);
+            hotel?.Owner.Should().Be(_hotel.Owner);
+            hotel?.Address.Should().Be(_hotel.Address);
+            hotel?.City.Should().Be(_hotel.City);
+            hotel?.Country.Should().Be(_hotel.Country);
+            hotel?.Thumbnail.Should().Be(_hotel.Thumbnail);
+            hotel?.Images.Should().NotBeNullOrEmpty();
+        }
+
         [Theory, TestPriority(2)]
         [MemberData(nameof(HotelTestData.NotFoundTestData), MemberType = typeof(HotelTestData))]
         public async Task GetHotel_ReturnsNotFound_WhenHotelNotExists(object id)
         {
+            Skip.If(_hotel is null, skipMessage);
             // Act
             var response = await _client.GetAsync($"/api/hotels/{id}");
             var notFound = await response.Content.ReadFromJsonAsync<NotFoundResponse>();
@@ -129,6 +154,58 @@ namespace ABPIntegrationTests.HotelTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
             notFound.Should().NotBeNull();
+        }
+
+        [Theory, TestPriority(3)]
+        [MemberData(nameof(HotelTestData.PatchUpdateTestData), MemberType = typeof(HotelTestData))]
+        public async Task UpdateHotel_ReturnsOkResponse_WhenHotelUpdated(UpdateHotelCommand command)
+        {
+            Skip.If(_hotel is null, skipMessage);
+            // Act
+            var response = await _client.PatchAsJsonAsync($"/api/hotels/{_hotel.Id}", command);
+            var responseHotel = await _client.GetAsync($"/api/hotels/{_hotel.Id}");
+            var hotel = await responseHotel.Content.ReadFromJsonAsync<HotelFullDto>();
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            hotel.Should().NotBeNull();
+            if (command.Name is not null) hotel!.Name.Should().Be(command.Name);
+            if (command.Description is not null) hotel!.Description.Should().Be(command.Description);
+            if (command.Owner is not null) hotel!.Owner.Should().Be(command.Owner);
+            if (command.Address is not null) hotel!.Address.Should().Be(command.Address);
+            if (command.PricePerNight is not null) hotel!.PricePerNight.Should().Be(command.PricePerNight);
+            if (command.HotelType is not null)
+                hotel!.HotelType.Should().Be( Enum.GetName(typeof(HotelType),command.HotelType));
+
+        }
+
+        [Theory, TestPriority(3)]
+        [MemberData(nameof(HotelTestData.UpdateHotelInvalidTestData), MemberType = typeof(HotelTestData))]
+        public async Task UpdateHotel_ReturnsBadRequest_WhenInvalidBody(UpdateHotelCommand? command)
+        {
+            Skip.If(_hotel is null, skipMessage);
+            //Act
+            var response = await _client.PatchAsJsonAsync($"/api/hotels/{_hotel.Id}", command);
+            var badRequest = await response.Content.ReadFromJsonAsync<ValidationFailureResponse>();
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            badRequest.Should().NotBeNull();
+        }
+
+
+        [Fact, TestPriority(3)]
+        public async Task UpdateHotel_ReturnsBadRequest_WhenHotelCommandIsNull()
+        {
+            Skip.If(_hotel is null, skipMessage);
+
+            // Arrange
+            UpdateHotelCommand? updatedHotel = null;
+
+            // Act
+            var response = await _client.PatchAsJsonAsync($"/api/hotels/{_hotel.Id}", updatedHotel);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }
