@@ -59,10 +59,10 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
-                throw new ErrorException($"Error during Getting hotel with id '{request.HotelId}'.");
+                throw new ErrorException($"Error during Getting hotel with id '{request.HotelId}'.", exception);
             }
         }
     }

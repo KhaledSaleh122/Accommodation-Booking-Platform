@@ -37,10 +37,9 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
             {
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine(ex);
-                throw new ErrorException($"Error during updaing amenity with id '{request.id}'.");
+                throw new ErrorException($"Error during updaing amenity with id '{request.id}'.", exception);
             }
         }
     }

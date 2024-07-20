@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Create
 {
@@ -30,9 +31,9 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
             {
                 await _cityRepository.CreateAsync(city);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw new ErrorException($"Error during creating new city.");
+                throw new ErrorException($"Error during creating new city.", exception);
             }
             var cityDto = _mapper.Map<CityDto>(city);
             return cityDto;

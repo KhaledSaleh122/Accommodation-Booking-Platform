@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
 {
@@ -33,9 +34,9 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
             catch (NotFoundException) {
                 throw;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw new ErrorException($"Error during Getting amenity with id '{request.AmenityId}'.");
+                throw new ErrorException($"Error during Getting amenity with id '{request.AmenityId}'.", exception);
             }
         }
     }

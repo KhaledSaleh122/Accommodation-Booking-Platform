@@ -5,10 +5,11 @@ namespace Infrastructure.Repositories
 {
     public class ImageRepository : IImageService
     {
-        public void DeleteFile(string filePath)
+        public void DeleteFile(string filePath,bool isFileExist = false)
         {
             var directoryPath = $"{Directory.GetCurrentDirectory()}\\Public\\";
             var fullPath = Path.Combine(directoryPath, filePath);
+            if (isFileExist && !File.Exists(fullPath)) return;
             File.Delete(fullPath);
         }
 

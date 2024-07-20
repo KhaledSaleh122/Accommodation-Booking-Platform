@@ -77,15 +77,15 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
                 }
                 await _hotelRepository.CommitTransactionAsync();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 await _hotelRepository.RollbackTransactionAsync();
-                _imageRepository.DeleteFile($"{storePath}\\{thumbnailPath}\\{thumnailName}");
-                imagesName.ForEach(
-                    image =>
-                    _imageRepository.DeleteFile($"{storePath}\\{imagesPath}\\{image}")
-                );
-                throw new ErrorException($"Error during creating new hotel.");
+                _imageRepository.DeleteFile(hotel.Thumbnail,true);
+                    foreach (var image in hotel.Images)
+                {
+                    _imageRepository.DeleteFile(image.Path,true);
+                }
+                throw new ErrorException($"Error during creating new hotel.",exception);
             }
             var hotelDto = _mapper.Map<HotelMinDto>(hotel);
             return hotelDto;
