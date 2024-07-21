@@ -12,5 +12,6 @@ namespace Domain.Entities
         public string Thumbnail { get; set; }
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
+        public ICollection<RoomImage> Images { get; set; }
     }
 }
