@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     AdultCapacity = table.Column<int>(type: "int", nullable: false),
                     ChildrenCapacity = table.Column<int>(type: "int", nullable: false),
-                    Thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
