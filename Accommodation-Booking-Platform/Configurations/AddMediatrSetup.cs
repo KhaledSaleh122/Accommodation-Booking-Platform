@@ -6,6 +6,7 @@ using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelCQ.Commands.Create;
 using Application.CommandsAndQueries.RoomCQ.Commands.Create;
 using Application.CommandsAndQueries.UserCQ.Commands.Create;
+using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
 using System.Reflection;
 
 namespace Accommodation_Booking_Platform.Configurations
@@ -26,6 +27,7 @@ namespace Accommodation_Booking_Platform.Configurations
                 cfg.RegisterPreProcessor<AddAmenityToHotelCommand>();
                 cfg.RegisterPreProcessor<CreateRoomCommand>();
                 cfg.RegisterPreProcessor<CreateUserCommand>();
+                cfg.RegisterPreProcessor<SignInUserCommand>();
             });
             return services;
         }
