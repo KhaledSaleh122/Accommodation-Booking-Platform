@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Booking_API_Project.Configurations
 {
@@ -8,7 +9,7 @@ namespace Booking_API_Project.Configurations
             this IServiceProvider services)
         {
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = services.GetRequiredService<UserManager<User>>();
             await EnsureRolesAsync(roleManager);
             return services;
         }
