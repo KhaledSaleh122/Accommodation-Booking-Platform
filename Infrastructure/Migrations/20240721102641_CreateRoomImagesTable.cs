@@ -26,7 +26,7 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_RoomImage_Room_HotelId_RoomNumber",
                         columns: x => new { x.HotelId, x.RoomNumber },
-                        principalTable: "Room",
+                        principalTable: "Rooms",
                         principalColumns: new[] { "HotelId", "RoomNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
