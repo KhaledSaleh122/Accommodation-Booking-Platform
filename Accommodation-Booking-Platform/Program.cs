@@ -1,5 +1,6 @@
 using Accommodation_Booking_Platform.Configurations;
 using Accommodation_Booking_Platform.Middleware;
+using Booking_API_Project.Middleware;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
@@ -55,6 +56,7 @@ namespace Accommodation_Booking_Platform
             app.UseAuthorization();
             app.UseMiddleware<NotFoundMiddleware>();
             app.UseMiddleware<ValidationMappingMiddleware>();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.MapControllers();
         }
     }

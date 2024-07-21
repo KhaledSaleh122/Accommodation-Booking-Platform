@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
@@ -41,10 +42,10 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
                         request.PageSize
                     );
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
-                throw new ErrorException($"Error during Getting cities.");
+                throw new ErrorException($"Error during Getting cities.", exception);
             }
         }
     }

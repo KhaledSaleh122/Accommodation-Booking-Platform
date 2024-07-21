@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
@@ -35,9 +36,9 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw new ErrorException($"Error during updaing city with id '{request.id}'.");
+                throw new ErrorException($"Error during updaing city with id '{request.id}'.", exception);
             }
         }
     }

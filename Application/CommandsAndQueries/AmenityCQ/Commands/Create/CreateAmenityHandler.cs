@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Create
 {
@@ -30,9 +31,9 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Create
             {
                 await _amenityRepository.CreateAsync(amenity);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw new ErrorException($"Error during creating new amenity.");
+                throw new ErrorException($"Error during creating new amenity.", exception);
             }
             var amenityDto = _mapper.Map<AmenityDto>(amenity);
             return amenityDto;
