@@ -105,6 +105,7 @@ namespace Infrastructure.Repositories
                 .Include(inc => inc.HotelAmenity).ThenInclude(o => o.Amenity)
                 .Include(inc => inc.City)
                 .Include(inc => inc.Images)
+                .Include(inc => inc.Rooms).ThenInclude(o=>o.Images)
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
         }
 
