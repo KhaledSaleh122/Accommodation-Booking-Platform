@@ -48,7 +48,13 @@ namespace Accommodation_Booking_Platform
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(option => {
+                option.Password.RequiredLength = 6;
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequireDigit = true;
+                option.Password.RequireLowercase = false;
+                option.Password.RequireUppercase = false;
+            })
             .AddRoleManager<RoleManager<IdentityRole>>()
             .AddUserManager<UserManager<User>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -72,19 +78,19 @@ namespace Accommodation_Booking_Platform
                     RequestPath = ""
                 }
             );
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                await services.AddRoleBasedAccessControl();
-            }
-
+           
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.UseMiddleware<NotFoundMiddleware>();
             app.UseMiddleware<ValidationMappingMiddleware>();
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await services.AddRoleBasedAccessControl(app.Configuration);
+            }
         }
     }
 }
