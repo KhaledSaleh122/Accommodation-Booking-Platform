@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.AmenityDtos;
+using Application.Dtos.RoomDtos;
 
 namespace Application.Dtos.HotelDtos
 {
@@ -21,5 +22,7 @@ namespace Application.Dtos.HotelDtos
         public decimal Rating { get; set; }
 
         public ICollection<AmenityDto> Amenities { get; set; }
+
+        public ICollection<RoomDto> Rooms { get; set; }
     }
 }
