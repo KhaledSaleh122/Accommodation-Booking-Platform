@@ -3,6 +3,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240721101158_CreateRoomTable")]
+    partial class CreateRoomTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +44,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Amenities", (string)null);
+                    b.ToTable("Amenities");
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
@@ -75,7 +78,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Name", "Country")
                         .IsUnique();
 
-                    b.ToTable("Cities", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("Domain.Entities.Hotel", b =>
@@ -123,7 +126,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Hotels", (string)null);
+                    b.ToTable("Hotels");
                 });
 
             modelBuilder.Entity("Domain.Entities.HotelAmenity", b =>
@@ -160,7 +163,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("HotelImage", (string)null);
+                    b.ToTable("HotelImage");
                 });
 
             modelBuilder.Entity("Domain.Entities.Room", b =>
@@ -182,38 +185,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Thumbnail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("HotelId", "RoomNumber");
 
-                    b.ToTable("Room", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.RoomImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoomNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId", "RoomNumber");
-
-                    b.ToTable("RoomImage", (string)null);
+                    b.ToTable("Room");
                 });
 
             modelBuilder.Entity("Domain.Entities.Hotel", b =>
@@ -268,17 +244,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Hotel");
                 });
 
-            modelBuilder.Entity("Domain.Entities.RoomImage", b =>
-                {
-                    b.HasOne("Domain.Entities.Room", "room")
-                        .WithMany("Images")
-                        .HasForeignKey("HotelId", "RoomNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("room");
-                });
-
             modelBuilder.Entity("Domain.Entities.Amenity", b =>
                 {
                     b.Navigation("HotelAmenity");
@@ -296,11 +261,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Room", b =>
-                {
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

@@ -223,9 +223,10 @@ namespace ABPIntegrationTests.HotelTests
         {
             Skip.If(_hotel is null, skipMessage);
             //Arrange
-            var hotelSQuery = new GetHotelsQuery()
+            int page = 1;
+            int pageSize = 10;
+            var hotelSQuery = new GetHotelsQuery(page,pageSize)
             {
-                Page = 1,
                 City = _hotel.City,
                 Country = _hotel.Country,
                 HotelName = _hotel.Name,
@@ -233,7 +234,6 @@ namespace ABPIntegrationTests.HotelTests
                 MinPrice = 0,
                 MaxPrice = _hotel.PricePerNight,
                 HotelType = [(HotelType)Enum.Parse(typeof(HotelType), _hotel.HotelType)],
-                PageSize = 1,
             };
 
             string query = $"?page={hotelSQuery.Page}" +
