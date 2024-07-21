@@ -2,6 +2,7 @@ using Accommodation_Booking_Platform.Configurations;
 using Accommodation_Booking_Platform.Middleware;
 using Booking_API_Project.Configurations;
 using Booking_API_Project.Middleware;
+using Domain.Entities;
 using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
@@ -47,8 +48,9 @@ namespace Accommodation_Booking_Platform
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>()
             .AddRoleManager<RoleManager<IdentityRole>>()
+            .AddUserManager<UserManager<User>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
         }
