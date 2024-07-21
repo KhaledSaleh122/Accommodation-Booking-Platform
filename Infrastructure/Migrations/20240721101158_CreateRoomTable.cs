@@ -11,7 +11,7 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Room",
+                name: "Rooms",
                 columns: table => new
                 {
                     RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
@@ -25,9 +25,9 @@ namespace Infrastructure.Migrations
                 {
                     table.CheckConstraint("CK_Rooms_AdultCapacity_gre_0", "AdultCapacity >= 0");
                     table.CheckConstraint("CK_Rooms_ChildrenCapacity_gre_0", "ChildrenCapacity >= 0");
-                    table.PrimaryKey("PK_Room", x => new { x.HotelId, x.RoomNumber });
+                    table.PrimaryKey("PK_Rooms", x => new { x.HotelId, x.RoomNumber });
                     table.ForeignKey(
-                        name: "FK_Room_Hotels_HotelId",
+                        name: "FK_Rooms_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "Id",
@@ -39,7 +39,7 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Room");
+                name: "Rooms");
         }
     }
 }
