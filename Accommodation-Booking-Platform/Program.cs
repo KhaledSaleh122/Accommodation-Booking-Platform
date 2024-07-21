@@ -3,6 +3,7 @@ using Accommodation_Booking_Platform.Middleware;
 using Booking_API_Project.Middleware;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 
 namespace Accommodation_Booking_Platform
@@ -51,6 +52,16 @@ namespace Accommodation_Booking_Platform
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseStaticFiles(
+                new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider
+                    (
+                        Path.Combine(Directory.GetCurrentDirectory(), "Public")
+                    ),
+                    RequestPath = ""
+                }
+            );
 
             app.UseHttpsRedirection();
             app.UseAuthorization();

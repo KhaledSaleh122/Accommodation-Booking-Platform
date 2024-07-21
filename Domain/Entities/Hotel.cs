@@ -19,5 +19,7 @@ namespace Domain.Entities
         public ICollection<HotelImage> Images { get; set; }
         public ICollection<HotelAmenity> HotelAmenity { get; set; }
 
+        public ICollection<Room> Rooms { get; set; }
+
     }
 }

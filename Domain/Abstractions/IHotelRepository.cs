@@ -5,6 +5,10 @@ namespace Domain.Abstractions
 {
     public interface IHotelRepository
     {
+        public Task<bool> RoomNumberExistsAsync(int hotelId, string roomNumber);
+        Task AddRoomAsync(Room room);
+        Task<Room> DeleteRoomAsync(Room room);
+        Task<Room?> GetHotelRoom(int hotelId, string roomNumber);
         Task<Hotel> DeleteAsync(Hotel hotel);
         public Task BeginTransactionAsync();
         public Task CommitTransactionAsync();

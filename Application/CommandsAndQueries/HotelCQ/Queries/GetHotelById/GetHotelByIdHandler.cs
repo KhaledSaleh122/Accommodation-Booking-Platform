@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.AmenityDtos;
 using Application.Dtos.HotelDtos;
+using Application.Dtos.RoomDtos;
 using Application.Exceptions;
 using Application.Execptions;
 using AutoMapper;
@@ -40,6 +41,12 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                         opt.MapFrom(src => src.City.Country)
                    );
                 cfg.CreateMap<Amenity, AmenityDto>();
+                cfg.CreateMap<Room, RoomDto>()
+                    .ForMember(dest => dest.Images, opt =>
+                        opt.MapFrom(
+                          src => src.Images.Select(x => x.Path).ToList()
+                        )
+                    );
             });
             _mapper = configuration.CreateMapper();
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));

@@ -8,29 +8,14 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
     {
         public GetHotelsQuery(
                 int page, 
-                int pageSize, 
-                decimal minPrice,
-                decimal? maxPrice,
-                string? city, 
-                string? country,
-                HotelType[] hotelType, 
-                string? hotelName,
-                string? owner,
-                int[] aminites
+                int pageSize
             )
         {
-            Page = page;
-            PageSize = pageSize;
-            MinPrice = minPrice;
-            MaxPrice = maxPrice;
-            City = city;
-            Country = country;
-            HotelType = hotelType;
-            HotelName = hotelName;
-            Owner = owner;
-            Aminites = aminites;
-        }
-        public GetHotelsQuery() {
+            var pagination = new PaginationParameters(page, pageSize);
+            Page = pagination.Page;
+            PageSize = pagination.pageSize;
+            Aminites = [];
+            HotelType = [];
         }
         public int Page { get; set; }
         public int PageSize { get; set; }
