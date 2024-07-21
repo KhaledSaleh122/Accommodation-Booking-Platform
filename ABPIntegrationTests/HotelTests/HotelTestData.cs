@@ -8,6 +8,7 @@ namespace ABPIntegrationTests.HotelTests
     {
         public static IEnumerable<object?[]> CreateHotelTestData =>
             [
+                //Invalid Images - more than 20
                 [
                     new CreateHotelCommand
                     {
@@ -139,7 +140,7 @@ namespace ABPIntegrationTests.HotelTests
                         PricePerNight = 100
                     }
                 ],
-                // Invalid Images - empty or more than 20
+                // Invalid Images - empty
                 [
                     new CreateHotelCommand
                     {
