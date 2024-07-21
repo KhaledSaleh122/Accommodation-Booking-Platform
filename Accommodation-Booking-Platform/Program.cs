@@ -48,8 +48,8 @@ namespace Accommodation_Booking_Platform
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = configuration.GetValue<string>("JWTToken:Issuer"),
