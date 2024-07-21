@@ -5,10 +5,13 @@ using Booking_API_Project.Middleware;
 using Domain.Entities;
 using FluentValidation;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 
 namespace Accommodation_Booking_Platform
 {
@@ -36,6 +39,28 @@ namespace Accommodation_Booking_Platform
                 options.SuppressModelStateInvalidFilter = true;
                 options.SuppressMapClientErrors = true;
             });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration.GetValue<string>("JWTToken:Issuer"),
+                    ValidAudience = configuration.GetValue<string>("JWTToken:Audience"),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWTToken:Key")!)
+                    )
+                };
+            });
+
+
 
             services
                 .AddControllers()
@@ -80,6 +105,7 @@ namespace Accommodation_Booking_Platform
             );
            
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<NotFoundMiddleware>();
             app.UseMiddleware<ValidationMappingMiddleware>();
