@@ -112,19 +112,17 @@ namespace Presentation.Controllers
         int pageSize = 10
     )
         {
-            var query = new GetHotelsQuery
-                (
-                    page,
-                    pageSize,
-                    minPrice,
-                    maxPrice,
-                    city,
-                    country,
-                    hotelType,
-                    hotelName,
-                    owner,
-                    aminites
-                );
+            var query = new GetHotelsQuery(page, pageSize)
+            {
+                City = city,
+                Country = country,
+                HotelType = hotelType,
+                HotelName = hotelName,
+                Owner = owner,
+                Aminites = aminites,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice
+            };
             var (hotels, totalRecords, thePage, thePageSize) = await _mediator.Send(query);
             var response = new ResultWithPaginationResponse<IEnumerable<HotelDto>>()
             {
