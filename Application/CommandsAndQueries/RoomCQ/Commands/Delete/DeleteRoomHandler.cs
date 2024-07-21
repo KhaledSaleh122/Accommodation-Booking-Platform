@@ -12,9 +12,9 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
-        private readonly IImageRepository _imageRepository;
+        private readonly IImageService _imageRepository;
 
-        public DeleteRoomHandler(IHotelRepository hotelRepository, IImageRepository imageRepository)
+        public DeleteRoomHandler(IHotelRepository hotelRepository, IImageService imageRepository)
         {
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
             var configuration = new MapperConfiguration(cfg =>
@@ -35,10 +35,10 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
         {
             try
             {
-                var hotel = await _hotelRepository.GetByIdAsync(request.HotelId);
-                if (hotel == null) throw new NotFoundException("Hotel not found!");
-                var room = await _hotelRepository.GetHotelRoom(request.HotelId, request.RoomNumber);
-                if (room is null) throw new NotFoundException("Room not found");
+                var hotel = await _hotelRepository.GetByIdAsync(request.HotelId) 
+                    ?? throw new NotFoundException("Hotel not found!");
+                var room = await _hotelRepository.GetHotelRoom(request.HotelId, request.RoomNumber) 
+                    ?? throw new NotFoundException("Room not found");
                 await _hotelRepository.BeginTransactionAsync();
                 await _hotelRepository.DeleteRoomAsync(room);
                 _imageRepository.DeleteFile(room.Thumbnail);
@@ -52,12 +52,13 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
             catch (NotFoundException) {
                 throw;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 await _hotelRepository.RollbackTransactionAsync();
                 throw new ErrorException(
                     $"Error during deleting Room with room number " +
-                    $"'{request.RoomNumber}' from hotel with id '{request.HotelId}'."
+                    $"'{request.RoomNumber}' from hotel with id '{request.HotelId}'.",
+                    exception
                 );
             }
         }
