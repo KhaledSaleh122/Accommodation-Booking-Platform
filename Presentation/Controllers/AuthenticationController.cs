@@ -27,6 +27,9 @@ namespace Presentation.Controllers
         public async Task<IActionResult> RegisterUser(CreateUserCommand? command) { 
             if(command is null) throw new CustomValidationException("The body for this request required");
             var createdUser = await _mediator.Send(command);
+            return new ObjectResult(createdUser) { 
+                StatusCode = StatusCodes.Status201Created 
+            };
         }
     }
 }

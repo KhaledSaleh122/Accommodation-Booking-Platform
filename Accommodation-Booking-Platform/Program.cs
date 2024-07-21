@@ -1,7 +1,10 @@
 using Accommodation_Booking_Platform.Configurations;
 using Accommodation_Booking_Platform.Middleware;
+using Booking_API_Project.Configurations;
 using Booking_API_Project.Middleware;
 using FluentValidation;
+using Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
@@ -43,9 +46,14 @@ namespace Accommodation_Booking_Platform
             services.AddMediatrConfiguration();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddRoleManager<RoleManager<IdentityRole>>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         }
 
-        private static void Configure(WebApplication app)
+        private async static void Configure(WebApplication app)
         {
             if (app.Environment.IsDevelopment())
             {
@@ -62,6 +70,12 @@ namespace Accommodation_Booking_Platform
                     RequestPath = ""
                 }
             );
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await services.AddRoleBasedAccessControl();
+            }
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
