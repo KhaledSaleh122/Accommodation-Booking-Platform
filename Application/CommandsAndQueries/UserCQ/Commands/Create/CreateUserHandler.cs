@@ -2,9 +2,11 @@
 using Application.Execptions;
 using AutoMapper;
 using Domain.Entities;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using System;
+using System.Text;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.Create
 {
@@ -30,8 +32,24 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                 Email = request.Email,
             };
             var result = await _userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded) {
-                throw new ErrorException($"Error during creating new User.");
+            await _userManager.AddToRoleAsync(user, "User");
+            if (!result.Succeeded)
+            {
+                throw new ValidationException(
+                    $"Error during creating new User.",
+                    result.Errors.Select(x =>
+                    {
+                        string? name = null ;
+                       if (x.Code.Contains("UserName", StringComparison.CurrentCultureIgnoreCase)) 
+                            name = "Username";                        
+                       else if (x.Code.Contains("Password", StringComparison.CurrentCultureIgnoreCase)) 
+                            name = "Password";                        
+                       else if (x.Code.Contains("Email", StringComparison.CurrentCultureIgnoreCase)) 
+                            name = "Email";
+
+                        return new ValidationFailure() { PropertyName = name ?? x.Code, ErrorMessage = x.Description };
+                    })
+               );
             }
 
             return _mapper.Map<UserDto>(user);
