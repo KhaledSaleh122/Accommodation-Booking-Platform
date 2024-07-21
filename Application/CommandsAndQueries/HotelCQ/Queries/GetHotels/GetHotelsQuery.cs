@@ -8,14 +8,12 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
     {
         public GetHotelsQuery(
                 int page, 
-                int pageSize, 
-                decimal minPrice
+                int pageSize
             )
         {
             var pagination = new PaginationParameters(page, pageSize);
             Page = pagination.Page;
             PageSize = pagination.pageSize;
-            MinPrice = minPrice;
             Aminites = [];
             HotelType = [];
         }
