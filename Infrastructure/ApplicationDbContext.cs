@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Infrastructure
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<User,IdentityRole,string>
     {
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -28,7 +28,8 @@ namespace Infrastructure
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.Entity<IdentityUser>().ToTable("Users");
+            modelBuilder.Entity<User>().ToTable("Users");
+            //modelBuilder.Entity<IdentityUser>().ToTable("Users");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
