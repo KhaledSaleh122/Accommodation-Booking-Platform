@@ -2,6 +2,7 @@
 using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
 using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.CommandsAndQueries.CityCQ.Commands.Update;
+using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelCQ.Commands.Create;
 using System.Reflection;
 
@@ -20,6 +21,7 @@ namespace Accommodation_Booking_Platform.Configurations
                 cfg.RegisterPreProcessor<UpdateCityCommand>();
                 cfg.RegisterPreProcessor<CreateHotelCommand>();
                 cfg.RegisterPreProcessor<UpdateHotelCommand>();
+                cfg.RegisterPreProcessor<AddAmenityToHotelCommand>();
             });
             return services;
         }
