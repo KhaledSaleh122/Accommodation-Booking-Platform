@@ -3,7 +3,7 @@
 namespace Domain.Entities
 {
 #nullable disable
-    public class Room
+    public sealed class Room
     {
         public string RoomNumber { get; set; }
         public RoomStatus Status { get; set; }
