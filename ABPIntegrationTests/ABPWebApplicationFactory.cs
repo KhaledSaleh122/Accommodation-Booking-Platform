@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace ABPIntegrationTests
 {
     public class ABPWebApplicationFactory : WebApplicationFactory<Program>
@@ -28,6 +29,7 @@ namespace ABPIntegrationTests
                 {
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    options.ConfigureWarnings(options => options.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                 });
 
                 // Ensure database is created
