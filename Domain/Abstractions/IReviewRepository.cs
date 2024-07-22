@@ -5,6 +5,6 @@ namespace Domain.Abstractions
     public interface IReviewRepository
     {
         public Task<Review> AddHotelReview(Review review);
-        public Task<Review> DeleteHotelReview(int reviewId);
+        public Task<Review> DeleteHotelReview(Review review);
     }
 }
