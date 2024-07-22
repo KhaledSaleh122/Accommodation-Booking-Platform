@@ -1,5 +1,6 @@
 ﻿using Domain.Abstractions;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -24,6 +25,11 @@ namespace Infrastructure.Repositories
             _dbContext.Reviews.Remove(review);
             await _dbContext.SaveChangesAsync();
             return review;
+        }
+
+        public Task<bool> DoesUserReviewed(int hotelId, string userId)
+        {
+            return _dbContext.Reviews.AnyAsync(review => review.UserId == userId && review.HotelId == hotelId);
         }
     }
 }

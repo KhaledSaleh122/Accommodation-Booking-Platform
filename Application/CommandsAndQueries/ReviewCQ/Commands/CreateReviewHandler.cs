@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands
 {
@@ -35,15 +36,24 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands
                     ?? throw new NotFoundException("Hotel not found!");
                 review.HotelId = request.hotelId;
                 review.UserId = request.userId;
+                var isAlreadyReviewed = await _reviewRepository.DoesUserReviewed(request.hotelId,request.userId);
+                if (isAlreadyReviewed)
+                    throw new ErrorException("User has already rated this hotel.") { 
+                        StatusCode = StatusCodes.Status409Conflict 
+                    };
                 var createdReview = await _reviewRepository.AddHotelReview(review);
                 return _mapper.Map<ReviewDto>(createdReview);
             }
-            catch (NotFoundException) {
+            catch (ErrorException) {
+                throw;
+            }
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (Exception exception)
             {
-                throw new ErrorException("Error during adding the review on the hotel",exception);
+                throw new ErrorException("Error during adding the review on the hotel", exception);
             }
         }
     }

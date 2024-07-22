@@ -2,7 +2,7 @@
 {
     public class ErrorException : Exception
     {
-
+        public int? StatusCode { get; set; }
         public ErrorException() { }
 
         public ErrorException(string message)
