@@ -33,6 +33,8 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands
             {
                 var hotel = await _hotelRepository.GetByIdAsync(request.hotelId)
                     ?? throw new NotFoundException("Hotel not found!");
+                review.HotelId = request.hotelId;
+                review.UserId = request.userId;
                 var createdReview = await _reviewRepository.AddHotelReview(review);
                 return _mapper.Map<ReviewDto>(createdReview);
             }
