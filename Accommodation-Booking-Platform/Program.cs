@@ -18,7 +18,7 @@ namespace Accommodation_Booking_Platform
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,7 @@ namespace Accommodation_Booking_Platform
 
             var app = builder.Build();
 
-            Configure(app);
+            await Configure(app);
 
             app.Run();
         }
@@ -39,25 +39,6 @@ namespace Accommodation_Booking_Platform
                 options.SuppressMapClientErrors = true;
             });
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = false,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration.GetValue<string>("JWTToken:Issuer"),
-                    ValidAudience = configuration.GetValue<string>("JWTToken:Audience"),
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWTToken:Key")!)
-                    )
-                };
-            });
             services.AddSwaggerGen(c =>
              {
                 c.AddSecurityDefinition("ABPApiBearerAuth", new()
@@ -104,10 +85,33 @@ namespace Accommodation_Booking_Platform
             .AddUserManager<UserManager<User>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration.GetValue<string>("JWTToken:Issuer"),
+                    ValidAudience = configuration.GetValue<string>("JWTToken:Audience"),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWTToken:Key")!)
+                    )
+                };
+            });
         }
 
-        private async static void Configure(WebApplication app)
+        private async static Task Configure(WebApplication app)
         {
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            await services.AddRoleBasedAccessControl(app.Configuration);
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -131,12 +135,6 @@ namespace Accommodation_Booking_Platform
             app.UseMiddleware<ValidationMappingMiddleware>();
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.MapControllers();
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                await services.AddRoleBasedAccessControl(app.Configuration);
-            }
         }
     }
 }
