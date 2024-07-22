@@ -3,6 +3,7 @@ using Application.Execptions;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
 {
@@ -30,6 +31,12 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
                     AmenityId = request.AmenityId,
                     HotelId = request.HotelId
                 };
+                var isAmenityExist = await _hotelRepository.AmenityExistsAsync(request.HotelId, request.AmenityId);
+                if(isAmenityExist)
+                    throw new ErrorException("The hotel already has this amenity.")
+                    {
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
                 await _hotelRepository.AddAmenityAsync(amenityHotel);
             }
             catch (NotFoundException)

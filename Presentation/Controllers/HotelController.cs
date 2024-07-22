@@ -7,7 +7,6 @@ using Application.Dtos.HotelDtos;
 using Application.Exceptions;
 using Domain.Enums;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -90,7 +89,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<HotelMinDto>> DeleteHotel(int hotelId)
         {
-            if(hotelId <= 0) throw new NotFoundException("Hotel not found!");
+            if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             var deleteHotelCommand = new DeleteHotelCommand(hotelId);
             var deletedHotel = await _mediator.Send(deleteHotelCommand);
             _logger.LogInformation("Hotel with id '{deletedHotel.Id}' deleted.", deletedHotel.Id);
