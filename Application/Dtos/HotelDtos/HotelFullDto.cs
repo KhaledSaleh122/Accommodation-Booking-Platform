@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.AmenityDtos;
+using Application.Dtos.ReviewDtos;
 using Application.Dtos.RoomDtos;
 
 namespace Application.Dtos.HotelDtos
@@ -19,10 +20,12 @@ namespace Application.Dtos.HotelDtos
         public string City { get; set; }
         public string Country { get; set; }
 
-        public decimal Rating { get; set; }
+        public int Rating { get; set; }
 
         public ICollection<AmenityDto> Amenities { get; set; }
 
         public ICollection<RoomDto> Rooms { get; set; }
+
+        public ICollection<ReviewDto> Reviews { get; set; }
     }
 }
