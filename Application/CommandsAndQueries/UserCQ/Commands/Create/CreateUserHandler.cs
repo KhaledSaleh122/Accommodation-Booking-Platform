@@ -5,8 +5,8 @@ using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.Text;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.Create
 {
@@ -31,28 +31,56 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                 UserName = request.UserName,
                 Email = request.Email,
             };
-            var result = await _userManager.CreateAsync(user, request.Password);
-            await _userManager.AddToRoleAsync(user, "User");
-            if (!result.Succeeded)
+            try
             {
-                throw new ValidationException(
-                    $"Error during creating new User.",
-                    result.Errors.Select(x =>
+                var userWithThisEmail = await _userManager.FindByEmailAsync(request.Email);
+                if (userWithThisEmail is not null)
+                    throw new ErrorException("Email already exists.")
                     {
-                        string? name = null ;
-                       if (x.Code.Contains("UserName", StringComparison.CurrentCultureIgnoreCase)) 
-                            name = "Username";                        
-                       else if (x.Code.Contains("Password", StringComparison.CurrentCultureIgnoreCase)) 
-                            name = "Password";                        
-                       else if (x.Code.Contains("Email", StringComparison.CurrentCultureIgnoreCase)) 
-                            name = "Email";
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
+                var userWithThisUsername = await _userManager.FindByNameAsync(request.UserName);
+                if (userWithThisUsername is not null)
+                    throw new ErrorException("Username already exists.")
+                    {
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
+                var result = await _userManager.CreateAsync(user, request.Password);
+                await _userManager.AddToRoleAsync(user, "User");
+                if (!result.Succeeded)
+                {
+                    throw new ValidationException(
+                        $"Error during creating new User.",
+                        result.Errors.Select(x =>
+                        {
+                            string? name = null;
+                            if (x.Code.Contains("UserName", StringComparison.CurrentCultureIgnoreCase))
+                                name = "Username";
+                            else if (x.Code.Contains("Password", StringComparison.CurrentCultureIgnoreCase))
+                                name = "Password";
+                            else if (x.Code.Contains("Email", StringComparison.CurrentCultureIgnoreCase))
+                                name = "Email";
 
-                        return new ValidationFailure() { PropertyName = name ?? x.Code, ErrorMessage = x.Description };
-                    })
-               );
+                            return new ValidationFailure() { PropertyName = name ?? x.Code, ErrorMessage = x.Description };
+                        })
+                   );
+                }
+
+                return _mapper.Map<UserDto>(user);
             }
+            catch (ValidationException)
+            {
+                throw;
+            }
+            catch (ErrorException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
 
-            return _mapper.Map<UserDto>(user);
+                throw new ErrorException("Error during create the user account", exception);
+            }
         }
     }
 }

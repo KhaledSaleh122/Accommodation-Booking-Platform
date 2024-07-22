@@ -23,12 +23,12 @@ namespace Booking_API_Project.Middleware
             }
             catch (ErrorException execption)
             {
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.StatusCode = execption.StatusCode ?? StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
                 var serverErrorResponse = new ServerErrorResponse()
                 {
                     Title = execption.Message ?? "An unexpected error occurred",
-                    Status = StatusCodes.Status500InternalServerError,
+                    Status = context.Response.StatusCode,
                     TraceId = context.TraceIdentifier
                 };
                 _logger.LogError($"""

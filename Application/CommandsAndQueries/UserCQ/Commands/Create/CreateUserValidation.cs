@@ -1,22 +1,18 @@
 ﻿using Domain.Entities;
 using FluentValidation;
+using FluentValidation.Validators;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.Create
 {
     public class CreateUserValidation : AbstractValidator<CreateUserCommand>
     {
-        public CreateUserValidation(UserManager<User> userManager) {
+        public CreateUserValidation() {
             RuleFor(user => user.Email)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(50)
-                .EmailAddress()
-                .MustAsync(async (email, token) => {
-                    var user = await userManager.FindByEmailAsync(email);
-                    return user is null;
-                })
-                .WithMessage("Email already exists.");
+                .EmailAddress(EmailValidationMode.AspNetCoreCompatible);
             RuleFor(user => user.Password)
                 .NotEmpty()
                 .MaximumLength(30)
@@ -25,12 +21,7 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MinimumLength(1)
-                .MaximumLength(50)
-                .MustAsync( async(username, token) => {
-                   var user = await userManager.FindByNameAsync(username);
-                    return user is null;
-                })
-                .WithMessage("Username already exists.");
+                .MaximumLength(50);
 
         }
     }

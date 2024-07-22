@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.AmenityDtos;
 using Application.Dtos.HotelDtos;
+using Application.Dtos.ReviewDtos;
 using Application.Dtos.RoomDtos;
 using Application.Exceptions;
 using Application.Execptions;
@@ -39,6 +40,9 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                    .ForMember(dest => dest.Country,
                    opt =>
                         opt.MapFrom(src => src.City.Country)
+                   )
+                   .ForMember(dest => dest.Rating, 
+                    opt => opt.MapFrom(src => src.Reviews.Count > 0 ? src.Reviews.Average(r => r.Rating) : 0)
                    );
                 cfg.CreateMap<Amenity, AmenityDto>();
                 cfg.CreateMap<Room, RoomDto>()
@@ -47,6 +51,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                           src => src.Images.Select(x => x.Path).ToList()
                         )
                     );
+                cfg.CreateMap<Review, ReviewWithUserIdDto>();
             });
             _mapper = configuration.CreateMapper();
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
