@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240722190503_CreateReviewsTable")]
+    [Migration("20240722195251_CreateReviewsTable")]
     partial class CreateReviewsTable
     {
         /// <inheritdoc />
@@ -181,8 +181,8 @@ namespace Infrastructure.Migrations
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Rating")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
