@@ -86,6 +86,19 @@ namespace Accommodation_Booking_Platform
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+            services.AddAuthorization(option => {
+                option.AddPolicy("GuestOrUser", policy =>
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        return 
+                        context.User?.Identity is null  || 
+                        !context.User.Identity.IsAuthenticated ||
+                        context.User.IsInRole("User");
+                    });
+                });
+            });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
