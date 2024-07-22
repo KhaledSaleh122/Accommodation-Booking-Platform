@@ -9,7 +9,7 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
         {
             RuleFor(review => review.Rating)
                 .Cascade(CascadeMode.Stop)
-                .ExclusiveBetween(1, 5);
+                .InclusiveBetween(1, 5);
         }
     }
 }

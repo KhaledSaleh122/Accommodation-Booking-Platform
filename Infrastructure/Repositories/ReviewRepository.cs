@@ -27,9 +27,17 @@ namespace Infrastructure.Repositories
             return review;
         }
 
-        public Task<bool> DoesUserReviewed(int hotelId, string userId)
+        public async Task<bool> DoesUserReviewed(int hotelId, string userId)
         {
-            return _dbContext.Reviews.AnyAsync(review => review.UserId == userId && review.HotelId == hotelId);
+            return await _dbContext.Reviews.AnyAsync(review => review.UserId == userId && review.HotelId == hotelId);
+        }
+
+        public async Task<Review?> GetReview(int hotelId, string userId)
+        {
+            return await _dbContext.Reviews.FirstOrDefaultAsync(review =>
+                review.HotelId == hotelId &&
+                review.UserId == userId
+            );
         }
     }
 }
