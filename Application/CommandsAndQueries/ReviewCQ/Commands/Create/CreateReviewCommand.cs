@@ -1,7 +1,7 @@
 ﻿using Application.Dtos.ReviewDtos;
 using MediatR;
 
-namespace Application.CommandsAndQueries.ReviewCQ.Commands
+namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
     public class CreateReviewCommand : IRequest<ReviewDto>
     {

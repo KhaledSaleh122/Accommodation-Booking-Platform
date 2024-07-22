@@ -1,4 +1,4 @@
-﻿using Application.CommandsAndQueries.ReviewCQ.Commands;
+﻿using Application.CommandsAndQueries.ReviewCQ.Commands.Create;
 using Application.Dtos.ReviewDtos;
 using Application.Exceptions;
 using MediatR;
