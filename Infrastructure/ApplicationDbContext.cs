@@ -15,6 +15,7 @@ namespace Infrastructure
         public DbSet<Room> Rooms { get; set; }
 
         public DbSet<HotelAmenity> HotelAmenity { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         public ApplicationDbContext(DbContextOptions options)
             : base(options)
@@ -29,7 +30,6 @@ namespace Infrastructure
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<User>().ToTable("Users");
-            //modelBuilder.Entity<IdentityUser>().ToTable("Users");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
