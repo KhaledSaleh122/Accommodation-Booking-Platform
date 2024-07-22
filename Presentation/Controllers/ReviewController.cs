@@ -1,4 +1,6 @@
 ﻿using Application.CommandsAndQueries.ReviewCQ.Commands.Create;
+using Application.CommandsAndQueries.ReviewCQ.Commands.Delete;
+using Application.Dtos.HotelDtos;
 using Application.Dtos.ReviewDtos;
 using Application.Exceptions;
 using MediatR;
@@ -36,7 +38,37 @@ namespace Presentation.Controllers
             command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             command.hotelId = hotelId;
             var reviewDto = await _mediator.Send(command);
+            _logger.LogInformation(
+               "New Review created: HotelId={command.hotelId}, UserId={command.userId}, Rate={command.Rating}",
+               command.hotelId,
+               command.userId,
+               command.Rating);
             return CreatedAtRoute("GetHotelById", new { hotelId }, reviewDto);
         }
+
+        [HttpDelete("{userId}")]
+        [Authorize(Roles = "User,Admin")]
+        [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteHotelReview(int hotelId,string userId) {
+            if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
+            var admin = User.FindFirst(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            if (admin is null && userId != currentUserId) {
+                return Forbid();
+            }
+            var command = new DeleteReviewCommand()
+            {
+                HotelId = hotelId,
+                UserId = userId
+            };
+            var reviewDto = await _mediator.Send(command);
+            _logger.LogInformation(
+                "Review with HotelId '{command.HotelId}' and UserId '{command.UserId}' deleted.",
+                command.HotelId,
+                command.UserId);
+            return Ok(reviewDto);
+        }
+
     }
 }
