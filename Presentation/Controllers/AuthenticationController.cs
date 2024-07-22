@@ -40,18 +40,19 @@ namespace Presentation.Controllers
             };
         }
         [HttpPost("sessions")]
-        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserSignInDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> LoginInUser(SignInUserCommand? command)
         {
             if (command is null) 
                 throw new CustomValidationException("The body for this request required");
-            var token = await _mediator.Send(command);
+            var signInDto = await _mediator.Send(command);
+            if (signInDto is null) return Unauthorized();
             _logger.LogInformation(
                 "New login to account name '{command.UserName}'",
                 command.UserName
             );
-            return Ok(token);
+            return Ok(signInDto);
         }
 
     }

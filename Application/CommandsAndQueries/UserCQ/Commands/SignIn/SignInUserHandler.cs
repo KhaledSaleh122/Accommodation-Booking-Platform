@@ -1,4 +1,5 @@
-﻿using Application.Exceptions;
+﻿using Application.Dtos.UserDtos;
+using Application.Exceptions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
 {
-    public class SignInUserHandler : IRequestHandler<SignInUserCommand, string>
+    public class SignInUserHandler : IRequestHandler<SignInUserCommand, UserSignInDto?>
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -26,27 +27,30 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
             _configuration = configuration;
         }
 
-        public async Task<string> Handle(SignInUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserSignInDto?> Handle(SignInUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName)
-                ?? throw new CustomValidationException("Username is worng!");
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user is null) return null;
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (!result.Succeeded)
-                throw new CustomValidationException("Password is worng!");
+                return null;
 
             var roles = await _userManager.GetRolesAsync(user);
 
             var tokenhandler = new JwtSecurityTokenHandler();
             var tkey = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTToken:Key")!);
+            var claims = new List<Claim>() {
+                new (ClaimTypes.Name, user.UserName!),
+                new (ClaimTypes.Email, user.Email!),
+                new (ClaimTypes.NameIdentifier, user.Id),
+            };
+            foreach (var role in roles) {
+                claims.Add(new(ClaimTypes.Role, role));
+            }
+            var expireDate = DateTime.UtcNow.AddMinutes(60);
             var TokenDescp = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(
-                [
-                    new Claim("Username", user.UserName!),
-                    new Claim("Email", user.Email!),
-                    new Claim("Id", user.Id),
-                    new Claim("Roles",String.Join(",",roles)),
-                ]),
+                Subject = new ClaimsIdentity(claims),
                 Issuer = _configuration.GetValue<string>("JWTToken:Issuer"),
                 Audience = _configuration.GetValue<string>("JWTToken:Audience"),
                 Expires = DateTime.UtcNow.AddMinutes(60),
@@ -56,7 +60,7 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
                 )
             };
             var token = tokenhandler.CreateToken(TokenDescp);
-            return tokenhandler.WriteToken(token);
+            return new UserSignInDto() { Token = tokenhandler.WriteToken(token),Expiration = expireDate };
         }
     }
 }

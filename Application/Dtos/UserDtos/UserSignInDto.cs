@@ -4,6 +4,7 @@ namespace Application.Dtos.UserDtos
 {
     public class UserSignInDto
     {
-        public SecurityToken Token { get; set; }
+        public string Token { get; set; }
+        public DateTime Expiration { get; set; }
     }
 }
