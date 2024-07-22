@@ -23,7 +23,10 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                     .ForMember(dest => dest.City,
                         opt => opt.MapFrom(src => src.City.Name))
                     .ForMember(dest => dest.Country, 
-                        opt => opt.MapFrom(src => src.City.Country));
+                        opt => opt.MapFrom(src => src.City.Country))
+                    .ForMember(dest => dest.Rating,
+                        opt => opt.MapFrom(src => src.Reviews.Count > 0 ? src.Reviews.Average(r => r.Rating) : 0)
+                    );
                 cfg.CreateMap<Amenity, AmenityDto>();
             });
             _mapper = configuration.CreateMapper();
