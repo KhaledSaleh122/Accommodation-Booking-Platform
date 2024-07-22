@@ -1,11 +1,12 @@
 ﻿using Domain.Abstractions;
 using FluentValidation;
 
-namespace Application.CommandsAndQueries.ReviewCQ.Commands
+namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
     public class CreateReviewValidation : AbstractValidator<CreateReviewCommand>
     {
-        public CreateReviewValidation() {
+        public CreateReviewValidation()
+        {
             RuleFor(review => review.Rating)
                 .Cascade(CascadeMode.Stop)
                 .ExclusiveBetween(1, 5);

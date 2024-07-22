@@ -7,7 +7,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.CommandsAndQueries.ReviewCQ.Commands
+namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
     public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewDto>
     {
@@ -36,15 +36,17 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands
                     ?? throw new NotFoundException("Hotel not found!");
                 review.HotelId = request.hotelId;
                 review.UserId = request.userId;
-                var isAlreadyReviewed = await _reviewRepository.DoesUserReviewed(request.hotelId,request.userId);
+                var isAlreadyReviewed = await _reviewRepository.DoesUserReviewed(request.hotelId, request.userId);
                 if (isAlreadyReviewed)
-                    throw new ErrorException("User has already rated this hotel.") { 
-                        StatusCode = StatusCodes.Status409Conflict 
+                    throw new ErrorException("User has already rated this hotel.")
+                    {
+                        StatusCode = StatusCodes.Status409Conflict
                     };
                 var createdReview = await _reviewRepository.AddHotelReview(review);
                 return _mapper.Map<ReviewDto>(createdReview);
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (NotFoundException)

@@ -4,7 +4,7 @@ using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.CommandsAndQueries.CityCQ.Commands.Update;
 using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelCQ.Commands.Create;
-using Application.CommandsAndQueries.ReviewCQ.Commands;
+using Application.CommandsAndQueries.ReviewCQ.Commands.Create;
 using Application.CommandsAndQueries.RoomCQ.Commands.Create;
 using Application.CommandsAndQueries.UserCQ.Commands.Create;
 using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
