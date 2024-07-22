@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Domain.Abstractions;
+using FluentValidation;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands
 {
@@ -6,8 +7,8 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands
     {
         public CreateReviewValidation() {
             RuleFor(review => review.Rating)
-                .NotEmpty()
-                .ExclusiveBetween(1,5);
+                .Cascade(CascadeMode.Stop)
+                .ExclusiveBetween(1, 5);
         }
     }
 }

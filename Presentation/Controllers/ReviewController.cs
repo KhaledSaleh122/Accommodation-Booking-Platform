@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Validation;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -32,6 +33,8 @@ namespace Presentation.Controllers
         {
             if(hotelId <= 0) throw new NotFoundException("Hotel not found!");
             if (command is null) throw new CustomValidationException("The request must include a body.");
+            command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            command.hotelId = hotelId;
             var reviewDto = await _mediator.Send(command);
             return CreatedAtRoute("GetHotelById", new { hotelId }, reviewDto);
         }

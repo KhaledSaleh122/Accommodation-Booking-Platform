@@ -14,6 +14,8 @@ namespace Infrastructure.Configurations
                 .IsRequired(true);
             builder.Property(review => review.Comment)
                 .IsRequired(false);
+
+            builder.HasKey(review => new { review.HotelId , review.UserId });
         }
     }
 }

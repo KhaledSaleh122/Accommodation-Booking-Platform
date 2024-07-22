@@ -51,7 +51,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                           src => src.Images.Select(x => x.Path).ToList()
                         )
                     );
-                cfg.CreateMap<Review, ReviewDto>();
+                cfg.CreateMap<Review, ReviewWithUserIdDto>();
             });
             _mapper = configuration.CreateMapper();
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
