@@ -7,6 +7,7 @@ using Application.Dtos.HotelDtos;
 using Application.Exceptions;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -99,18 +100,18 @@ namespace Presentation.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<HotelDto>>> GetHotels
-    (
-        string? city,
-        string? country,
-        [FromQuery] HotelType[] hotelType,
-        string? hotelName,
-        string? owner,
-        [FromQuery] int[] aminites,
-        decimal? maxPrice,
-        decimal minPrice = 0,
-        int page = 1,
-        int pageSize = 10
-    )
+        (
+            string? city,
+            string? country,
+            [FromQuery] HotelType[] hotelType,
+            string? hotelName,
+            string? owner,
+            [FromQuery] int[] aminites,
+            decimal? maxPrice,
+            decimal minPrice = 0,
+            int page = 1,
+            int pageSize = 10
+        )
         {
             var query = new GetHotelsQuery(page, pageSize)
             {
