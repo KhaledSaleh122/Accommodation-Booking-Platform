@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
 {
@@ -56,7 +57,16 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
               }).ToList();
             try
             {
-                var hotel = await _hotelRepository.GetByIdAsync(request.hotelId) 
+                var isRoomNumberExist = await _hotelRepository.RoomNumberExistsAsync(
+                    request.hotelId,
+                    request.RoomNumber
+                );
+                if (isRoomNumberExist)
+                    throw new ErrorException("The RoomNumber already Exist.")
+                    {
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
+                var hotel = await _hotelRepository.GetByIdAsync(request.hotelId)
                     ?? throw new NotFoundException("Hotel not Found!");
                 await _hotelRepository.BeginTransactionAsync();
                 await _hotelRepository.AddRoomAsync(room);
@@ -71,12 +81,16 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
             {
                 throw;
             }
+            catch (ErrorException) {
+                throw;
+            }
             catch (Exception exception)
             {
 
                 await _hotelRepository.RollbackTransactionAsync();
-                _imageRepository.DeleteFile(room.Thumbnail,true);
-                foreach (var image in room.Images) {
+                _imageRepository.DeleteFile(room.Thumbnail, true);
+                foreach (var image in room.Images)
+                {
                     _imageRepository.DeleteFile(image.Path);
                 }
                 throw new ErrorException($"Error during creating new Room.", exception);

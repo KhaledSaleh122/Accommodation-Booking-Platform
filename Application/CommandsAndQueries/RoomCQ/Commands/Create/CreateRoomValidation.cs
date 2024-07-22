@@ -6,7 +6,7 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
 {
     public class CreateRoomValidation : AbstractValidator<CreateRoomCommand>
     {
-        public CreateRoomValidation(IHotelRepository hotelRepository, IImageService imageRepository)
+        public CreateRoomValidation(IImageService imageRepository)
         {
             RuleFor(room => room.RoomNumber)
                 .NotEmpty()
@@ -30,22 +30,6 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
                   (image) => imageRepository.ValidateImage(image, context, "Images")
                 )
               );
-            RuleFor(m => m).CustomAsync(
-                async (command, context, token) =>
-                {
-                    if (command.RoomNumber is not null)
-                    {
-                        var isExist = await hotelRepository.RoomNumberExistsAsync(
-                                command.hotelId,
-                                command.RoomNumber
-                            );
-                        if (isExist)
-                        {
-                            context.AddFailure("RoomNumber", "The RoomNumber already Exist");
-                        }
-                    }
-                }
-            );
         }
     }
 }

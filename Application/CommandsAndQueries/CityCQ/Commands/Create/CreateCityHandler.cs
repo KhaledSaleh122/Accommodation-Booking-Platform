@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Create
@@ -29,7 +30,23 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
             var city = _mapper.Map<City>(request);
             try
             {
+                var isCityExist = await _cityRepository.DoesCityExistInCountryAsync(
+                    request.Name, request.Country
+                );
+                if (isCityExist)
+                    throw new ErrorException("A city with this name already exists in the country.") { 
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
+                var isPostExist = await _cityRepository.DoesPostOfficeExistsAsync(request.PostOffice);
+                if (isPostExist)
+                    throw new ErrorException("This post office exists in a city.")
+                    {
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
                 await _cityRepository.CreateAsync(city);
+            }
+            catch (ErrorException) {
+                throw;
             }
             catch (Exception exception)
             {
