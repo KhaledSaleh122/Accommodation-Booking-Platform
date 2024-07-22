@@ -9,6 +9,8 @@ namespace Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<Review> builder)
         {
             builder.Property(review => review.Rating)
+                .IsRequired(true);            
+            builder.Property(review => review.UserId)
                 .IsRequired(true);
             builder.Property(review => review.Comment)
                 .IsRequired(false);
