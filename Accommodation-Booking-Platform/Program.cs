@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 
@@ -21,12 +22,10 @@ namespace Accommodation_Booking_Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             ConfigureServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             Configure(app);
 
             app.Run();
@@ -59,7 +58,28 @@ namespace Accommodation_Booking_Platform
                     )
                 };
             });
+            services.AddSwaggerGen(c =>
+             {
+                c.AddSecurityDefinition("ABPApiBearerAuth", new()
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    Description = "Input a valid token to access this API"
+                });
 
+                c.AddSecurityRequirement(new()
+                {
+                    {
+                        new ()
+                        {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "ABPApiBearerAuth" }
+                        },
+                        new List<string>()
+                    }
+                });
+             });
 
 
             services
