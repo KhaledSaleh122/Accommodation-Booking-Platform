@@ -3,7 +3,8 @@
 namespace Domain.Entities
 {
 #nullable disable
-    public class User : IdentityUser
+    public sealed class User : IdentityUser
     {
+        public ICollection<Review> Reviews { get; set; }
     }
 }

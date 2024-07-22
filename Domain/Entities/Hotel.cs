@@ -21,5 +21,7 @@ namespace Domain.Entities
 
         public ICollection<Room> Rooms { get; set; }
 
+        public ICollection<Review> Reviews { get; set; }
+
     }
 }
