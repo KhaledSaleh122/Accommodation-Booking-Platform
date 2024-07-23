@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using System;
 
@@ -14,9 +15,13 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public DeleteReviewHandler(IReviewRepository reviewRepository, IHotelRepository hotelRepository)
+        public DeleteReviewHandler(
+            IReviewRepository reviewRepository,
+            IHotelRepository hotelRepository,
+            UserManager<User> userManager)
         {
             _reviewRepository = reviewRepository ?? throw new ArgumentNullException(nameof(reviewRepository));
             var configuration = new MapperConfiguration(cfg =>
@@ -26,6 +31,7 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
             });
             _mapper = configuration.CreateMapper();
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
         public async Task<ReviewDto> Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
         {
@@ -33,6 +39,8 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
 			{
                 var hotel = await _hotelRepository.GetByIdAsync(request.HotelId)
                                 ?? throw new NotFoundException("Hotel not found!");
+                var user = await _userManager.FindByIdAsync(request.UserId) 
+                                ?? throw new NotFoundException("User not found!");
                 var review = await _reviewRepository.GetReview(request.HotelId, request.UserId)
                                 ?? throw new NotFoundException("Review not found!");
                 var deletedReview = await _reviewRepository.DeleteHotelReview(review);
