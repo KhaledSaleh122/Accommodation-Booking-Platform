@@ -49,6 +49,7 @@ namespace Presentation.Controllers
         [HttpDelete("{userId}")]
         [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteHotelReview(int hotelId,string userId) {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
