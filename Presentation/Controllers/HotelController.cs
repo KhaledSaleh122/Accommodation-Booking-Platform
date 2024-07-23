@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Pagination;
 using Presentation.Responses.Validation;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -45,8 +46,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<HotelFullDto>> GetHotel(int hotelId)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
-            var query = new GetHotelByIdQuery(hotelId);
+            var query = new GetHotelByIdQuery(hotelId) { UserId = userId };
             var hotelDto = await _mediator.Send(query);
             return Ok(hotelDto);
         }

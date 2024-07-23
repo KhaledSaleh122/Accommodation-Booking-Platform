@@ -14,6 +14,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
         
         }
 
-        public int HotelId { get; }
+        public int HotelId { get; set; }
+        public string? UserId { get; set; }
     }
 }
