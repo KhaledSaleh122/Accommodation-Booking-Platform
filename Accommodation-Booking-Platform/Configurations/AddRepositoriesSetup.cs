@@ -1,5 +1,6 @@
 ﻿using Domain.Abstractions;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 
 namespace Accommodation_Booking_Platform.Configurations
 {
@@ -10,8 +11,9 @@ namespace Accommodation_Booking_Platform.Configurations
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IHotelRepository, HotelRepository>();
-            services.AddScoped<IImageService, ImageRepository>();
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IHotelAmenityRepository, HotelAmenityRepository>();
             return services;
         }
     }

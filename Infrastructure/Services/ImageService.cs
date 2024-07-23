@@ -1,11 +1,11 @@
 ﻿using Domain.Abstractions;
 using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Services
 {
-    public class ImageRepository : IImageService
+    public class ImageService : IImageService
     {
-        public void DeleteFile(string filePath,bool isFileExist = false)
+        public void DeleteFile(string filePath, bool isFileExist = false)
         {
             var directoryPath = $"{Directory.GetCurrentDirectory()}\\Public\\";
             var fullPath = Path.Combine(directoryPath, filePath);
@@ -31,7 +31,7 @@ namespace Infrastructure.Repositories
 
         public bool ValidateFile(IFormFile formFile)
         {
-            var extention = Path.GetExtension(formFile.FileName);
+            var extention = Path.GetExtension(formFile.FileName).ToLower();
             if (extention is null) throw new Exception("Couldn't find file extentsion");
             var allowedImageExtentsion = new List<string>() { ".jpg", ".jpeg", ".png" };
             var isAllowed = allowedImageExtentsion.Contains(extention);

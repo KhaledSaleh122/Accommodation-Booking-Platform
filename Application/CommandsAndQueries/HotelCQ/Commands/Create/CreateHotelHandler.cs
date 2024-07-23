@@ -13,11 +13,13 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
         private readonly IHotelRepository _hotelRepository;
         private readonly IImageService _imageRepository;
         private readonly IMapper _mapper;
+        private readonly ITransactionService _transactionService;
 
         public CreateHotelHandler(
             IHotelRepository hotelRepository,
             IImageService imageRepository,
-            ICityRepository cityRepository)
+            ICityRepository cityRepository,
+            ITransactionService transactionService)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -30,7 +32,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
                        opt =>
                             opt.MapFrom(src => src.City.Country)
                    )
-                   .ForMember(dest => dest.Images, 
+                   .ForMember(dest => dest.Images,
                        opt =>
                             opt.MapFrom(src => src.Images.Select(x => x.Path).ToList())
                    );
@@ -44,6 +46,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
             _mapper = configuration.CreateMapper();
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
             _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         }
 
         public async Task<HotelMinDto> Handle(
@@ -73,7 +76,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
                 }).ToList();
             try
             {
-                await _hotelRepository.BeginTransactionAsync();
+                await _transactionService.BeginTransactionAsync();
                 await _hotelRepository.CreateAsync(hotel);
                 _imageRepository.UploadFile(request.Thumbnail, $"{storePath}\\{thumbnailPath}", thumnailName);
 
@@ -81,11 +84,11 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
                 {
                     _imageRepository.UploadFile(request.Images[i], $"{storePath}\\{imagesPath}", imagesName[i]);
                 }
-                await _hotelRepository.CommitTransactionAsync();
+                await _transactionService.CommitTransactionAsync();
             }
             catch (Exception exception)
             {
-                await _hotelRepository.RollbackTransactionAsync();
+                await _transactionService.RollbackTransactionAsync();
                 _imageRepository.DeleteFile(hotel.Thumbnail,true);
                     foreach (var image in hotel.Images)
                 {
