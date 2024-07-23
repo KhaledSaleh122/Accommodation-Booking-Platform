@@ -11,11 +11,16 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IAmenityRepository _amenityRepository;
+        private readonly IHotelAmenityRepository _hotelAmenityRepository;
 
-        public RemoveAmenityFromHotelHandler(IAmenityRepository amenityRepository, IHotelRepository hotelRepository)
+        public RemoveAmenityFromHotelHandler(
+            IAmenityRepository amenityRepository, 
+            IHotelRepository hotelRepository, 
+            IHotelAmenityRepository hotelAmenityRepository)
         {
             _amenityRepository = amenityRepository ?? throw new ArgumentNullException(nameof(amenityRepository));
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
+            _hotelAmenityRepository = hotelAmenityRepository ?? throw new ArgumentNullException(nameof(hotelAmenityRepository));
         }
 
         public async Task Handle(RemoveAmenityFromHotelCommand request, CancellationToken cancellationToken)
@@ -31,7 +36,7 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
                     AmenityId = request.AmenityId,
                     HotelId = request.HotelId
                 };
-                await _hotelRepository.RemoveAmenityAsync(amenityHotel);
+                await _hotelAmenityRepository.RemoveAmenityAsync(amenityHotel);
             }
             catch (NotFoundException)
             {

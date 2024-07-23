@@ -14,8 +14,14 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
         private readonly IMapper _mapper;
         private readonly IHotelRepository _hotelRepository;
         private readonly IImageService _imageRepository;
+        private readonly ITransactionService _transactionService;
+        private readonly IHotelRoomRepository _hotelRoomRepository;
 
-        public CreateRoomHandler(IHotelRepository hotelRepository, IImageService imageRepository)
+        public CreateRoomHandler(
+            IHotelRepository hotelRepository,
+            IImageService imageRepository,
+            ITransactionService transactionService,
+            IHotelRoomRepository hotelRoomRepository)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -33,6 +39,8 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
               throw new ArgumentNullException(nameof(hotelRepository));
             _imageRepository = imageRepository ??
               throw new ArgumentNullException(nameof(imageRepository));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+            _hotelRoomRepository = hotelRoomRepository ?? throw new ArgumentNullException(nameof(hotelRoomRepository));
         }
         public async Task<RoomDto> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
         {
@@ -57,7 +65,7 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
               }).ToList();
             try
             {
-                var isRoomNumberExist = await _hotelRepository.RoomNumberExistsAsync(
+                var isRoomNumberExist = await _hotelRoomRepository.RoomNumberExistsAsync(
                     request.hotelId,
                     request.RoomNumber
                 );
@@ -68,14 +76,14 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
                     };
                 var hotel = await _hotelRepository.GetByIdAsync(request.hotelId)
                     ?? throw new NotFoundException("Hotel not Found!");
-                await _hotelRepository.BeginTransactionAsync();
-                await _hotelRepository.AddRoomAsync(room);
+                await _transactionService.BeginTransactionAsync();
+                await _hotelRoomRepository.AddRoomAsync(room);
                 _imageRepository.UploadFile(request.Thumbnail, $"{storePath}\\{thumbnailPath}", thumnailName);
                 for (int i = 0; i < request.Images.Count; i++)
                 {
                     _imageRepository.UploadFile(request.Images[i], $"{storePath}\\{imagesPath}", imagesName[i]);
                 }
-                await _hotelRepository.CommitTransactionAsync();
+                await _transactionService.CommitTransactionAsync();
             }
             catch (NotFoundException)
             {
@@ -87,7 +95,7 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
             catch (Exception exception)
             {
 
-                await _hotelRepository.RollbackTransactionAsync();
+                await _transactionService.RollbackTransactionAsync();
                 _imageRepository.DeleteFile(room.Thumbnail, true);
                 foreach (var image in room.Images)
                 {

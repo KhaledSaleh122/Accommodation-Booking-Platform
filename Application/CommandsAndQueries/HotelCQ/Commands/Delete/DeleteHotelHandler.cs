@@ -13,8 +13,12 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
         private readonly IMapper _mapper;
         private readonly IHotelRepository _repository;
         private readonly IImageService _imageRepository;
+        private readonly ITransactionService _transactionService;
 
-        public DeleteHotelHandler(IHotelRepository repository, IImageService imageRepository)
+        public DeleteHotelHandler(
+            IHotelRepository repository,
+            IImageService imageRepository, 
+            ITransactionService transactionService)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -22,7 +26,8 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
             });
             _mapper = configuration.CreateMapper();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _imageRepository = imageRepository;
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         }
 
         public async Task<HotelMinDto> Handle(DeleteHotelCommand request, CancellationToken cancellationToken)
@@ -31,14 +36,14 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
             try
             {
                 var hotel = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException();
-                await _repository.BeginTransactionAsync();
+                await _transactionService.BeginTransactionAsync();
                 deletedHotel = await _repository.DeleteAsync(hotel);
                 _imageRepository.DeleteFile(hotel.Thumbnail);
                 foreach (var image in hotel.Images)
                 {
                     _imageRepository.DeleteFile(image.Path);
                 }
-                await _repository.CommitTransactionAsync();
+                await _transactionService.CommitTransactionAsync();
             }
             catch (NotFoundException)
             {
@@ -46,7 +51,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
             }
             catch (Exception exception)
             {
-                await _repository.RollbackTransactionAsync();
+                await _transactionService.RollbackTransactionAsync();
                 throw new ErrorException($"Error during deleting hotel with id '{request.Id}'.", exception);
             }
             return _mapper.Map<HotelMinDto>(deletedHotel);

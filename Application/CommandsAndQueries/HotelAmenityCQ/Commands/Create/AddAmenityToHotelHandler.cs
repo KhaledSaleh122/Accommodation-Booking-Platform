@@ -11,11 +11,17 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IAmenityRepository _amenityRepository;
+        private readonly IHotelAmenityRepository _hotelAmenityRepository;
 
-        public AddAmenityToHotelHandler(IAmenityRepository amenityRepository, IHotelRepository hotelRepository)
+        public AddAmenityToHotelHandler(
+                IAmenityRepository amenityRepository,
+                IHotelRepository hotelRepository, 
+                IHotelAmenityRepository hotelAmenityRepository
+            )
         {
             _amenityRepository = amenityRepository ?? throw new ArgumentNullException(nameof(amenityRepository));
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
+            _hotelAmenityRepository = hotelAmenityRepository ?? throw new ArgumentNullException(nameof(hotelAmenityRepository));
         }
 
         public async Task Handle(AddAmenityToHotelCommand request, CancellationToken cancellationToken)
@@ -31,13 +37,13 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
                     AmenityId = request.AmenityId,
                     HotelId = request.HotelId
                 };
-                var isAmenityExist = await _hotelRepository.AmenityExistsAsync(request.HotelId, request.AmenityId);
+                var isAmenityExist = await _hotelAmenityRepository.AmenityExistsAsync(request.HotelId, request.AmenityId);
                 if(isAmenityExist)
                     throw new ErrorException("The hotel already has this amenity.")
                     {
                         StatusCode = StatusCodes.Status409Conflict
                     };
-                await _hotelRepository.AddAmenityAsync(amenityHotel);
+                await _hotelAmenityRepository.AddAmenityAsync(amenityHotel);
             }
             catch (NotFoundException)
             {

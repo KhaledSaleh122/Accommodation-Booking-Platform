@@ -14,29 +14,7 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task AddAmenityAsync(HotelAmenity amenityHotel)
-        {
-            await _dbContext.HotelAmenity.AddAsync(amenityHotel);
-            await _dbContext.SaveChangesAsync();
-        }
-        public async Task<bool> AmenityExistsAsync(int hotelId, int amenityId)
-        {
-            return await _dbContext.HotelAmenity.AnyAsync(
-                x => 
-                    x.AmenityId == amenityId && x.HotelId == hotelId
-                );
-        }
 
-        public async Task BeginTransactionAsync()
-        {
-            await _dbContext.Database.BeginTransactionAsync();
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            if (_dbContext.Database.CurrentTransaction is null) return;
-            await _dbContext.Database.CurrentTransaction.CommitAsync();
-        }
 
         public async Task<Hotel> DeleteAsync(Hotel hotel)
         {
@@ -119,56 +97,12 @@ namespace Infrastructure.Repositories
             hotel.City = city;
         }
 
-        public async Task RemoveAmenityAsync(HotelAmenity amenityHotel)
-        {
-            _dbContext.HotelAmenity.Remove(amenityHotel);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            if (_dbContext.Database.CurrentTransaction is null) return;
-            await _dbContext.Database.CurrentTransaction.RollbackAsync();
-        }
-
         public async Task UpdateAsync(Hotel updatedHotel)
         {
             _dbContext.Entry(updatedHotel).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddRoomAsync(Room room)
-        {
-            await _dbContext.Rooms.AddAsync(room);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<Room> DeleteRoomAsync(Room room)
-        {
-            _dbContext.Rooms.Remove(room);
-            await _dbContext.SaveChangesAsync();
-            return room;
-        }
-
-        public async Task<Room?> GetHotelRoom(int hotelId, string roomNumber)
-        {
-            return await _dbContext.Rooms
-                .Include(o => o.Images)
-                .FirstOrDefaultAsync(
-                    p =>
-                        p.RoomNumber.ToLower() == roomNumber.ToLower() &&
-                        p.HotelId == hotelId
-            );
-        }
-
-        public async Task<bool> RoomNumberExistsAsync(int hotelId, string roomNumber)
-        {
-            return await _dbContext.Rooms.AnyAsync(
-                p =>
-                p.RoomNumber.ToLower() == roomNumber.ToLower() &&
-                p.HotelId == hotelId
-            );
-        }
 
     }
 }

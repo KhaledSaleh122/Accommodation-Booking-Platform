@@ -13,8 +13,14 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
         private readonly IImageService _imageRepository;
+        private readonly IHotelRoomRepository _hotelRoomRepository;
+        private readonly ITransactionService _transactionService;
 
-        public DeleteRoomHandler(IHotelRepository hotelRepository, IImageService imageRepository)
+        public DeleteRoomHandler(
+            IHotelRepository hotelRepository,
+            IImageService imageRepository,
+            IHotelRoomRepository hotelRoomRepository
+            , ITransactionService transactionService)
         {
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
             var configuration = new MapperConfiguration(cfg =>
@@ -28,7 +34,9 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
             });
 
             _mapper = configuration.CreateMapper();
-            _imageRepository = imageRepository;
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
+            _hotelRoomRepository = hotelRoomRepository ?? throw new ArgumentNullException(nameof(hotelRoomRepository));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         }
 
         public async Task<RoomDto> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
@@ -37,16 +45,16 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
             {
                 var hotel = await _hotelRepository.GetByIdAsync(request.HotelId) 
                     ?? throw new NotFoundException("Hotel not found!");
-                var room = await _hotelRepository.GetHotelRoom(request.HotelId, request.RoomNumber) 
+                var room = await _hotelRoomRepository.GetHotelRoom(request.HotelId, request.RoomNumber) 
                     ?? throw new NotFoundException("Room not found");
-                await _hotelRepository.BeginTransactionAsync();
-                await _hotelRepository.DeleteRoomAsync(room);
+                await _transactionService.BeginTransactionAsync();
+                await _hotelRoomRepository.DeleteRoomAsync(room);
                 _imageRepository.DeleteFile(room.Thumbnail);
                 foreach (var image in room.Images)
                 {
                     _imageRepository.DeleteFile(image.Path);
                 }
-                await _hotelRepository.CommitTransactionAsync();
+                await _transactionService.CommitTransactionAsync();
                 return _mapper.Map<RoomDto>(room);
             }
             catch (NotFoundException) {
@@ -54,7 +62,7 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
             }
             catch (Exception exception)
             {
-                await _hotelRepository.RollbackTransactionAsync();
+                await _transactionService.RollbackTransactionAsync();
                 throw new ErrorException(
                     $"Error during deleting Room with room number " +
                     $"'{request.RoomNumber}' from hotel with id '{request.HotelId}'.",
