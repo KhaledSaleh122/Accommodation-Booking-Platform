@@ -14,6 +14,10 @@ namespace Accommodation_Booking_Platform.Configurations
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IHotelAmenityRepository, HotelAmenityRepository>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IHotelRoomRepository, HotelRoomRepository>();
+            services.AddScoped<IRecentlyVisitedHotelRepository, RecentlyVisitedHotelRepository>();
+
             return services;
         }
     }
