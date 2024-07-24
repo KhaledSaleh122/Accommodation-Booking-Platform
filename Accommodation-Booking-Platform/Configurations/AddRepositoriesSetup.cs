@@ -17,6 +17,7 @@ namespace Accommodation_Booking_Platform.Configurations
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IHotelRoomRepository, HotelRoomRepository>();
             services.AddScoped<IRecentlyVisitedHotelRepository, RecentlyVisitedHotelRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
 
             return services;
         }

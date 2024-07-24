@@ -38,7 +38,7 @@ namespace Accommodation_Booking_Platform
                 options.SuppressModelStateInvalidFilter = true;
                 options.SuppressMapClientErrors = true;
             });
-
+            services.AddDateOnlyTimeOnlyStringConverters();
             services.AddSwaggerGen(c =>
              {
                 c.AddSecurityDefinition("ABPApiBearerAuth", new()
@@ -47,6 +47,7 @@ namespace Accommodation_Booking_Platform
                     Scheme = "Bearer",
                     Description = "Input a valid token to access this API"
                 });
+                 c.UseDateOnlyTimeOnlyStringConverters();
 
                 c.AddSecurityRequirement(new()
                 {
