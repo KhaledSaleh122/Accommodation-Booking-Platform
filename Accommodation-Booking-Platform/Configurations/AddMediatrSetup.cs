@@ -1,5 +1,6 @@
 ﻿using Application.CommandsAndQueries.AmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.AmenityCQ.Commands.Update;
+using Application.CommandsAndQueries.BookingCQ.Commands.Create;
 using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.CommandsAndQueries.CityCQ.Commands.Update;
 using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create;
@@ -30,6 +31,7 @@ namespace Accommodation_Booking_Platform.Configurations
                 cfg.RegisterPreProcessor<CreateUserCommand>();
                 cfg.RegisterPreProcessor<SignInUserCommand>();
                 cfg.RegisterPreProcessor<CreateReviewCommand>();
+                cfg.RegisterPreProcessor<CreateRoomBookingCommand>();
             });
             return services;
         }
