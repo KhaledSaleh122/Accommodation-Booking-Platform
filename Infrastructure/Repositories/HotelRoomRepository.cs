@@ -13,6 +13,10 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        public async Task Update(Room room) {
+            _dbContext.Entry(room).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
         public async Task AddRoomAsync(Room room)
         {
             await _dbContext.Rooms.AddAsync(room);
