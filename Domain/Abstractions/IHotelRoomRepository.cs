@@ -7,7 +7,7 @@ namespace Domain.Abstractions
         public Task<bool> RoomNumberExistsAsync(int hotelId, string roomNumber);
         Task AddRoomAsync(Room room);
         Task<Room> DeleteRoomAsync(Room room);
-        Task<Room?> GetHotelRoom(int hotelId, string roomNumber);
-        public Task Update(Room room);
+        Task<Room?> GetHotelRoomAsync(int hotelId, string roomNumber);
+        public Task UpdateAsync(Room room);
     }
 }

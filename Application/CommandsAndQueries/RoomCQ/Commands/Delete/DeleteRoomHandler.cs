@@ -45,7 +45,7 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
             {
                 var hotel = await _hotelRepository.GetByIdAsync(request.HotelId) 
                     ?? throw new NotFoundException("Hotel not found!");
-                var room = await _hotelRoomRepository.GetHotelRoom(request.HotelId, request.RoomNumber) 
+                var room = await _hotelRoomRepository.GetHotelRoomAsync(request.HotelId, request.RoomNumber) 
                     ?? throw new NotFoundException("Room not found");
                 await _transactionService.BeginTransactionAsync();
                 await _hotelRoomRepository.DeleteRoomAsync(room);

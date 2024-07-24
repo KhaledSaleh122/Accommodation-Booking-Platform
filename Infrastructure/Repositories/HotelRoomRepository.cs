@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task Update(Room room) {
+        public async Task UpdateAsync(Room room) {
             _dbContext.Entry(room).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
             return room;
         }
 
-        public async Task<Room?> GetHotelRoom(int hotelId, string roomNumber)
+        public async Task<Room?> GetHotelRoomAsync(int hotelId, string roomNumber)
         {
             return await _dbContext.Rooms
                 .Include(o => o.Images)

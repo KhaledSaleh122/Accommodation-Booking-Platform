@@ -49,7 +49,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             {
                 var hotel = await _hotelRepository.GetByIdAsync(request.hotelId) 
                     ?? throw new NotFoundException("Hotel not found");
-                var room = await _hotelRoomRepository.GetHotelRoom(request.hotelId, request.roomNumber)
+                var room = await _hotelRoomRepository.GetHotelRoomAsync(request.hotelId, request.roomNumber)
                     ?? throw new NotFoundException("Room not found");
                 if (room.Status != RoomStatus.Available)
                     throw new ErrorException("Room not available")
@@ -59,7 +59,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                 await _transactionService.BeginTransactionAsync();
                 var createdBooking = await _bookingRepository.CreateRoomBookingAsync(booking);
                 room.Status = RoomStatus.Reserved;
-                await _hotelRoomRepository.Update(room);
+                await _hotelRoomRepository.UpdateAsync(room);
                 await _transactionService.CommitTransactionAsync();
                 return _mapper.Map<BookingDto>(createdBooking);
 
