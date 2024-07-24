@@ -12,6 +12,15 @@ namespace Infrastructure.Configurations
                 .IsRequired(true);
             builder.Property(booking => booking.EndDate)
                 .IsRequired(true);
+            builder.Property(booking => booking.RoomNumber)
+                .IsRequired(true);
+            builder.Property(booking => booking.HotelId)
+                .IsRequired(true);
+            builder.Property(booking => booking.UserId)
+                .IsRequired(true);
+            builder.HasOne(rel => rel.Room)
+                .WithMany(rel => rel.Bookings)
+                .HasForeignKey(rel => new { rel.HotelId, rel.RoomNumber });
         }
     }
 }

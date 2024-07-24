@@ -17,7 +17,7 @@ namespace Infrastructure
         public DbSet<HotelAmenity> HotelAmenity { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
-        public DbSet<Booking> bookings { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         public DbSet<RecentlyVisitedHotel> RecentlyVisitedHotels { get; set; }
         public ApplicationDbContext(DbContextOptions options)
