@@ -7,6 +7,7 @@ using Application.Dtos.HotelDtos;
 using Application.Exceptions;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -55,8 +56,11 @@ namespace Presentation.Controllers
 
 
         [HttpPatch("{hotelId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateHotel(int hotelId, UpdateHotelCommand? command)
         {
             if (command is null) return Ok();
@@ -68,8 +72,11 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(HotelMinDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateHotel([FromForm] CreateHotelCommand request)
         {
             if (request is null) throw new CustomValidationException("The request must include a body.");
@@ -87,8 +94,11 @@ namespace Presentation.Controllers
 
 
         [HttpDelete("{hotelId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(HotelMinDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<HotelMinDto>> DeleteHotel(int hotelId)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");

@@ -3,6 +3,7 @@ using Application.CommandsAndQueries.RoomCQ.Commands.Delete;
 using Application.Dtos.RoomDtos;
 using Application.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,9 +25,12 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(RoomDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateRoom(int hotelId, [FromForm] CreateRoomCommand? command)
         {
             if (command is null) throw new CustomValidationException("The request must include a body.");
@@ -42,8 +46,11 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{roomNumber}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(RoomDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteRoom(int hotelId, string roomNumber)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");

@@ -2,6 +2,7 @@
 using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete;
 using Application.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,8 +22,11 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("{amenityId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> AddAmenityToHotel(int hotelId, int amenityId)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
@@ -35,8 +39,11 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{amenityId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> RemoveAmenityFromHotel(int hotelId, int amenityId)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
