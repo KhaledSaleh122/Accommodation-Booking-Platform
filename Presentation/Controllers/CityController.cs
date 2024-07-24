@@ -6,6 +6,7 @@ using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
 using Application.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -66,6 +67,9 @@ namespace Presentation.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(CityDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateCity(CreateCityCommand? request)
@@ -81,8 +85,11 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{cityId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateCity(int cityId, UpdateCityCommand? command)
         {
             if (cityId <= 0) throw new NotFoundException("City not found!");
@@ -94,8 +101,11 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{cityId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(CityDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<CityDto>> DeleteCity(int cityId)
         {
             if (cityId <= 0) throw new NotFoundException("City not found!");

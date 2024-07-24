@@ -3,6 +3,7 @@ using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
 using Application.Dtos.UserDtos;
 using Application.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Authorize(Policy = "Guest")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,6 +25,8 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("users")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegisterUser(CreateUserCommand? command)
@@ -40,6 +44,8 @@ namespace Presentation.Controllers
             };
         }
         [HttpPost("sessions")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(UserSignInDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> LoginInUser(SignInUserCommand? command)

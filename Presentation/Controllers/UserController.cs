@@ -22,9 +22,11 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("recently-visited-hotels")]
+        [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(typeof(ICollection<RvhDto>),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "User,Admin")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetRecentlyVisitedHotels(string userId) {
             var admin = User.FindFirst(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;

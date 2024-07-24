@@ -31,6 +31,8 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateHotelReview(int hotelId, CreateReviewCommand? command)
         {
             if(hotelId <= 0) throw new NotFoundException("Hotel not found!");
@@ -49,8 +51,9 @@ namespace Presentation.Controllers
         [HttpDelete("{userId}")]
         [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteHotelReview(int hotelId,string userId) {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             var admin = User.FindFirst(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");

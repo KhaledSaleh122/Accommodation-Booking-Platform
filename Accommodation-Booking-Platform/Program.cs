@@ -88,6 +88,15 @@ namespace Accommodation_Booking_Platform
             .AddDefaultTokenProviders();
 
             services.AddAuthorization(option => {
+                option.AddPolicy("Guest", policy =>
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        return
+                        context.User?.Identity is null ||
+                        !context.User.Identity.IsAuthenticated;
+                    });
+                });
                 option.AddPolicy("GuestOrUser", policy =>
                 {
                     policy.RequireAssertion(context =>
