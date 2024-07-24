@@ -13,5 +13,6 @@ namespace Domain.Entities
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
         public ICollection<RoomImage> Images { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
     }
 }
