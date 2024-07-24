@@ -41,9 +41,9 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
                                 ?? throw new NotFoundException("Hotel not found!");
                 var user = await _userManager.FindByIdAsync(request.UserId) 
                                 ?? throw new NotFoundException("User not found!");
-                var review = await _reviewRepository.GetReview(request.HotelId, request.UserId)
+                var review = await _reviewRepository.GetReviewAsync(request.HotelId, request.UserId)
                                 ?? throw new NotFoundException("Review not found!");
-                var deletedReview = await _reviewRepository.DeleteHotelReview(review);
+                var deletedReview = await _reviewRepository.DeleteHotelReviewAsync(review);
                 return _mapper.Map<ReviewDto>(deletedReview);
             } catch (NotFoundException)
             {

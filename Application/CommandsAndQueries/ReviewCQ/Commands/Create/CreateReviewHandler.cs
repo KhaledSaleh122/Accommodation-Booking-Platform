@@ -36,13 +36,13 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
                     ?? throw new NotFoundException("Hotel not found!");
                 review.HotelId = request.hotelId;
                 review.UserId = request.userId;
-                var isAlreadyReviewed = await _reviewRepository.DoesUserReviewed(request.hotelId, request.userId);
+                var isAlreadyReviewed = await _reviewRepository.DoesUserReviewedAsync(request.hotelId, request.userId);
                 if (isAlreadyReviewed)
                     throw new ErrorException("User has already rated this hotel.")
                     {
                         StatusCode = StatusCodes.Status409Conflict
                     };
-                var createdReview = await _reviewRepository.AddHotelReview(review);
+                var createdReview = await _reviewRepository.AddHotelReviewAsync(review);
                 return _mapper.Map<ReviewDto>(createdReview);
             }
             catch (ErrorException)
