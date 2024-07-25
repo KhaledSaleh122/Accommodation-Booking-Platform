@@ -27,5 +27,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         public string? HotelName { get; set; }
         public string? Owner { get; set; }
         public int[] Aminites { get; set; }
+        public DateOnly? CheckIn { get; set; }
+        public DateOnly? CheckOut { get; set; }
     }
 }

@@ -65,5 +65,21 @@ namespace Infrastructure.Repositories
             _dbContext.Entry(updatedCity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<City>> TopVisitedCities()
+        {
+            var result = await _dbContext.Cities
+                .Include(h => h.Hotels).ThenInclude(r => r.RecentlyVisitedHotels)
+                .GroupBy(g => new { g.Id,g.Name })
+                .Select(g => new
+                {
+                    City = new City() { Id = g.Key.Id, Name = g.Key.Name },
+                    count = g.Count()
+                }).OrderByDescending(or => or.count)
+                .Take(5)
+                .Select(g => g.City)
+                .ToListAsync();
+            return result;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
 using Application.CommandsAndQueries.CityCQ.Commands.Delete;
 using Application.CommandsAndQueries.CityCQ.Commands.Update;
+using Application.CommandsAndQueries.CityCQ.Queries.TopVisitedCities;
 using Application.CommandsAndQueries.CityCQ.Query.GetCities;
 using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
@@ -114,5 +115,14 @@ namespace Presentation.Controllers
             _logger.LogInformation("City with id '{deletedCity.Id}' deleted.", deletedCity.Id);
             return Ok(deletedCity);
         }
+
+        [HttpGet("top-visited-cities")]
+        [ProducesResponseType(typeof(CityTopDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CityTopDto>>> GetTopVisitedCities() {
+            var command = new GetTopVisitedCitiesCommand();
+            var cities = await _mediator.Send(command);
+            return Ok(cities);
+        }
+
     }
 }
