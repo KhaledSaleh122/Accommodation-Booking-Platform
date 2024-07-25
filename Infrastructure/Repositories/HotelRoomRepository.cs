@@ -49,5 +49,16 @@ namespace Infrastructure.Repositories
                 p.HotelId == hotelId
             );
         }
+
+        public async Task<bool> IsRoomAvailable(int hotelId, string roomNumber, DateOnly startDate, DateOnly endDate)
+        {
+            return !(await _dbContext.Bookings.AnyAsync(
+                b =>
+                    b.StartDate < endDate &&
+                    b.EndDate > startDate &&
+                    b.HotelId == hotelId &&
+                    b.RoomNumber == roomNumber
+                ));
+        }
     }
 }

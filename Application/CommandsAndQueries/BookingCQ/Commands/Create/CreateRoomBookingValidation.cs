@@ -8,8 +8,9 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             RuleFor(booking => booking.StartDate)
                 .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
                 .WithMessage("Start date must be today or later");
-            RuleFor(booking => booking.DaysToStay)
-                .GreaterThanOrEqualTo(1);
+            RuleFor(booking => booking.EndDate)
+                .Must((booking,endDate) => endDate > booking.StartDate)
+                .WithMessage("End date must be after start date");
         }           
     }
 }

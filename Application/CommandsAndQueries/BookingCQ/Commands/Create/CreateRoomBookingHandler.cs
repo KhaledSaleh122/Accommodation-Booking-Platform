@@ -16,7 +16,6 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
         private readonly IBookingRepository _bookingRepository;
         private readonly IHotelRepository _hotelRepository;
         private readonly IHotelRoomRepository _hotelRoomRepository;
-        private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
 
         public CreateRoomBookingHandler(
@@ -28,14 +27,11 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Booking, BookingDto>();
-                cfg.CreateMap<CreateRoomBookingCommand, Booking>()
-                .ForMember(dest => dest.EndDate,
-                    opt => opt.MapFrom(src => src.StartDate.AddDays(src.DaysToStay)));
+                cfg.CreateMap<CreateRoomBookingCommand, Booking>();
             });
             _mapper = configuration.CreateMapper();
             _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
             _hotelRoomRepository = hotelRoomRepository ?? throw new ArgumentNullException(nameof(hotelRoomRepository));
-            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
         }
 
@@ -51,16 +47,19 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                     ?? throw new NotFoundException("Hotel not found");
                 var room = await _hotelRoomRepository.GetHotelRoomAsync(request.hotelId, request.roomNumber)
                     ?? throw new NotFoundException("Room not found");
-                if (room.Status != RoomStatus.Available)
-                    throw new ErrorException("Room not available")
+                var isRoomAvailable = await _hotelRoomRepository.IsRoomAvailable(
+                        request.hotelId,
+                        request.roomNumber,
+                        request.StartDate,
+                        request.EndDate
+                    );
+                if (!isRoomAvailable)
+                    throw new ErrorException("Room not available for selected date")
                     {
                         StatusCode = StatusCodes.Status409Conflict
                     };
-                await _transactionService.BeginTransactionAsync();
                 var createdBooking = await _bookingRepository.CreateRoomBookingAsync(booking);
-                room.Status = RoomStatus.Reserved;
                 await _hotelRoomRepository.UpdateAsync(room);
-                await _transactionService.CommitTransactionAsync();
                 return _mapper.Map<BookingDto>(createdBooking);
 
             }
@@ -73,7 +72,6 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             }
             catch (Exception exception)
             {
-                await _transactionService.RollbackTransactionAsync();
                 throw new ErrorException("Error during creating the room booking ", exception);
             }
         }
