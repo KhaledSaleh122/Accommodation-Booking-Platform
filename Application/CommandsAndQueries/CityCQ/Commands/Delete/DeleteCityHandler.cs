@@ -13,8 +13,13 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _repository;
+        private readonly IImageService _imageRepository;
+        private readonly ITransactionService _transactionService;
 
-        public DeleteCityHandler(ICityRepository repository)
+        public DeleteCityHandler(
+            ICityRepository repository, 
+            IImageService imageRepository,
+            ITransactionService transactionService)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -23,6 +28,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
             });
             _mapper = configuration.CreateMapper();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         }
 
         public async Task<CityDto> Handle(DeleteCityCommand request, CancellationToken cancellationToken)
@@ -31,7 +38,10 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
             try
             {
                 var city = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException();
+                await _transactionService.BeginTransactionAsync();
                 deletedCity = await _repository.DeleteAsync(city);
+                _imageRepository.DeleteFile(city.Thumbnail);
+                await _transactionService.CommitTransactionAsync();
             }
             catch (NotFoundException)
             {
@@ -39,7 +49,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
             }
             catch (Exception exception)
             {
-
+                await _transactionService.RollbackTransactionAsync();
                 throw new ErrorException($"Error during deleting city with id '{request.Id}'.", exception);
             }
             return _mapper.Map<CityDto>(deletedCity);
