@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
 {
@@ -11,8 +12,9 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
         }
 
         public AddAmenityToHotelCommand() { }
-
+        [Required]
         public int HotelId { get; set; }
+        [Required]
         public int AmenityId { get; set; }
     }
 }

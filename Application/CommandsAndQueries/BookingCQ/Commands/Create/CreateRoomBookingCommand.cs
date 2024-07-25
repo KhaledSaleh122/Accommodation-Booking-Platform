@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.VisualBasic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
 {
@@ -10,7 +11,9 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
         public int hotelId;
         public string roomNumber;
         public string userId;
+        [Required]
         public DateOnly StartDate { get; set; }
+        [Required]
         public DateOnly EndDate { get; set; }
     }
 }

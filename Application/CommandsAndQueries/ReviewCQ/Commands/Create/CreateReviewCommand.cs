@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.ReviewDtos;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
@@ -7,7 +8,9 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
     {
         public int hotelId;
         public string userId;
+        [Required]
         public string? Comment { get; set; }
+        [Required]
         public int Rating { get; set; }
     }
 }
