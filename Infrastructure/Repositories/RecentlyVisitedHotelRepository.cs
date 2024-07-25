@@ -1,6 +1,7 @@
 ﻿using Domain.Abstractions;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Infrastructure.Repositories
 {
@@ -19,14 +20,19 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<RecentlyVisitedHotel>> GetAsync(string userId)
+        public async Task<IDictionary<RecentlyVisitedHotel,double>> GetAsync(string userId)
         {
-            return await _dbContext.RecentlyVisitedHotels
+            var result =  await _dbContext.RecentlyVisitedHotels
                 .Include(o => o.Hotel).ThenInclude(o => o.City)
-                .Include(o => o.Hotel).ThenInclude(o => o.Reviews)
+                .Include(o => o.Hotel)
                 .Where(rvh => rvh.UserId == userId)
                 .OrderByDescending(o => o.VisitedDate)
-                .ToListAsync();
+                .Select(o => new { 
+                    RecentlyVisitedHotel = o,
+                    AvgReviewScore = o.Hotel.Reviews.Count != 0 ? o.Hotel.Reviews.Average(r => r.Rating) : 0
+                })
+                .ToDictionaryAsync(key => key.RecentlyVisitedHotel, value => value.AvgReviewScore);
+            return result;
         }
     }
 }

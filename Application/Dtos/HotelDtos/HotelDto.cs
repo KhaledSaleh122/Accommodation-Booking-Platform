@@ -16,7 +16,7 @@ namespace Application.Dtos.HotelDtos
         public string City { get; set; }
         public string Country { get; set; }
 
-        public int Rating { get; set; }
+        public double Rating { get; set; }
 
         public ICollection<AmenityDto> Amenities { get; set; }
     }

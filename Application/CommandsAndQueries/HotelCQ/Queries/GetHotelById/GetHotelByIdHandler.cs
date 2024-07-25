@@ -41,9 +41,6 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                    .ForMember(dest => dest.Country,
                    opt =>
                         opt.MapFrom(src => src.City.Country)
-                   )
-                   .ForMember(dest => dest.Rating,
-                    opt => opt.MapFrom(src => src.Reviews.Count > 0 ? src.Reviews.Average(r => r.Rating) : 0)
                    );
                 cfg.CreateMap<Amenity, AmenityDto>();
                 cfg.CreateMap<Room, RoomDto>()
@@ -65,7 +62,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
         {
             try
             {
-                var hotel = await _hotelRepository.GetByIdAsync(request.HotelId) ??
+                var (hotel,avgReviews) = await _hotelRepository.GetByIdAsync(request.HotelId) ??
                     throw new NotFoundException("Hotel not found!");
                 if (request.UserId is not null) {
                     var recentlyVisited = new RecentlyVisitedHotel() {
@@ -75,7 +72,9 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                     };
                     await _recentlyVisitedHotel.AddAsync(recentlyVisited);
                 }
-                return _mapper.Map<HotelFullDto>(hotel);
+                var hotelDto =  _mapper.Map<HotelFullDto>(hotel);
+                hotelDto.Rating = avgReviews;
+                return hotelDto;
             }
             catch (NotFoundException)
             {

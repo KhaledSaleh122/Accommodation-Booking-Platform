@@ -22,11 +22,8 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                         opt => opt.MapFrom(src => src.HotelAmenity.Select(am => am.Amenity)))
                     .ForMember(dest => dest.City,
                         opt => opt.MapFrom(src => src.City.Name))
-                    .ForMember(dest => dest.Country, 
-                        opt => opt.MapFrom(src => src.City.Country))
-                    .ForMember(dest => dest.Rating,
-                        opt => opt.MapFrom(src => src.Reviews.Count > 0 ? src.Reviews.Average(r => r.Rating) : 0)
-                    );
+                    .ForMember(dest => dest.Country,
+                        opt => opt.MapFrom(src => src.City.Country));
                 cfg.CreateMap<Amenity, AmenityDto>();
             });
             _mapper = configuration.CreateMapper();
@@ -40,11 +37,9 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         {
             decimal minPrice = request.MinPrice >= 0 ? request.MinPrice : 0;
             decimal? maxPrice = request.MaxPrice >= request.MinPrice ? request.MaxPrice : null;
-            IEnumerable<Hotel> hotels;
-            int totalRecords;
             try
             {
-                (hotels, totalRecords) = await _hotelRepository.GetAsync
+                var (result, totalRecords) = await _hotelRepository.GetAsync
                     (
                         request.Page, 
                         request.PageSize,
@@ -57,20 +52,23 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                         request.Owner,
                         request.Aminites
                     );
+                var hotels = _mapper.Map<IEnumerable<HotelDto>>(result.Keys);
+                for (int i = 0; i < result.Count; i++){
+                    hotels.ElementAt(i).Rating = result.ElementAt(i).Value;
+                }
+                return
+                    (
+                        hotels,
+                        totalRecords,
+                        request.Page,
+                        request.PageSize
+                    );
             }
             catch (Exception exception)
             {
 
                 throw new ErrorException($"Error during Getting hotels.", exception);
             }
-
-            return 
-                (
-                    _mapper.Map<IEnumerable<HotelDto>>(hotels),
-                    totalRecords,
-                    request.Page,
-                    request.PageSize
-                );
         }
     }
 }

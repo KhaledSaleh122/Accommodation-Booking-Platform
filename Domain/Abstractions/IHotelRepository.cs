@@ -7,7 +7,7 @@ namespace Domain.Abstractions
     {
         Task<Hotel> DeleteAsync(Hotel hotel);
 
-        public Task<(IEnumerable<Hotel>, int)> GetAsync
+        Task<(IDictionary<Hotel, double>, int)> GetAsync
             (
                 int page,
                 int pageSize,
@@ -20,7 +20,7 @@ namespace Domain.Abstractions
                 string? owner,
                 int[] aminites
             );
-        Task<Hotel?> GetByIdAsync(int hotelId);
+        Task<(Hotel, double)?> GetByIdAsync(int hotelId);
         Task CreateAsync(Hotel hotel);
         Task UpdateAsync(Hotel updatedHotel);
     }
