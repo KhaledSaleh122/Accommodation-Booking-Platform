@@ -35,13 +35,23 @@ namespace Infrastructure.Repositories
                 HotelType[] hotelType,
                 string? hotelName,
                 string? owner,
-                int[] aminites
+                int[] aminites,
+                DateOnly checkIn,
+                DateOnly checkOut
             )
         {
             var query = _dbContext.Hotels
                                   .Include(o => o.City)
                                   .Include(o => o.HotelAmenity).ThenInclude(o => o.Amenity)
-                                  .Where(p => p.PricePerNight >= minPrice);
+                                  .Where(p => p.PricePerNight >= minPrice)
+                                  .Where(h => 
+                                    h.Rooms.Any(r => 
+                                        !r.Bookings.Any(b => 
+                                            b.StartDate < checkOut &&
+                                            b.EndDate > checkIn
+                                        )
+                                    )
+                                  );
 
             if (aminites.Length > 0)
                 query = query.Where

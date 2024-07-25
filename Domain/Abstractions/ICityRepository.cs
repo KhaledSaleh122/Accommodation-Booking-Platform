@@ -11,5 +11,6 @@ namespace Domain.Abstractions
         Task<City?> GetByIdAsync(int cityId);
         Task CreateAsync(City city);
         Task UpdateAsync(City updatedCity);
+        Task<IEnumerable<City>> TopVisitedCities();
     }
 }

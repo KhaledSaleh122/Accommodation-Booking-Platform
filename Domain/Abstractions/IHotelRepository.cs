@@ -18,7 +18,9 @@ namespace Domain.Abstractions
                 HotelType[] hotelType,
                 string? hotelName,
                 string? owner,
-                int[] aminites
+                int[] aminites,
+                DateOnly checkIn,
+                DateOnly checkOut
             );
         Task<(Hotel, double)?> GetByIdAsync(int hotelId);
         Task CreateAsync(Hotel hotel);
