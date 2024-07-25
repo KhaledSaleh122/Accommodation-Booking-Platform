@@ -35,7 +35,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> CreateHotelReview(int hotelId, CreateReviewCommand? command)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
-            if (command is null) throw new CustomValidationException("The request must include a body.");
+            if (command is null) throw new CustomValidationException("The request must include a valid body.");
             command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             command.hotelId = hotelId;
             var reviewDto = await _mediator.Send(command);

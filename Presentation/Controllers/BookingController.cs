@@ -32,7 +32,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> CreateRoomBooking(int hotelId, string roomNumber,[FromBody] CreateRoomBookingCommand? command)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
-            if (command is null) throw new CustomValidationException("The body for this request required");
+            if (command is null) throw new CustomValidationException("The request must include a valid body.");
             command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             command.hotelId = hotelId;
             command.roomNumber = roomNumber;

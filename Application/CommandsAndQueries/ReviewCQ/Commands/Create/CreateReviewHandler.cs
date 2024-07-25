@@ -11,11 +11,11 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
     public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewDto>
     {
-        private readonly IReviewRepository _reviewRepository;
+        private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
 
-        public CreateReviewHandler(IReviewRepository reviewRepository, IHotelRepository hotelRepository)
+        public CreateReviewHandler(IReviewHotelRepository reviewRepository, IHotelRepository hotelRepository)
         {
             _reviewRepository = reviewRepository ?? throw new ArgumentNullException(nameof(reviewRepository));
             var configuration = new MapperConfiguration(cfg =>

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class ReviewRepository : IReviewRepository
+    public class ReviewRepository : IReviewHotelRepository
     {
         private readonly ApplicationDbContext _dbContext;
 

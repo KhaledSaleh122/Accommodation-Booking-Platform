@@ -79,7 +79,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateHotel([FromForm] CreateHotelCommand request)
         {
-            if (request is null) throw new CustomValidationException("The request must include a body.");
+            if (request is null) throw new CustomValidationException("The request must include a valid body.");
             var hotelDto = await _mediator.Send(request);
             _logger.LogInformation(
                 "New hotel created: Id={hotelDto.Id}, Name={hotelDto.Name}",
