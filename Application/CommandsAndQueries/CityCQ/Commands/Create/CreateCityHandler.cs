@@ -13,8 +13,13 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
     {
         private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageRepository;
+        private readonly ITransactionService _transactionService;
 
-        public CreateCityHandler(ICityRepository cityRepository)
+        public CreateCityHandler(
+            ICityRepository cityRepository,
+            IImageService imageRepository, 
+            ITransactionService transactionService)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -23,6 +28,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
             });
             _mapper = configuration.CreateMapper();
             _cityRepository = cityRepository ?? throw new ArgumentNullException(nameof(cityRepository));
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         }
 
         public async Task<CityDto> Handle(CreateCityCommand request, CancellationToken cancellationToken)
@@ -43,17 +50,25 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
                     {
                         StatusCode = StatusCodes.Status409Conflict
                     };
+                var storePath = "CityThumbnails";
+                var thumnailName = Guid.NewGuid().ToString();
+                city.Thumbnail =$"{storePath}/{thumnailName}{Path.GetExtension(request.Thumbnail.FileName)}";
+                await _transactionService.BeginTransactionAsync();
+                _imageRepository.UploadFile(request.Thumbnail, $"{storePath}", thumnailName);
                 await _cityRepository.CreateAsync(city);
+                await _transactionService.CommitTransactionAsync();
+                var cityDto = _mapper.Map<CityDto>(city);
+                return cityDto;
             }
             catch (ErrorException) {
                 throw;
             }
             catch (Exception exception)
             {
+                await _transactionService.RollbackTransactionAsync();
+                _imageRepository.DeleteFile(city.Thumbnail, true);
                 throw new ErrorException($"Error during creating new city.", exception);
             }
-            var cityDto = _mapper.Map<CityDto>(city);
-            return cityDto;
         }
     }
 }

@@ -21,6 +21,8 @@ namespace Infrastructure.Configurations
                 .IsUnique();
             builder.HasIndex(city => city.PostOffice)
                 .IsUnique();
+            builder.Property(city => city.Thumbnail)
+                .IsRequired(true);
         }
     }
 }
