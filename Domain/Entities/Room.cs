@@ -6,7 +6,6 @@ namespace Domain.Entities
     public sealed class Room
     {
         public string RoomNumber { get; set; }
-        public RoomStatus Status { get; set; }
         public int AdultCapacity { get; set; }
         public int ChildrenCapacity { get; set; }
         public string Thumbnail { get; set; }

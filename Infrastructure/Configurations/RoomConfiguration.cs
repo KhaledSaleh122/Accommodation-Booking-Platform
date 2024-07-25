@@ -16,8 +16,6 @@ namespace Infrastructure.Configurations
                 .IsRequired();
             builder.Property(Room => Room.RoomNumber)
                 .HasMaxLength(10);         
-            builder.Property(Room => Room.Status)
-                .IsRequired();
             builder.HasKey(pro => new { pro.HotelId, pro.RoomNumber });
             builder.HasOne(o => o.Hotel)
                    .WithMany(o => o.Rooms)

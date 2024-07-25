@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.BookingDtos;
 using MediatR;
 using Microsoft.VisualBasic;
+using System.ComponentModel;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
 {
@@ -10,6 +11,6 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
         public string roomNumber;
         public string userId;
         public DateOnly StartDate { get; set; }
-        public int DaysToStay { get; set; }
+        public DateOnly EndDate { get; set; }
     }
 }

@@ -9,7 +9,6 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
     {
         public int hotelId;
         public string RoomNumber { get; set; }
-        public RoomStatus Status { get; set; }
         public int AdultCapacity { get; set; }
         public int ChildrenCapacity { get; set; }
         public IFormFile Thumbnail { get; set; }
