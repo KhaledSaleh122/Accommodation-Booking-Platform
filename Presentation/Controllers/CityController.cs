@@ -73,7 +73,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(CityDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateCity(CreateCityCommand? request)
+        public async Task<IActionResult> CreateCity([FromForm]CreateCityCommand? request)
         {
             if (request is null) throw new CustomValidationException("The request must include a body.");
             var cityDto = await _mediator.Send(request);

@@ -12,6 +12,8 @@ namespace Infrastructure.Configurations
             builder.HasIndex(user => user.UserName).IsUnique();
             builder.Property(user => user.Email).HasMaxLength(50);
             builder.HasIndex(user => user.Email).IsUnique();
+            builder.Property(user => user.Thumbnail)
+                .IsRequired(true);
         }
     }
 }
