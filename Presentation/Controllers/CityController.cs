@@ -75,7 +75,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateCity([FromForm]CreateCityCommand? request)
         {
-            if (request is null) throw new CustomValidationException("The request must include a body.");
+            if (request is null) throw new CustomValidationException("The request must include a valid body.");
             var cityDto = await _mediator.Send(request);
             _logger.LogInformation("New city created: Id={cityDto.Id}, Name={cityDto.Name}", cityDto.Id, cityDto.Name);
             return CreatedAtAction(

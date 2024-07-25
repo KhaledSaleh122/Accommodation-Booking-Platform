@@ -27,7 +27,6 @@ namespace Accommodation_Booking_Platform
             var app = builder.Build();
 
             await Configure(app);
-
             app.Run();
         }
 

@@ -33,7 +33,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateRoom(int hotelId, [FromForm] CreateRoomCommand? command)
         {
-            if (command is null) throw new CustomValidationException("The request must include a body.");
+            if (command is null) throw new CustomValidationException("The request must include a valid body.");
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             command.hotelId = hotelId;
             var room = await _mediator.Send(command);

@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.UserDtos;
 using Application.Execptions;
 using AutoMapper;
+using Domain.Abstractions;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -14,22 +15,31 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        public CreateUserHandler(UserManager<User> userManager)
+        private readonly ITransactionService _transactionService;
+        private readonly IImageService _imageRepository;
+        public CreateUserHandler(
+            UserManager<User> userManager,
+            ITransactionService transactionService,
+            IImageService imageRepository)
         {
-            this._userManager = userManager;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<User, UserDto>();
             });
             _mapper = configuration.CreateMapper();
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
         }
         public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-
+            var storePath = "UsersThumbnails";
+            var thumnailName = Guid.NewGuid().ToString();
             var user = new User()
             {
                 UserName = request.UserName,
                 Email = request.Email,
+                Thumbnail = $"{storePath}/{thumnailName}{Path.GetExtension(request.Thumbnail.FileName)}"
             };
             try
             {
@@ -45,8 +55,8 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                     {
                         StatusCode = StatusCodes.Status409Conflict
                     };
+                await _transactionService.BeginTransactionAsync();
                 var result = await _userManager.CreateAsync(user, request.Password);
-                await _userManager.AddToRoleAsync(user, "User");
                 if (!result.Succeeded)
                 {
                     throw new ValidationException(
@@ -66,6 +76,9 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                    );
                 }
 
+                await _userManager.AddToRoleAsync(user, "User");
+                _imageRepository.UploadFile(request.Thumbnail, $"{storePath}", thumnailName);
+                await _transactionService.CommitTransactionAsync();
                 return _mapper.Map<UserDto>(user);
             }
             catch (ValidationException)
@@ -78,7 +91,8 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
             }
             catch (Exception exception)
             {
-
+                await _transactionService.RollbackTransactionAsync();
+                _imageRepository.DeleteFile(user.Thumbnail, true);
                 throw new ErrorException("Error during create the user account", exception);
             }
         }

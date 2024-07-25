@@ -2,7 +2,7 @@
 
 namespace Domain.Abstractions
 {
-    public interface IReviewRepository
+    public interface IReviewHotelRepository
     {
         public Task<Review> AddHotelReviewAsync(Review review);
         public Task<Review> DeleteHotelReviewAsync(Review review);

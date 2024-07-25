@@ -37,7 +37,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateAmenity(CreateAmenityCommand request)
         {
-            if (request is null) throw new CustomValidationException("The body for this request required");
+            if (request is null) throw new CustomValidationException("The request must include a valid body.");
             var amenityDto = await _mediator.Send(request);
             _logger.LogInformation
             (

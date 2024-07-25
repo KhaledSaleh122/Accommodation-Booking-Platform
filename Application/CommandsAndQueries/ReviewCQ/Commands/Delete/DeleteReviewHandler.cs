@@ -13,13 +13,13 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
 {
     public class DeleteReviewHandler : IRequestHandler<DeleteReviewCommand, ReviewDto>
     {
-        private readonly IReviewRepository _reviewRepository;
+        private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         public DeleteReviewHandler(
-            IReviewRepository reviewRepository,
+            IReviewHotelRepository reviewRepository,
             IHotelRepository hotelRepository,
             UserManager<User> userManager)
         {

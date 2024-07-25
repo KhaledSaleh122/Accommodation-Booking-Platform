@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240725160351_AddColumnOriginalPriceDiscountPercentage")]
+    partial class AddColumnOriginalPriceDiscountPercentage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,30 +298,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("HotelId", "RoomNumber");
 
                     b.ToTable("RoomImage");
-                });
-
-            modelBuilder.Entity("Domain.Entities.SpecialOffer", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DiscountPercentage")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("ExpireDate")
-                        .HasColumnType("date");
-
-                    b.Property<int>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OfferType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
-
-                    b.ToTable("SpecialOffers");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -651,17 +630,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("room");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SpecialOffer", b =>
-                {
-                    b.HasOne("Domain.Entities.Hotel", "Hotel")
-                        .WithMany("SpecialOffers")
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -734,8 +702,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("Rooms");
-
-                    b.Navigation("SpecialOffers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Room", b =>

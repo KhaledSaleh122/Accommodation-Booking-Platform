@@ -29,7 +29,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterUser(CreateUserCommand? command)
+        public async Task<IActionResult> RegisterUser([FromForm]CreateUserCommand? command)
         {
             if (command is null) throw new CustomValidationException("The body for this request required");
             var createdUser = await _mediator.Send(command);

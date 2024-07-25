@@ -15,7 +15,12 @@ namespace Infrastructure.Configurations
             builder.Property(booking => booking.RoomNumber)
                 .IsRequired(true);
             builder.Property(booking => booking.HotelId)
+                .IsRequired(true);            
+            builder.Property(booking => booking.OriginalPrice)
                 .IsRequired(true);
+            builder.Property(booking => booking.DiscountPercentage)
+                .IsRequired(true);
+
             builder.Property(booking => booking.UserId)
                 .IsRequired(true);
             builder.HasOne(rel => rel.Room)

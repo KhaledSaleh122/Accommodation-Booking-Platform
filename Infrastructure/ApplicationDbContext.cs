@@ -18,6 +18,7 @@ namespace Infrastructure
         public DbSet<Review> Reviews { get; set; }
 
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<SpecialOffer> SpecialOffers { get; set; }
 
         public DbSet<RecentlyVisitedHotel> RecentlyVisitedHotels { get; set; }
         public ApplicationDbContext(DbContextOptions options)
