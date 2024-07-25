@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task<(IEnumerable<Hotel>, int)> GetAsync
+        public async Task<(IDictionary<Hotel, double>, int)> GetAsync
             (
                 int page,
                 int pageSize,
@@ -39,54 +39,66 @@ namespace Infrastructure.Repositories
             )
         {
             var query = _dbContext.Hotels
-                                  .Include(inc => inc.Reviews)
                                   .Include(o => o.City)
                                   .Include(o => o.HotelAmenity).ThenInclude(o => o.Amenity)
                                   .Where(p => p.PricePerNight >= minPrice);
 
-            if (aminites.Length > 0) 
+            if (aminites.Length > 0)
                 query = query.Where
                     (
-                        am => am.HotelAmenity.Count > 0 && 
+                        am => am.HotelAmenity.Count > 0 &&
                         aminites.All(p => am.HotelAmenity.Any(o => o.AmenityId == p))
                     );
 
-            if (maxPrice is not null) 
+            if (maxPrice is not null)
                 query = query.Where(p => p.PricePerNight <= maxPrice);
 
-            if (!String.IsNullOrEmpty(city)) 
+            if (!String.IsNullOrEmpty(city))
                 query = query.Where(c => c.City.Name.Contains(city));
 
-            if (!String.IsNullOrEmpty(country)) 
+            if (!String.IsNullOrEmpty(country))
                 query = query.Where(c => c.City.Country.Contains(country));
 
-            if (hotelType is not null && hotelType.Length > 0 ) 
+            if (hotelType is not null && hotelType.Length > 0)
                 query = query.Where(ht => hotelType.Contains(ht.HotelType));
-            
-            if (!String.IsNullOrEmpty(owner)) 
+
+            if (!String.IsNullOrEmpty(owner))
                 query = query.Where(o => o.Owner.Contains(owner));
-            
-            if (!String.IsNullOrEmpty(hotelName)) 
+
+            if (!String.IsNullOrEmpty(hotelName))
                 query = query.Where(o => o.Name.Contains(hotelName));
-           
+
             int totalRecords = await query.CountAsync();
-            return (
-                     await query.Take(page * pageSize)
-                                .Skip((page - 1) * pageSize)
-                                .ToListAsync()
-                     , totalRecords
-                   );
+            var result = await query
+                .Select(h => new
+                {
+                    Hotel = h,
+                    AvgReviewScore = h.Reviews.Count != 0 ? h.Reviews.Average(r => r.Rating) : 0
+                })
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToDictionaryAsync(k => k.Hotel, v => v.AvgReviewScore);
+            return (result, totalRecords);
         }
 
-        public async Task<Hotel?> GetByIdAsync(int hotelId)
+        public async Task<(Hotel, double)?> GetByIdAsync(int hotelId)
         {
-            return await _dbContext.Hotels
+            var result = await _dbContext.Hotels
                 .Include(inc => inc.HotelAmenity).ThenInclude(o => o.Amenity)
                 .Include(inc => inc.City)
                 .Include(inc => inc.Images)
-                .Include(inc => inc.Reviews)
-                .Include(inc => inc.Rooms).ThenInclude(o=>o.Images)
-                .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
+                .Include(inc => inc.Rooms).ThenInclude(o => o.Images)
+                .Select(h => new
+                {
+                    Hotel = h,
+                    Reviews = h.Reviews.Take(10).ToList(),
+                    AvgReviewScore = h.Reviews.Count != 0 ? h.Reviews.Average(r => r.Rating) : 0
+                })
+                .FirstOrDefaultAsync(h => h.Hotel.Id == hotelId);
+            if (result is not null)
+                result.Hotel.Reviews = result.Reviews;
+
+            return result is null ? null : (result.Hotel,result.AvgReviewScore);
         }
 
         public async Task CreateAsync(Hotel hotel)

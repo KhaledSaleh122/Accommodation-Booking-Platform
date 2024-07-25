@@ -1,6 +1,5 @@
 ﻿using Application.CommandsAndQueries.ReviewCQ.Commands.Create;
 using Application.CommandsAndQueries.ReviewCQ.Commands.Delete;
-using Application.Dtos.HotelDtos;
 using Application.Dtos.ReviewDtos;
 using Application.Exceptions;
 using MediatR;
@@ -35,7 +34,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateHotelReview(int hotelId, CreateReviewCommand? command)
         {
-            if(hotelId <= 0) throw new NotFoundException("Hotel not found!");
+            if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             if (command is null) throw new CustomValidationException("The request must include a body.");
             command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             command.hotelId = hotelId;
@@ -54,11 +53,13 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> DeleteHotelReview(int hotelId,string userId) {
+        public async Task<IActionResult> DeleteHotelReview(int hotelId, string userId)
+        {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             var admin = User.FindFirst(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-            if (admin is null && userId != currentUserId) {
+            if (admin is null && userId != currentUserId)
+            {
                 return Forbid();
             }
             var command = new DeleteReviewCommand()

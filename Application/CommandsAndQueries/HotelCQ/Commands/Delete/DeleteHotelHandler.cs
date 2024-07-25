@@ -35,7 +35,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
             Hotel deletedHotel;
             try
             {
-                var hotel = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException();
+                var (hotel, avgReviews) = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException();
                 await _transactionService.BeginTransactionAsync();
                 deletedHotel = await _repository.DeleteAsync(hotel);
                 _imageRepository.DeleteFile(hotel.Thumbnail);

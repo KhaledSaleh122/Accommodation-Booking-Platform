@@ -23,9 +23,6 @@ namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecen
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Hotel, HotelMinWithRatingDto>()
-                    .ForMember(dest => dest.Rating,
-                        opt => opt.MapFrom(src => src.Reviews.Count > 0 ? src.Reviews.Average(r => r.Rating) : 0)
-                    )
                     .ForMember(dest => dest.City,
                         opt => opt.MapFrom(src => src.City.Name))
                     .ForMember(dest => dest.Country,
@@ -41,8 +38,14 @@ namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecen
             {
                 var user = await _userManager.FindByIdAsync(request.UserId)
                 ?? throw new NotFoundException("User not found!");
-                var recentlyVisited = await _repository.GetAsync(request.UserId);
-                return _mapper.Map<IEnumerable<RvhDto>>(recentlyVisited);
+                var result = await _repository.GetAsync(request.UserId);
+                var recentlyVisitedDto =  _mapper.Map<IEnumerable<RvhDto>>(result.Keys);
+                for (var i = 0; i < result.Count; i++)
+                {
+                    recentlyVisitedDto.ElementAt(i).hotel.Rating = result.ElementAt(i).Value;
+                }
+                return recentlyVisitedDto;
+
             }
             catch (NotFoundException) {
                 throw;
