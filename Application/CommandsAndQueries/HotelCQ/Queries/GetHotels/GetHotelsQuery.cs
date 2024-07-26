@@ -29,5 +29,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         public int[] Aminites { get; set; }
         public DateOnly? CheckIn { get; set; }
         public DateOnly? CheckOut { get; set; }
+        public int Adult { get; set; }
+        public int Children { get; set; }
     }
 }
