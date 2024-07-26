@@ -37,7 +37,9 @@ namespace Infrastructure.Repositories
                 string? owner,
                 int[] aminites,
                 DateOnly checkIn,
-                DateOnly checkOut
+                DateOnly checkOut,
+                int children,
+                int adult
             )
         {
             var query = _dbContext.Hotels
@@ -51,6 +53,12 @@ namespace Infrastructure.Repositories
                                             b.EndDate > checkIn
                                         )
                                     )
+                                  ).Where(
+                                    h => h.Rooms.Any(
+                                        r => 
+                                            r.ChildrenCapacity >= children && 
+                                            r.AdultCapacity >= adult
+                                        )
                                   );
 
             if (aminites.Length > 0)

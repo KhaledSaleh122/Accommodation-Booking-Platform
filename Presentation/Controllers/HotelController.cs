@@ -119,8 +119,10 @@ namespace Presentation.Controllers
             string? owner,
             [FromQuery] int[] aminites,
             decimal? maxPrice,
-            DateOnly? checkIn = null,
-            DateOnly? checkout = null,
+            DateOnly? checkInDate = null,
+            DateOnly? checkoutDate = null,
+            int numberOfAdults = 2,
+            int numberOfchildrens = 0,
             decimal minPrice = 0,
             int page = 1,
             int pageSize = 10
@@ -136,8 +138,10 @@ namespace Presentation.Controllers
                 Aminites = aminites,
                 MaxPrice = maxPrice,
                 MinPrice = minPrice,
-                CheckIn = checkIn,
-                CheckOut = checkout
+                CheckIn = checkInDate,
+                CheckOut = checkoutDate,
+                Adult = numberOfAdults,
+                Children = numberOfchildrens
             };
             var (hotels, totalRecords, thePage, thePageSize) = await _mediator.Send(query);
             var response = new ResultWithPaginationResponse<IEnumerable<HotelDto>>()

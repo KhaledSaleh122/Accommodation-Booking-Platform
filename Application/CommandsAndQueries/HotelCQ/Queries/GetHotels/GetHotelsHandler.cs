@@ -43,6 +43,8 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                 checkIn = DateOnly.FromDateTime(DateTime.UtcNow);
                 checkOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
             }
+            var children = request.Children >= 0 ? request.Children : 0;
+            var adult = request.Adult >= 0 ? request.Adult : 2;
             try
             {
                 var (result, totalRecords) = await _hotelRepository.GetAsync
@@ -58,7 +60,9 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                         request.Owner,
                         request.Aminites,
                         checkIn,
-                        checkOut
+                        checkOut,
+                        children,
+                        adult
                     );
                 var hotels = _mapper.Map<IEnumerable<HotelDto>>(result.Keys);
                 for (int i = 0; i < result.Count; i++){
