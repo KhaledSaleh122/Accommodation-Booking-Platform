@@ -8,8 +8,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
 {
     public class CreateRoomBookingCommand : IRequest<BookingDto>
     {
-        public int HotelId { get; set; }
         public string userId;
         public CreateBookingDto[] RoomBookings { get; set; }
+        public CreditCardInformationDto CreditCard { get; set; }
     }
 }
