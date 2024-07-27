@@ -12,20 +12,13 @@ namespace Infrastructure.Configurations
                 .IsRequired(true);
             builder.Property(booking => booking.EndDate)
                 .IsRequired(true);
-            builder.Property(booking => booking.RoomNumber)
-                .IsRequired(true);
-            builder.Property(booking => booking.HotelId)
-                .IsRequired(true);            
-            builder.Property(booking => booking.OriginalPrice)
-                .IsRequired(true);
-            builder.Property(booking => booking.DiscountPercentage)
+            builder.Property(booking => booking.SpecialOfferId)
+                .IsRequired(false);            
+            builder.Property(booking => booking.OriginalTotalPrice)
                 .IsRequired(true);
 
             builder.Property(booking => booking.UserId)
                 .IsRequired(true);
-            builder.HasOne(rel => rel.Room)
-                .WithMany(rel => rel.Bookings)
-                .HasForeignKey(rel => new { rel.HotelId, rel.RoomNumber });
         }
     }
 }

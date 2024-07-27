@@ -33,8 +33,6 @@ namespace Presentation.Controllers
         {
             if (command is null) throw new CustomValidationException("The request must include a valid body.");
             command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-            //command.hotelId = hotelId;
-            //command.roomNumber = roomNumber;
             var bookingDto = await _mediator.Send(command);
             return Ok(bookingDto);
         }
