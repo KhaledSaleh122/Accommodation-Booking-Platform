@@ -21,6 +21,13 @@ namespace Infrastructure.Repositories
             return specialOffer;
         }
 
+        public async Task<IEnumerable<SpecialOffer>> FindAsync(int hotelId,IEnumerable<string> specialOffers)
+        {
+            return await _dbContext.SpecialOffers
+                .Where(x => x.HotelId == hotelId &&  specialOffers.Contains(x.Id) && x.ExpireDate >= DateOnly.FromDateTime(DateTime.UtcNow))
+                .ToListAsync();
+        }
+
         public async Task<SpecialOffer?> GetByIdAsync(string id)
         {
             return await _dbContext.SpecialOffers

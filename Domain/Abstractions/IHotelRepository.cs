@@ -26,5 +26,6 @@ namespace Domain.Abstractions
         Task<(Hotel, double)?> GetByIdAsync(int hotelId);
         Task CreateAsync(Hotel hotel);
         Task UpdateAsync(Hotel updatedHotel);
+        Task<Hotel?> FindRoomsAsync(int hotelId, IEnumerable<string> roomsIds);
     }
 }

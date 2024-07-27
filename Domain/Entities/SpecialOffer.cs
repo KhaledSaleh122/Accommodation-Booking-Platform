@@ -12,5 +12,6 @@ namespace Domain.Entities
         public OfferType  OfferType { get; set; }
 
         public DateOnly ExpireDate { get; set; }
+        public ICollection<Booking> bookings { get; set; }
     }
 }

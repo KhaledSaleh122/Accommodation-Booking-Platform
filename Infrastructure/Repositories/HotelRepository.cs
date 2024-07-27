@@ -46,14 +46,15 @@ namespace Infrastructure.Repositories
                                   .Include(o => o.City)
                                   .Include(o => o.HotelAmenity).ThenInclude(o => o.Amenity)
                                   .Where(p => p.PricePerNight >= minPrice)
-                                  .Where(h => 
-                                    h.Rooms.Any(r => 
-                                        !r.Bookings.Any(b => 
-                                            b.StartDate < checkOut &&
-                                            b.EndDate > checkIn
-                                        )
-                                    )
-                                  ).Where(
+                                  //.Where(h => 
+                                   // h.Rooms.Any(r => 
+                                       // !r.Bookings.Any(b => 
+                                           // b.StartDate < checkOut &&
+                                           // b.EndDate > checkIn
+                                       // )
+                                    //)
+                                  //)
+                                  .Where(
                                     h => h.Rooms.Any(
                                         r => 
                                             r.ChildrenCapacity >= children && 
@@ -134,5 +135,18 @@ namespace Infrastructure.Repositories
         }
 
 
+        public async Task<Hotel?> FindRoomsAsync(int hotelId, IEnumerable<string> roomsIds)
+        {
+            var result = await _dbContext.Hotels
+                .Where(h => h.Id == hotelId)
+                .Select(x => new
+                {
+                    Hotel = x,
+                    Rooms = x.Rooms.Where(r => roomsIds.Contains(r.RoomNumber)).ToList()
+                }).FirstOrDefaultAsync();
+            if(result is not null)
+                result.Hotel.Rooms = result.Rooms;
+            return result?.Hotel;
+        }
     }
 }
