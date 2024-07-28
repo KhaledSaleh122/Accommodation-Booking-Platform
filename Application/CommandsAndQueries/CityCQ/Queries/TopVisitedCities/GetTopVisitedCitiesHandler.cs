@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Queries.TopVisitedCities
 {
-    public class GetTopVisitedCitiesHandler : IRequestHandler<GetTopVisitedCitiesCommand, IEnumerable<CityTopDto>>
+    internal class GetTopVisitedCitiesHandler : IRequestHandler<GetTopVisitedCitiesCommand, IEnumerable<CityTopDto>>
     {
         private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;

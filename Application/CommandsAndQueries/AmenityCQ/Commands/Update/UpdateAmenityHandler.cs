@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
 {
-    public class UpdateAmenityHandler : IRequestHandler<UpdateAmenityCommand>
+    internal class UpdateAmenityHandler : IRequestHandler<UpdateAmenityCommand, AmenityDto>
     {
         private readonly IMapper _mapper;
         private readonly IAmenityRepository _repository;
@@ -24,7 +24,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
             _mapper = configuration.CreateMapper();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-        public async Task Handle(UpdateAmenityCommand request, CancellationToken cancellationToken)
+        public async Task<AmenityDto> Handle(UpdateAmenityCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -32,6 +32,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
                     throw new NotFoundException($"Amenity not found!");
                 var updatedAmenity = _mapper.Map<Amenity>(request);
                 await _repository.UpdateAsync(updatedAmenity);
+                return _mapper.Map<AmenityDto>(updatedAmenity);
             }
             catch (NotFoundException)
             {

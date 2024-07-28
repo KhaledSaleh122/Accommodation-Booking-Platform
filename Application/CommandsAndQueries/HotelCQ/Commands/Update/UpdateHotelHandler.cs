@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Commands.Update
 {
-    public class UpdateHotelHandler : IRequestHandler<UpdateHotelCommand>
+    internal class UpdateHotelHandler : IRequestHandler<UpdateHotelCommand>
     {
         private readonly IMapper _mapper;
         private readonly IHotelRepository _repository;

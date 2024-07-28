@@ -8,7 +8,8 @@ using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
 {
-    public class GetAmenitiesHandler : IRequestHandler<GetAmenitiesQuery, (IEnumerable<AmenityDto>, int, int, int)>
+    internal class GetAmenitiesHandler : IRequestHandler<GetAmenitiesQuery, 
+        (IEnumerable<AmenityDto> Amenities, int TotalRecords, int Page, int PageSize)>
     {
         private readonly IMapper _mapper;
         private readonly IAmenityRepository _amenityRepository;
@@ -23,7 +24,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
             _amenityRepository = amenityRepository ?? throw new ArgumentNullException(nameof(amenityRepository));
         }
 
-        public async Task<(IEnumerable<AmenityDto>, int, int, int)> Handle(
+        public async Task<(IEnumerable<AmenityDto> Amenities, int TotalRecords, int Page, int PageSize)> Handle(
             GetAmenitiesQuery request, CancellationToken cancellationToken)
         {
             try

@@ -11,7 +11,7 @@ using System;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
 {
-    public class GetUserBookingByIdHandler : IRequestHandler<GetUserBookingByIdQuery, BookingWithPaymentIntentDto>
+    internal class GetUserBookingByIdHandler : IRequestHandler<GetUserBookingByIdQuery, BookingWithPaymentIntentDto>
     {
         private readonly IMapper _mapper;
         private readonly IBookingRepository _bookingRepository;

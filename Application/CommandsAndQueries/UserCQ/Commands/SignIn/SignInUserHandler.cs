@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
 {
-    public class SignInUserHandler : IRequestHandler<SignInUserCommand, UserSignInDto?>
+    internal class SignInUserHandler : IRequestHandler<SignInUserCommand, UserSignInDto?>
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;

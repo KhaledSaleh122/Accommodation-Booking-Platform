@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
 {
-    public class GetAmenityByIdHandler : IRequestHandler<GetAmenityByIdQuery, AmenityDto?>
+    internal class GetAmenityByIdHandler : IRequestHandler<GetAmenityByIdQuery, AmenityDto?>
     {
         private readonly IMapper _mapper;
         private readonly IAmenityRepository _amenityRepository;

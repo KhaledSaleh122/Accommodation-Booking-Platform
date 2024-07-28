@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.Create
 {
-    public class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
+    internal class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;

@@ -11,7 +11,7 @@ using System;
 
 namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecentlyVisitedHotels
 {
-    public class GetRvhHandler : IRequestHandler<GetRvhCommand, IEnumerable<RvhDto>>
+    internal class GetRvhHandler : IRequestHandler<GetRvhCommand, IEnumerable<RvhDto>>
     {
         private readonly IRecentlyVisitedHotelRepository _repository;
         private readonly IMapper _mapper;

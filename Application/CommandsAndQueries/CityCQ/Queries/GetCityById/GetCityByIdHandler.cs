@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCityById
 {
-    public class GetCityByIdHandler : IRequestHandler<GetCityByIdQuery, CityDto>
+    internal class GetCityByIdHandler : IRequestHandler<GetCityByIdQuery, CityDto>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _cityRepository;

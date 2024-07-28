@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings
 {
-    public class GetUserBookingsHandler : IRequestHandler<GetUserBookingsQuery,(IEnumerable<BookingDto>, int, int, int)>
+    internal class GetUserBookingsHandler : IRequestHandler<GetUserBookingsQuery,(IEnumerable<BookingDto>, int, int, int)>
     {
         private readonly IMapper _mapper;
         private readonly IBookingRepository _bookingRepository;

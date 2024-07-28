@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDealOffers
 {
-    public class GetTopSpecialFeatureOffersHandler : IRequestHandler<GetTopSpecialFeatureOffersCommand, IEnumerable<FeaturedDealsDto>>
+    internal class GetTopSpecialFeatureOffersHandler : IRequestHandler<GetTopSpecialFeatureOffersCommand, IEnumerable<FeaturedDealsDto>>
     {
         private readonly IMapper _mapper;
         private readonly ISpecialOfferRepository _specialOfferRepository;

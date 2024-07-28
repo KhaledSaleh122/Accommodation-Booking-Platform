@@ -11,7 +11,7 @@ using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
 {
-    public class CreateRoomBookingHandler : IRequestHandler<CreateRoomBookingCommand, BookingRequestDto>
+    internal class CreateRoomBookingHandler : IRequestHandler<CreateRoomBookingCommand, BookingRequestDto>
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IHotelRepository _hotelRepository;

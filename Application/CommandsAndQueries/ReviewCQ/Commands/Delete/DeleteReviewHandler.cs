@@ -11,7 +11,7 @@ using System;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
 {
-    public class DeleteReviewHandler : IRequestHandler<DeleteReviewCommand, ReviewDto>
+    internal class DeleteReviewHandler : IRequestHandler<DeleteReviewCommand, ReviewDto>
     {
         private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
