@@ -16,7 +16,8 @@ namespace Infrastructure.Configurations
                 .IsRequired(false);            
             builder.Property(booking => booking.OriginalTotalPrice)
                 .IsRequired(true);
-
+            builder.Property(booking => booking.PaymentIntentId)
+                .IsRequired(true);
             builder.Property(booking => booking.UserId)
                 .IsRequired(true);
         }

@@ -5,11 +5,13 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Options;
+using Stripe;
 using System;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
 {
-    public class GetUserBookingByIdHandler : IRequestHandler<GetUserBookingByIdQuery, BookingDto>
+    public class GetUserBookingByIdHandler : IRequestHandler<GetUserBookingByIdQuery, BookingWithPaymentIntentDto>
     {
         private readonly IMapper _mapper;
         private readonly IBookingRepository _bookingRepository;
@@ -19,7 +21,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
             _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
             var configuration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Booking, BookingDto>()
+                cfg.CreateMap<Booking, BookingWithPaymentIntentDto>()
                     .ForMember(dest => dest.HotelId,
                         opt => opt.MapFrom(src => src.BookingRooms.First().HotelId))
                     .ForMember(dest => dest.Rooms,
@@ -28,14 +30,25 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
             _mapper = configuration.CreateMapper();
         }
 
-        public async Task<BookingDto> Handle(GetUserBookingByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BookingWithPaymentIntentDto> Handle(GetUserBookingByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
                 var booking = await _bookingRepository.GetByIdAsync(request.UserId, request.BookingId) 
                     ?? throw new NotFoundException("Booking not found!");
-                return _mapper.Map<BookingDto>(booking);
+                var service = new PaymentIntentService();
+                var paymentIntent = await service.GetAsync(booking.PaymentIntentId, null, null, cancellationToken)
+                    ?? throw new ErrorException(
+                        "We encountered an issue while processing your payment. Please contact customer support.")
+                    {
+                        StatusCode = 500
+                    };
 
+                var bookingDto =  _mapper.Map<BookingWithPaymentIntentDto>(booking);
+                bookingDto.PaymentIntentId = paymentIntent.Id;
+                bookingDto.PaymentIntentStatus = paymentIntent.Status;
+                bookingDto.ClientSecret = paymentIntent.ClientSecret;
+                return bookingDto;
             }
             catch (NotFoundException) {
                 throw;

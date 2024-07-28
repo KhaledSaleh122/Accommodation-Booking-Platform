@@ -15,13 +15,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                 .NotEmpty()
                 .ForEach((x) => x.NotEmpty().MaximumLength(20));
             RuleFor(booking => booking.SpecialOfferId)
-                .MaximumLength(100);
-            RuleFor(booking => booking.CreditCard.CardNumber)
-                .CreditCard();
-            RuleFor(booking => booking.CreditCard.CardCodeCVC)
-            .NotEmpty();            
-            RuleFor(booking => booking.CreditCard.CardHolderName)
-            .NotEmpty();            
+                .MaximumLength(100);         
         }           
     }
 }

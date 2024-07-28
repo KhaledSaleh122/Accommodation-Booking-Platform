@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using System.Reflection;
 using System.Text;
 
@@ -61,7 +62,7 @@ namespace Accommodation_Booking_Platform
                     }
                 });
              });
-
+            StripeConfiguration.ApiKey = configuration.GetValue<string>("Stripe:SecretKey");
 
             services
                 .AddControllers()

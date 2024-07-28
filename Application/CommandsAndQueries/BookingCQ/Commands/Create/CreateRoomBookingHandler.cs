@@ -6,10 +6,12 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
 {
-    public class CreateRoomBookingHandler : IRequestHandler<CreateRoomBookingCommand, BookingDto>
+    public class CreateRoomBookingHandler : IRequestHandler<CreateRoomBookingCommand, BookingRequestDto>
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IHotelRepository _hotelRepository;
@@ -27,8 +29,10 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Booking, BookingDto>()
-                .ForMember(dest => dest.HotelId, opt => opt.MapFrom(src => src.BookingRooms.First().HotelId))
-                .ForMember(dest => dest.Rooms, opt => opt.MapFrom(src => src.BookingRooms.Select(x => x.RoomNumber).ToList()));
+                .ForMember(dest => dest.HotelId,
+                opt => opt.MapFrom(src => src.BookingRooms.First().HotelId))
+                .ForMember(dest => dest.Rooms, 
+                opt => opt.MapFrom(src => src.BookingRooms.Select(x => x.RoomNumber).ToList()));
                 cfg.CreateMap<CreateRoomBookingCommand, Booking>();
             });
             _mapper = configuration.CreateMapper();
@@ -38,7 +42,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             _specialOfferRepository = specialOfferRepository ?? throw new ArgumentNullException(nameof(specialOfferRepository));
         }
 
-        public async Task<BookingDto> Handle(CreateRoomBookingCommand request, CancellationToken cancellationToken)
+        public async Task<BookingRequestDto> Handle(CreateRoomBookingCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -86,8 +90,26 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                     SpecialOfferId = request.SpecialOfferId,
                     UserId = request.userId
                 };
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = (long)discountedTotalPrice,
+                    Currency = "usd",
+                    AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                    {
+                        Enabled = true,
+                    }
+                };
+                var service = new PaymentIntentService();
+                var paymentIntent = await service.CreateAsync(options,null,cancellationToken);
+                booking.PaymentIntentId = paymentIntent.Id;
                 var createdBooking =  await _bookingRepository.CreateRoomBookingAsync(booking);
-                return _mapper.Map<BookingDto>(createdBooking);
+                var bookingDto = _mapper.Map<BookingDto>(createdBooking);
+
+                return new BookingRequestDto() { 
+                    ClientSecret = paymentIntent.ClientSecret,
+                    PaymentIntentId = paymentIntent.Id,
+                    Booking = bookingDto
+                };
             }
             catch (ErrorException)
             {

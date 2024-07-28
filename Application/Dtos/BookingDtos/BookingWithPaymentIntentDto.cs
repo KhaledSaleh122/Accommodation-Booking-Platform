@@ -1,18 +1,18 @@
-﻿namespace Domain.Entities
+﻿namespace Application.Dtos.BookingDtos
 {
-    public sealed class Booking
+    public class BookingWithPaymentIntentDto
     {
-        #nullable disable
         public int Id { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public string SpecialOfferId { get; set; }
         public decimal OriginalTotalPrice { get; set; }
         public decimal DiscountedTotalPrice { get; set; }
+        public int HotelId { get; set; }
+        public ICollection<string> Rooms { get; set; }
+
         public string PaymentIntentId { get; set; }
-        public ICollection<BookingRoom> BookingRooms { get; set; }
-        public SpecialOffer SpecialOffer { get; set; }
-        public string UserId { get; set; }
-        public User User { get; set; }
+        public string PaymentIntentStatus { get; set; }
+        public string ClientSecret { get; set; }
     }
 }

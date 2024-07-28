@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
 {
-    public class GetUserBookingByIdQuery : IRequest<BookingDto>
+    public class GetUserBookingByIdQuery : IRequest<BookingWithPaymentIntentDto>
     {
         public string UserId { get; set; }
         public int BookingId { get; set; }
