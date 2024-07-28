@@ -56,6 +56,10 @@ namespace Presentation.Controllers
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             var command = new DeleteRoomCommand() { HotelId = hotelId, RoomNumber = roomNumber };
             var roomDto = await _mediator.Send(command);
+            _logger.LogInformation(
+                "Room with ID '{roomId}' in the hotel with ID '{hotelId}' deleted",
+                roomDto.RoomNumber,
+                hotelId);
             return Ok(roomDto);
         }
     }

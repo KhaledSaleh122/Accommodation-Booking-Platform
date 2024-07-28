@@ -3,7 +3,7 @@ using Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById;
 using Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings;
 using Application.Dtos.BookingDtos;
 using Application.Exceptions;
-using Application.Execptions;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,23 +31,23 @@ namespace Presentation.Controllers
 
         [HttpPost("/api/users/bookings")]
         [Authorize(Roles = "User")]
-        [ProducesResponseType(typeof(ServerErrorResponse),StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ServerErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(BookingDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BookingRequestDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateRoomBooking([FromBody] CreateRoomBookingCommand? command)
         {
             if (command is null) throw new CustomValidationException("The request must include a valid body.");
             command.userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-            var bookingDto = await _mediator.Send(command);
-            return CreatedAtAction(
-                nameof(GetUserBooking),
-                new { command.userId, bookingId = bookingDto.Id },
-                bookingDto
-            );
+            var bookingRequest = await _mediator.Send(command);
+            _logger.LogInformation(
+                "A new request with ID '{BookingId}' has been created to book a room.",
+                bookingRequest.Booking.Id);
+            return Ok(bookingRequest);
         }
+
 
         [HttpGet]
         [Authorize(Roles = "User,Admin")]
