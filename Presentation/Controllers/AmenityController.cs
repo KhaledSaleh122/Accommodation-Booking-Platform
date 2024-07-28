@@ -60,7 +60,9 @@ namespace Presentation.Controllers
         public async Task<ActionResult<AmenityDto>> GetAmenity(int amenityId)
         {
             if (amenityId <= 0) throw new NotFoundException("Amenity not found");
-            var query = new GetAmenityByIdQuery(amenityId);
+            var query = new GetAmenityByIdQuery() { 
+             AmenityId = amenityId
+            };
             var amenityDto = await _mediator.Send(query);
             return Ok(amenityDto);
         }
@@ -86,16 +88,16 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AmenityDto),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAmenity(int amenityId, UpdateAmenityCommand? command)
         {
             if (command is null) return Ok();
             if (amenityId <= 0) throw new NotFoundException("Amenity not found");
             command.id = amenityId;
-            await _mediator.Send(command);
+            var updatedAmenity = await _mediator.Send(command);
             _logger.LogInformation("Amenity with id '{AmenityId}' updated.", amenityId);
-            return Ok();
+            return Ok(updatedAmenity);
         }
 
 
@@ -108,7 +110,7 @@ namespace Presentation.Controllers
         public async Task<ActionResult<AmenityDto>> DeleteAmenity(int amenityId)
         {
             if (amenityId <= 0) throw new NotFoundException("Amenity not found");
-            var deleteAmenityCommand = new DeleteAmenityCommand(amenityId);
+            var deleteAmenityCommand = new DeleteAmenityCommand() { Id = amenityId };
             var deletedAmenity = await _mediator.Send(deleteAmenityCommand);
             _logger.LogInformation("Amenity with id '{deletedAmenity.Id}' deleted.", deletedAmenity.Id);
             return Ok(deletedAmenity);

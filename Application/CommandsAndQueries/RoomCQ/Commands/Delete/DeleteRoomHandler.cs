@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
 {
-    public class DeleteRoomHandler : IRequestHandler<DeleteRoomCommand, RoomDto>
+    internal class DeleteRoomHandler : IRequestHandler<DeleteRoomCommand, RoomDto>
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;

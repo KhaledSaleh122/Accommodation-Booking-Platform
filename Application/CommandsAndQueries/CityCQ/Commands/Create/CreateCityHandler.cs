@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Create
 {
-    public class CreateCityHandler : IRequestHandler<CreateCityCommand, CityDto>
+    internal class CreateCityHandler : IRequestHandler<CreateCityCommand, CityDto>
     {
         private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;

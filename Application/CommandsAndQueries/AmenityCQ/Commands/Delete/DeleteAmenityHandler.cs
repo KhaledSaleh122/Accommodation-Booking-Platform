@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
 {
-    public class DeleteAmenityHandler : IRequestHandler<DeleteAmenityCommand, AmenityDto>
+    internal class DeleteAmenityHandler : IRequestHandler<DeleteAmenityCommand, AmenityDto>
     {
         private readonly IMapper _mapper;
         private readonly IAmenityRepository _repository;
@@ -30,7 +30,8 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
             Amenity deletedAmenity;
             try
             {
-                var amenity = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException("Amenity not found!");
+                var amenity = await _repository.GetByIdAsync(request.Id) 
+                    ?? throw new NotFoundException("Amenity not found!");
                 deletedAmenity = await _repository.DeleteAsync(amenity);
             }
             catch (NotFoundException) {

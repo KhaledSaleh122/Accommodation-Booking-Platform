@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
 {
-    public class GetHotelsHandler : IRequestHandler<GetHotelsQuery, (IEnumerable<HotelDto>, int, int, int)>
+    internal class GetHotelsHandler : IRequestHandler<GetHotelsQuery, (IEnumerable<HotelDto>, int, int, int)>
     {
         private readonly IMapper _mapper;
         private readonly IHotelRepository _hotelRepository;

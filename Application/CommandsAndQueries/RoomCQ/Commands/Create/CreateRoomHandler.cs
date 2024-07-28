@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
 {
-    public class CreateRoomHandler : IRequestHandler<CreateRoomCommand, RoomDto>
+    internal class CreateRoomHandler : IRequestHandler<CreateRoomCommand, RoomDto>
     {
         private readonly IMapper _mapper;
         private readonly IHotelRepository _hotelRepository;

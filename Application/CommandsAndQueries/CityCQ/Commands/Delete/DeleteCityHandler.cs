@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
 {
-    public class DeleteCityHandler : IRequestHandler<DeleteCityCommand, CityDto>
+    internal class DeleteCityHandler : IRequestHandler<DeleteCityCommand, CityDto>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _repository;

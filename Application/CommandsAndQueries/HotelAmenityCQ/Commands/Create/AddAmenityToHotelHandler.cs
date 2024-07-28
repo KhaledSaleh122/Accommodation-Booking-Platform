@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
 {
-    public class AddAmenityToHotelHandler : IRequestHandler<AddAmenityToHotelCommand>
+    internal class AddAmenityToHotelHandler : IRequestHandler<AddAmenityToHotelCommand>
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IAmenityRepository _amenityRepository;

@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
 {
-    public class CreateHotelHandler : IRequestHandler<CreateHotelCommand, HotelMinDto>
+    internal class CreateHotelHandler : IRequestHandler<CreateHotelCommand, HotelMinDto>
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IImageService _imageRepository;

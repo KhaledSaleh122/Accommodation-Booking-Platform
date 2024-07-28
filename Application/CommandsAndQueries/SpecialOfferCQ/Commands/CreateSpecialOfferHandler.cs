@@ -6,11 +6,10 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands
 {
-    public class CreateSpecialOfferHandler : IRequestHandler<CreateSpecialOfferCommand, SpecialOfferDto>
+    internal class CreateSpecialOfferHandler : IRequestHandler<CreateSpecialOfferCommand, SpecialOfferDto>
     {
         private readonly ISpecialOfferRepository _specialOfferRepository;
         private readonly IHotelRepository _hotelRepository;
@@ -37,7 +36,7 @@ namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands
                 var hotel = await _hotelRepository.GetByIdAsync(request.hotelId)
                     ?? throw new NotFoundException("Hotel not found!");
                 var specialOffer_ = await _specialOfferRepository.GetByIdAsync(id);
-                if(specialOffer_ is not null) 
+                if (specialOffer_ is not null)
                     throw new ErrorException("A special offer with this id already exists!")
                     {
                         StatusCode = StatusCodes.Status409Conflict
@@ -45,7 +44,8 @@ namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands
                 var createdSpecialOffer = await _specialOfferRepository.CreateAsync(specialOffer);
                 return _mapper.Map<SpecialOfferDto>(createdSpecialOffer);
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (NotFoundException)

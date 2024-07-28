@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
-    public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewDto>
+    internal class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewDto>
     {
         private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;

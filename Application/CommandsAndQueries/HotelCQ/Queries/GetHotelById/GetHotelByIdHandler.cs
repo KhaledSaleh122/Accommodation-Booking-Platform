@@ -11,7 +11,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
 {
-    public class GetHotelByIdHandler : IRequestHandler<GetHotelByIdQuery, HotelFullDto?>
+    internal class GetHotelByIdHandler : IRequestHandler<GetHotelByIdQuery, HotelFullDto?>
     {
         private readonly IMapper _mapper;
         private readonly IHotelRepository _hotelRepository;

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
 {
-    public class RemoveAmenityFromHotelHandler : IRequestHandler<RemoveAmenityFromHotelCommand>
+    internal class RemoveAmenityFromHotelHandler : IRequestHandler<RemoveAmenityFromHotelCommand>
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IAmenityRepository _amenityRepository;

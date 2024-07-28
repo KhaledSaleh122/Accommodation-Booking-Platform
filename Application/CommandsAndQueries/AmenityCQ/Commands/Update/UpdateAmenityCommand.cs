@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using Application.Dtos.AmenityDtos;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
 {
-    public class UpdateAmenityCommand : IRequest
+    public class UpdateAmenityCommand : IRequest<AmenityDto>
     {
         [Required]
         public int id;

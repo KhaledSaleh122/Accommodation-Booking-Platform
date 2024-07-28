@@ -8,7 +8,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
-    public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, (IEnumerable<CityDto>, int, int, int)>
+    internal class GetCitiesHandler : IRequestHandler<GetCitiesQuery, (IEnumerable<CityDto>, int, int, int)>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _cityRepository;

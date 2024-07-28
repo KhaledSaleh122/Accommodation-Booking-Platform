@@ -10,7 +10,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
-    public class UpdateCityHandler : IRequestHandler<UpdateCityCommand>
+    internal class UpdateCityHandler : IRequestHandler<UpdateCityCommand>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _repository;

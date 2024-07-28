@@ -8,7 +8,7 @@ using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Create
 {
-    public class CreateAmenityHandler : IRequestHandler<CreateAmenityCommand, AmenityDto>
+    internal class CreateAmenityHandler : IRequestHandler<CreateAmenityCommand, AmenityDto>
     {
         private readonly IAmenityRepository _amenityRepository;
         private readonly IMapper _mapper;
