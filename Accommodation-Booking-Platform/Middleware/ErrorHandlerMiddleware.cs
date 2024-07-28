@@ -21,19 +21,20 @@ namespace Booking_API_Project.Middleware
                 await _next(context);
 
             }
-            catch (ErrorException execption)
+            catch (ErrorException exception)
             {
-                context.Response.StatusCode = execption.StatusCode ?? StatusCodes.Status500InternalServerError;
+                context.Response.StatusCode = exception.StatusCode ?? StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
                 var serverErrorResponse = new ServerErrorResponse()
                 {
-                    Title = execption.Message ?? "An unexpected error occurred",
+                    Title = exception.Message ?? "An unexpected error occurred",
                     Status = context.Response.StatusCode,
                     TraceId = context.TraceIdentifier
                 };
                 _logger.LogError($"""
                                  Error Message: {serverErrorResponse.Title}
                                  TraceId: {serverErrorResponse.TraceId}
+                                 Inner Exception Message: {exception.InnerException?.Message}
                                  """);
                 await context.Response.WriteAsJsonAsync(serverErrorResponse);
             }
