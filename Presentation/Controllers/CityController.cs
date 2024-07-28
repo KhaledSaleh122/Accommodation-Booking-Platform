@@ -87,7 +87,7 @@ namespace Presentation.Controllers
 
         [HttpPut("{cityId}")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CityDto),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -96,9 +96,9 @@ namespace Presentation.Controllers
             if (cityId <= 0) throw new NotFoundException("City not found!");
             if (command is null) return Ok();
             command.id = cityId;
-            await _mediator.Send(command);
+            var city = await _mediator.Send(command);
             _logger.LogInformation("City with id '{cityId}' updated.", cityId);
-            return Ok();
+            return Ok(city);
         }
 
         [HttpDelete("{cityId}")]

@@ -1,4 +1,5 @@
-﻿using Application.Dtos.CityDtos;
+﻿using Application.Dtos.AmenityDtos;
+using Application.Dtos.CityDtos;
 using Application.Execptions;
 using AutoMapper;
 using Domain.Abstractions;
@@ -8,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
-    internal class GetCitiesHandler : IRequestHandler<GetCitiesQuery, (IEnumerable<CityDto>, int, int, int)>
+    internal class GetCitiesHandler : IRequestHandler<GetCitiesQuery, (IEnumerable<CityDto> Cities, int TotalRecords, int Page, int PageSize)>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _cityRepository;
@@ -23,7 +24,7 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
             _cityRepository = cityRepository;
         }
 
-        public async Task<(IEnumerable<CityDto>, int, int, int)> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
+        public async Task<(IEnumerable<CityDto> Cities, int TotalRecords, int Page, int PageSize)> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
         {
             try
             {

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
-    public class GetCitiesQuery : IRequest<(IEnumerable<CityDto>, int, int, int)>
+    public class GetCitiesQuery : IRequest<(IEnumerable<CityDto> Cities, int TotalRecords, int Page, int PageSize)>
     {
 
         public GetCitiesQuery(int page, int pageSize)

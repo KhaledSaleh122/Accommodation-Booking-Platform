@@ -10,7 +10,7 @@ using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
-    internal class UpdateCityHandler : IRequestHandler<UpdateCityCommand>
+    internal class UpdateCityHandler : IRequestHandler<UpdateCityCommand, CityDto>
     {
         private readonly IMapper _mapper;
         private readonly ICityRepository _repository;
@@ -25,7 +25,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
             _mapper = configuration.CreateMapper();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-        public async Task Handle(UpdateCityCommand request, CancellationToken cancellationToken)
+        public async Task<CityDto> Handle(UpdateCityCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -46,6 +46,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
                     };
                 var updatedCity = _mapper.Map<City>(request);
                 await _repository.UpdateAsync(updatedCity);
+                return _mapper.Map<CityDto>(updatedCity);
             }
             catch (NotFoundException)
             {
