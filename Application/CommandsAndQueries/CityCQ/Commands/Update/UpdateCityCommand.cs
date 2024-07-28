@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using Application.Dtos.CityDtos;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
-    public class UpdateCityCommand : IRequest
+    public class UpdateCityCommand : IRequest<CityDto>
     {
         [Required]
         public int id;
