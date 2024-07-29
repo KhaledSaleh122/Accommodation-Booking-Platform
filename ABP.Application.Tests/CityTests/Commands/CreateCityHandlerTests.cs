@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Text;
 
-namespace ABP.Application.Tests
+namespace ABP.Application.Tests.CityTests.Commands
 {
     public class CreateCityHandlerTests
     {
