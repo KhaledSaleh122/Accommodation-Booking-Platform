@@ -1,4 +1,4 @@
-using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById;
+using Application.CommandsAndQueries.AmenityCQ.Commands.Delete;
 using Application.Dtos.AmenityDtos;
 using Application.Exceptions;
 using Application.Execptions;
@@ -8,37 +8,39 @@ using Domain.Entities;
 using FluentAssertions;
 using Moq;
 
-namespace ABP.Application.Tests
+namespace ABP.Application.Tests.AmenityTests.Commands
 {
-    public class GetAmenityByIdHandlerTests
+    public class DeleteAmenityHandlerTests
     {
         private readonly Mock<IAmenityRepository> _amenityRepositoryMock;
         private readonly IFixture _fixture;
-        private readonly GetAmenityByIdQuery _query;
-        private readonly GetAmenityByIdHandler _handler;
+        private readonly DeleteAmenityCommand _command;
+        private readonly DeleteAmenityHandler _handler;
 
-        public GetAmenityByIdHandlerTests()
+        public DeleteAmenityHandlerTests()
         {
             _amenityRepositoryMock = new();
             _fixture = new Fixture();
-            _query = new GetAmenityByIdQuery()
+            _command = new DeleteAmenityCommand()
             {
-                AmenityId = _fixture.Create<int>()
+                Id = _fixture.Create<int>()
             };
-            _handler = new GetAmenityByIdHandler(_amenityRepositoryMock.Object);
+            _handler = new DeleteAmenityHandler(_amenityRepositoryMock.Object);
         }
         [Fact]
-        public async Task Handler_Should_ReturnRequestedAmenity_WhenSuccess()
+        public async Task Handler_Should_ReturnDeletedAmenity_WhenSuccess()
         {
             //Arrange
             _amenityRepositoryMock.Setup(
                 x => x.GetByIdAsync(It.IsAny<int>())
             ).ReturnsAsync(new Amenity());
-
+            _amenityRepositoryMock.Setup(
+                x => x.DeleteAsync(It.IsAny<Amenity>())
+            ).ReturnsAsync(new Amenity());
             //Act
-            AmenityDto result = (await _handler.Handle(_query, default))!;
+            AmenityDto result = await _handler.Handle(_command, default);
             //Assert
-            _amenityRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+            _amenityRepositoryMock.Verify(x => x.DeleteAsync(It.IsAny<Amenity>()), Times.Once);
             result.Should().NotBeNull();
         }
         [Fact]
@@ -48,11 +50,10 @@ namespace ABP.Application.Tests
             _amenityRepositoryMock.Setup(
                 x => x.GetByIdAsync(It.IsAny<int>())
             ).ReturnsAsync((Amenity?)null);
-
             //Act
-            Func<Task> result = async () => await _handler.Handle(_query, default);
+            Func<Task> result = async () => await _handler.Handle(_command, default);
             //Assert
-            _amenityRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Never);
+            _amenityRepositoryMock.Verify(x => x.DeleteAsync(It.IsAny<Amenity>()), Times.Never);
             await result.Should().ThrowAsync<NotFoundException>();
         }
 
@@ -60,17 +61,16 @@ namespace ABP.Application.Tests
         public async Task Handler_Should_ThrowsException_WhenFail()
         {
             //Arrange
-
             _amenityRepositoryMock.Setup(
                 x => x.GetByIdAsync(It.IsAny<int>())
             ).ReturnsAsync(new Amenity());
             _amenityRepositoryMock.Setup(x =>
-                x.GetByIdAsync(
-                    It.IsAny<int>()
+                x.DeleteAsync(
+                    It.IsAny<Amenity>()
                 )
             ).Throws<Exception>();
             //Act
-            Func<Task> result = async () => await _handler.Handle(_query, default);
+            Func<Task> result = async () => await _handler.Handle(_command, default);
             //Assert
             await result.Should().ThrowAsync<ErrorException>();
         }

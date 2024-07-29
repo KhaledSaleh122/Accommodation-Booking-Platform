@@ -2,7 +2,6 @@
 using Application.Execptions;
 using Domain.Abstractions;
 using Domain.Entities;
-using FluentValidation;
 using MediatR;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
@@ -14,8 +13,8 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
         private readonly IHotelAmenityRepository _hotelAmenityRepository;
 
         public RemoveAmenityFromHotelHandler(
-            IAmenityRepository amenityRepository, 
-            IHotelRepository hotelRepository, 
+            IAmenityRepository amenityRepository,
+            IHotelRepository hotelRepository,
             IHotelAmenityRepository hotelAmenityRepository)
         {
             _amenityRepository = amenityRepository ?? throw new ArgumentNullException(nameof(amenityRepository));

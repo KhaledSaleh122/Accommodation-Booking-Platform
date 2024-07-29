@@ -8,7 +8,7 @@ using Domain.Entities;
 using FluentAssertions;
 using Moq;
 
-namespace ABP.Application.Tests
+namespace ABP.Application.Tests.CityTests.Commands
 {
     public class DeleteCityHandlerTests
     {

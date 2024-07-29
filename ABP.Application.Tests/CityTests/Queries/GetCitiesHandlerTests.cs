@@ -1,38 +1,43 @@
-using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities;
-using Application.Dtos.AmenityDtos;
+using Application.CommandsAndQueries.CityCQ.Query.GetCities;
+using Application.Dtos.CityDtos;
 using Application.Execptions;
 using AutoFixture;
 using Domain.Abstractions;
 using FluentAssertions;
 using Moq;
 
-namespace ABP.Application.Tests
+namespace ABP.Application.Tests.CityTests.Queries
 {
-    public class GetAmenitiesHandlerTests
+    public class GetCitiesHandlerTests
     {
-        private readonly Mock<IAmenityRepository> _amenityRepositoryMock;
+        private readonly Mock<ICityRepository> _cityRepositoryMock;
         private readonly IFixture _fixture;
-        private readonly GetAmenitiesQuery _query;
-        private readonly GetAmenitiesHandler _handler;
-
-        public GetAmenitiesHandlerTests()
+        private readonly GetCitiesQuery _query;
+        private readonly GetCitiesHandler _handler;
+        public GetCitiesHandlerTests()
         {
-            _amenityRepositoryMock = new();
+            _cityRepositoryMock = new();
             _fixture = new Fixture();
             int page = _fixture.Create<int>();
             int pageSize = _fixture.Create<int>();
             _query = new(page, pageSize);
-            _handler = new GetAmenitiesHandler(_amenityRepositoryMock.Object);
+            _handler = new GetCitiesHandler(_cityRepositoryMock.Object);
         }
         [Fact]
-        public async Task Handler_Should_ReturnAmenities_WhenSuccess()
+        public async Task Handler_Should_ReturnCities_WhenSuccess()
         {
             //Arrange
             //Act
-            (IEnumerable<AmenityDto> result, int totalRecords, int page, int pageSize) =
+            (IEnumerable<CityDto> result, int totalRecords, int page, int pageSize) =
                 await _handler.Handle(_query, default);
             //Assert
-            _amenityRepositoryMock.Verify(x => x.GetAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            _cityRepositoryMock.Verify(
+                x =>
+                    x.GetAsync(
+                        It.IsAny<int>(), It.IsAny<int>(), default, default
+                    ),
+               Times.Once
+            );
             result.Should().NotBeNull();
             totalRecords.Should().BeGreaterThanOrEqualTo(0);
             page.Should().BeGreaterThanOrEqualTo(1);
@@ -42,9 +47,9 @@ namespace ABP.Application.Tests
         public async Task Handler_Should_ThrowsException_WhenFail()
         {
             //Arrange
-            _amenityRepositoryMock.Setup(x =>
+            _cityRepositoryMock.Setup(x =>
                 x.GetAsync(
-                    It.IsAny<int>(), It.IsAny<int>()
+                    It.IsAny<int>(), It.IsAny<int>(), default, default
                 )
             ).Throws<Exception>();
             //Act

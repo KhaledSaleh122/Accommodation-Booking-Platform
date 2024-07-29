@@ -1,4 +1,4 @@
-using Application.CommandsAndQueries.CityCQ.Commands.Update;
+using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
 using Application.Exceptions;
 using Application.Execptions;
@@ -8,41 +8,35 @@ using Domain.Entities;
 using FluentAssertions;
 using Moq;
 
-namespace ABP.Application.Tests
+namespace ABP.Application.Tests.CityTests.Queries
 {
-    public class UpdateCityHandlerTests
+    public class GetCityByIdHandlerTests
     {
         private readonly Mock<ICityRepository> _cityRepositoryMock;
         private readonly IFixture _fixture;
-        private readonly UpdateCityCommand _command;
-        private readonly UpdateCityHandler _handler;
-        public UpdateCityHandlerTests()
+        private readonly GetCityByIdQuery _query;
+        private readonly GetCityByIdHandler _handler;
+        public GetCityByIdHandlerTests()
         {
             _cityRepositoryMock = new();
             _fixture = new Fixture();
-            _command = new UpdateCityCommand()
+            _query = new GetCityByIdQuery()
             {
-                id = _fixture.Create<int>(),
-                Country = _fixture.Create<string>(),
-                Name = _fixture.Create<string>(),
-                PostOffice = _fixture.Create<string>()
+                CityId = _fixture.Create<int>()
             };
-            _handler = new UpdateCityHandler(_cityRepositoryMock.Object);
+            _handler = new GetCityByIdHandler(_cityRepositoryMock.Object);
         }
         [Fact]
-        public async Task Handler_Should_ReturnUpdatedCity_WhenSuccess()
+        public async Task Handler_Should_ReturnRequestedCity_WhenSuccess()
         {
             //Arrange
             _cityRepositoryMock.Setup(
                 x => x.GetByIdAsync(It.IsAny<int>())
             ).ReturnsAsync(new City());
-            _cityRepositoryMock.Setup(
-                x => x.UpdateAsync(It.IsAny<City>())
-            );
             //Act
-            CityDto result = await _handler.Handle(_command, default);
+            CityDto result = (await _handler.Handle(_query, default))!;
             //Assert
-            _cityRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<City>()), Times.Once);
+            _cityRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
             result.Should().NotBeNull();
         }
         [Fact]
@@ -53,9 +47,9 @@ namespace ABP.Application.Tests
                 x => x.GetByIdAsync(It.IsAny<int>())
             ).ReturnsAsync((City?)null);
             //Act
-            Func<Task> result = async () => await _handler.Handle(_command, default);
+            Func<Task> result = async () => await _handler.Handle(_query, default);
             //Assert
-            _cityRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<City>()), Times.Never);
+            _cityRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Never);
             await result.Should().ThrowAsync<NotFoundException>();
         }
 
@@ -67,12 +61,12 @@ namespace ABP.Application.Tests
                 x => x.GetByIdAsync(It.IsAny<int>())
             ).ReturnsAsync(new City());
             _cityRepositoryMock.Setup(x =>
-                x.UpdateAsync(
-                    It.IsAny<City>()
+                x.GetByIdAsync(
+                    It.IsAny<int>()
                 )
             ).Throws<Exception>();
             //Act
-            Func<Task> result = async () => await _handler.Handle(_command, default);
+            Func<Task> result = async () => await _handler.Handle(_query, default);
             //Assert
             await result.Should().ThrowAsync<ErrorException>();
         }

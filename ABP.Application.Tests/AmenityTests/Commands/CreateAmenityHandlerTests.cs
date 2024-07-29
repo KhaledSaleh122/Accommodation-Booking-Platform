@@ -7,7 +7,7 @@ using Domain.Entities;
 using FluentAssertions;
 using Moq;
 
-namespace ABP.Application.Tests
+namespace ABP.Application.Tests.AmenityTests.Commands
 {
     public class CreateAmenityHandlerTests
     {
