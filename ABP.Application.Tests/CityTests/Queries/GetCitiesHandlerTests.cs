@@ -3,6 +3,7 @@ using Application.Dtos.CityDtos;
 using Application.Execptions;
 using AutoFixture;
 using Domain.Abstractions;
+using Domain.Entities;
 using FluentAssertions;
 using Moq;
 
@@ -27,6 +28,12 @@ namespace ABP.Application.Tests.CityTests.Queries
         public async Task Handler_Should_ReturnCities_WhenSuccess()
         {
             //Arrange
+            _cityRepositoryMock.Setup(
+                x =>
+                    x.GetAsync(
+                        It.IsAny<int>(), It.IsAny<int>(), default, default
+                    )
+            ).ReturnsAsync(([],default));
             //Act
             (IEnumerable<CityDto> result, int totalRecords, int page, int pageSize) =
                 await _handler.Handle(_query, default);

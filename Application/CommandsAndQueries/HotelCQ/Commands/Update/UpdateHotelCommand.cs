@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
-    public class UpdateHotelCommand : IRequest
+    public class UpdateHotelCommand : IRequest<HotelMinDto>
     {
         public int hotelId;
         public string? Name { get; set; }

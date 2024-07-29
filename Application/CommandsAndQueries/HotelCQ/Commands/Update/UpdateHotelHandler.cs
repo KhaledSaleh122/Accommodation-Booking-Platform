@@ -1,4 +1,6 @@
 ﻿using Application.CommandsAndQueries.CityCQ.Commands.Update;
+using Application.CommandsAndQueries.HotelCQ.Commands.Create;
+using Application.Dtos.HotelDtos;
 using Application.Exceptions;
 using Application.Execptions;
 using AutoMapper;
@@ -9,7 +11,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Commands.Update
 {
-    internal class UpdateHotelHandler : IRequestHandler<UpdateHotelCommand>
+    internal class UpdateHotelHandler : IRequestHandler<UpdateHotelCommand, HotelMinDto>
     {
         private readonly IMapper _mapper;
         private readonly IHotelRepository _repository;
@@ -36,11 +38,24 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Update
                                 opt.MapFrom(src => (HotelType)src.HotelType!);
                             }
                     );
+                cfg.CreateMap<Hotel, HotelMinDto>()
+                   .ForMember(dest => dest.City,
+                       opt =>
+                            opt.MapFrom(src => src.City.Name)
+                   )
+                   .ForMember(dest => dest.Country,
+                       opt =>
+                            opt.MapFrom(src => src.City.Country)
+                   )
+                   .ForMember(dest => dest.Images,
+                       opt =>
+                            opt.MapFrom(src => src.Images.Select(x => x.Path).ToList())
+                   );
             });
             _mapper = configuration.CreateMapper();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-        public async Task Handle(UpdateHotelCommand request, CancellationToken cancellationToken)
+        public async Task<HotelMinDto> Handle(UpdateHotelCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -48,6 +63,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Update
                     throw new NotFoundException($"Hotel not found!");
                 _mapper.Map(request, hotel);
                 await _repository.UpdateAsync(hotel);
+                return _mapper.Map<HotelMinDto>(hotel);
             }
             catch (NotFoundException)
             {

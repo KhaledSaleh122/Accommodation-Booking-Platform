@@ -1,6 +1,7 @@
 ﻿using Domain.Abstractions;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Params;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
@@ -24,68 +25,50 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task<(IDictionary<Hotel, double>, int)> GetAsync
-            (
-                int page,
-                int pageSize,
-                decimal minPrice,
-                decimal? maxPrice,
-                string? city,
-                string? country,
-                HotelType[] hotelType,
-                string? hotelName,
-                string? owner,
-                int[] aminites,
-                DateOnly checkIn,
-                DateOnly checkOut,
-                int children,
-                int adult
-            )
+        public async Task<(IDictionary<Hotel, double>, int)> GetAsync(HotelSearch search)
         {
             var query = _dbContext.Hotels
                                   .Include(o => o.City)
                                   .Include(o => o.HotelAmenity).ThenInclude(o => o.Amenity)
-                                  .Where(p => p.PricePerNight >= minPrice)
-                                  //.Where(h => 
-                                   // h.Rooms.Any(r => 
-                                       // !r.Bookings.Any(b => 
-                                           // b.StartDate < checkOut &&
-                                           // b.EndDate > checkIn
-                                       // )
-                                    //)
-                                  //)
+                                  .Where(p => p.PricePerNight >= search.MinPrice)
+                                  .Where(h =>
+                                    h.Rooms.Any(r => r.BookingRooms.Any(br =>
+                                        br.Booking.StartDate < search.CheckOut &&
+                                        br.Booking.EndDate > search.CheckIn
+                                    ))
+                                  )
                                   .Where(
                                     h => h.Rooms.Any(
                                         r => 
-                                            r.ChildrenCapacity >= children && 
-                                            r.AdultCapacity >= adult
+                                            r.ChildrenCapacity >= search.Children && 
+                                            r.AdultCapacity >= search.Adult
                                         )
                                   );
 
-            if (aminites.Length > 0)
+            if (search.Aminites is not null && search.Aminites.Length > 0)
                 query = query.Where
                     (
                         am => am.HotelAmenity.Count > 0 &&
-                        aminites.All(p => am.HotelAmenity.Any(o => o.AmenityId == p))
+                        search.Aminites.All(p => am.HotelAmenity.Any(o => o.AmenityId == p))
                     );
 
-            if (maxPrice is not null)
-                query = query.Where(p => p.PricePerNight <= maxPrice);
+            if (search.MaxPrice is not null)
+                query = query.Where(p => p.PricePerNight <= search.MaxPrice);
 
-            if (!String.IsNullOrEmpty(city))
-                query = query.Where(c => c.City.Name.Contains(city));
+            if (!String.IsNullOrEmpty(search.City))
+                query = query.Where(c => c.City.Name.Contains(search.City));
 
-            if (!String.IsNullOrEmpty(country))
-                query = query.Where(c => c.City.Country.Contains(country));
+            if (!String.IsNullOrEmpty(search.Country))
+                query = query.Where(c => c.City.Country.Contains(search.Country));
 
-            if (hotelType is not null && hotelType.Length > 0)
-                query = query.Where(ht => hotelType.Contains(ht.HotelType));
+            if (search.HotelType is not null && search.HotelType.Length > 0)
+                query = query.Where(ht => search.HotelType.Contains(ht.HotelType));
 
-            if (!String.IsNullOrEmpty(owner))
-                query = query.Where(o => o.Owner.Contains(owner));
+            if (!String.IsNullOrEmpty(search.Owner))
+                query = query.Where(o => o.Owner.Contains(search.Owner));
 
-            if (!String.IsNullOrEmpty(hotelName))
-                query = query.Where(o => o.Name.Contains(hotelName));
+            if (!String.IsNullOrEmpty(search.HotelName))
+                query = query.Where(o => o.Name.Contains(search.HotelName));
 
             int totalRecords = await query.CountAsync();
             var result = await query
@@ -94,8 +77,8 @@ namespace Infrastructure.Repositories
                     Hotel = h,
                     AvgReviewScore = h.Reviews.Count != 0 ? h.Reviews.Average(r => r.Rating) : 0
                 })
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((search.Page - 1) * search.PageSize)
+                .Take(search.PageSize)
                 .ToDictionaryAsync(k => k.Hotel, v => v.AvgReviewScore);
             return (result, totalRecords);
         }
