@@ -4,6 +4,7 @@ using Application.Execptions;
 using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
+using Domain.Params;
 using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
@@ -47,23 +48,24 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
             var adult = request.Adult >= 0 ? request.Adult : 2;
             try
             {
-                var (result, totalRecords) = await _hotelRepository.GetAsync
-                    (
-                        request.Page, 
-                        request.PageSize,
-                        minPrice, 
-                        maxPrice,
-                        request.City,
-                        request.Country,
-                        request.HotelType,
-                        request.HotelName,
-                        request.Owner,
-                        request.Aminites,
-                        checkIn,
-                        checkOut,
-                        children,
-                        adult
-                    );
+                var search = new HotelSearch()
+                {
+                    Page = request.Page,
+                    PageSize = request.PageSize,
+                    MinPrice = minPrice,
+                    MaxPrice = maxPrice,
+                    HotelName = request.HotelName,
+                    Adult = adult,
+                    Children = children,
+                    Aminites = request.Aminites,
+                    CheckIn = checkIn,
+                    CheckOut = checkOut,
+                    City = request.City,
+                    Country = request.Country,
+                    HotelType = request.HotelType,
+                    Owner = request.Owner 
+                };
+                var (result, totalRecords) = await _hotelRepository.GetAsync(search);
                 var hotels = _mapper.Map<IEnumerable<HotelDto>>(result.Keys);
                 for (int i = 0; i < result.Count; i++){
                     hotels.ElementAt(i).Rating = result.ElementAt(i).Value;

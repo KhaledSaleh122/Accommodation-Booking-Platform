@@ -57,7 +57,7 @@ namespace Presentation.Controllers
 
         [HttpPatch("{hotelId}")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(HotelMinDto),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -66,9 +66,9 @@ namespace Presentation.Controllers
             if (command is null) return Ok();
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
             command.hotelId = hotelId;
-            await _mediator.Send(command);
+            var hotel = await _mediator.Send(command);
             _logger.LogInformation("Hotel with id '{hotelId}' updated.", hotelId);
-            return Ok();
+            return Ok(hotel);
         }
 
         [HttpPost]
@@ -102,7 +102,7 @@ namespace Presentation.Controllers
         public async Task<ActionResult<HotelMinDto>> DeleteHotel(int hotelId)
         {
             if (hotelId <= 0) throw new NotFoundException("Hotel not found!");
-            var deleteHotelCommand = new DeleteHotelCommand(hotelId);
+            var deleteHotelCommand = new DeleteHotelCommand() { Id = hotelId };
             var deletedHotel = await _mediator.Send(deleteHotelCommand);
             _logger.LogInformation("Hotel with id '{deletedHotel.Id}' deleted.", deletedHotel.Id);
             return Ok(deletedHotel);
