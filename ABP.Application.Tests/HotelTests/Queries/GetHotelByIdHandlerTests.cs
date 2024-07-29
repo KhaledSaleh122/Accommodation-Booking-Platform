@@ -13,20 +13,20 @@ namespace ABP.Application.Tests.HotelTests.Queries
     public class GetHotelByIdHandlerTests
     {
         private readonly Mock<IHotelRepository> _hotelRepositoryMock;
-        private readonly Mock<IRecentlyVisitedHotelRepository> _recentlyVisitedHotelRepository;
+        private readonly Mock<IRecentlyVisitedHotelRepository> _recentlyVisitedHotelRepositoryMock;
         private readonly IFixture _fixture;
         private readonly GetHotelByIdQuery _query;
         private readonly GetHotelByIdHandler _handler;
         public GetHotelByIdHandlerTests()
         {
             _hotelRepositoryMock = new();
-            _recentlyVisitedHotelRepository = new();
+            _recentlyVisitedHotelRepositoryMock = new();
             _fixture = new Fixture();
             _query = new GetHotelByIdQuery()
             {
                 HotelId = _fixture.Create<int>()
             };
-            _handler = new GetHotelByIdHandler(_hotelRepositoryMock.Object, _recentlyVisitedHotelRepository.Object);
+            _handler = new GetHotelByIdHandler(_hotelRepositoryMock.Object, _recentlyVisitedHotelRepositoryMock.Object);
         }
         [Fact]
         public async Task Handler_Should_ReturnRequestedHotel_WhenSuccess()
