@@ -154,6 +154,7 @@ namespace Accommodation_Booking_Platform
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseMiddleware<NotFoundMiddleware>();
             app.UseMiddleware<ValidationMappingMiddleware>();
             app.UseMiddleware<ErrorHandlerMiddleware>();
