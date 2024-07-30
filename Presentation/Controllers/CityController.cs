@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         public async Task<ActionResult<CityDto>> GetCity(int cityId)
         {
             if (cityId <= 0 ) throw new NotFoundException("City not found!");
-            var query = new GetCityByIdQuery(cityId);
+            var query = new GetCityByIdQuery() { CityId = cityId };
             var cityDto = await _mediator.Send(query);
             return Ok(cityDto);
         }
@@ -110,7 +110,7 @@ namespace Presentation.Controllers
         public async Task<ActionResult<CityDto>> DeleteCity(int cityId)
         {
             if (cityId <= 0) throw new NotFoundException("City not found!");
-            var deleteCityCommand = new DeleteCityCommand(cityId);
+            var deleteCityCommand = new DeleteCityCommand() { Id = cityId };
             var deletedCity = await _mediator.Send(deleteCityCommand);
             _logger.LogInformation("City with id '{deletedCity.Id}' deleted.", deletedCity.Id);
             return Ok(deletedCity);

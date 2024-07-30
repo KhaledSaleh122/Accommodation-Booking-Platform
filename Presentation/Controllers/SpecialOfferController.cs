@@ -1,4 +1,4 @@
-﻿using Application.CommandsAndQueries.SpecialOfferCQ.Commands;
+﻿using Application.CommandsAndQueries.SpecialOfferCQ.Commands.Create;
 using Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDealOffers;
 using Application.Dtos.SpecialOfferDtos;
 using Application.Exceptions;

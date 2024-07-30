@@ -7,7 +7,7 @@ using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelCQ.Commands.Create;
 using Application.CommandsAndQueries.ReviewCQ.Commands.Create;
 using Application.CommandsAndQueries.RoomCQ.Commands.Create;
-using Application.CommandsAndQueries.SpecialOfferCQ.Commands;
+using Application.CommandsAndQueries.SpecialOfferCQ.Commands.Create;
 using Application.CommandsAndQueries.UserCQ.Commands.Create;
 using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
 using System.Reflection;

@@ -4,7 +4,7 @@ using Domain.Enums;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands
+namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands.Create
 {
     public class CreateSpecialOfferCommand : IRequest<SpecialOfferDto>
     {
