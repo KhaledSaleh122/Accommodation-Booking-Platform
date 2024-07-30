@@ -1,14 +1,15 @@
-﻿using Application.Execptions;
+﻿using Booking_API_Project.Middleware;
 using Presentation.Responses.ServerErrors;
-using Application.Exceptions;
-namespace Booking_API_Project.Middleware
+using System;
+
+namespace Accommodation_Booking_Platform.Middleware
 {
-    public class ErrorHandlerMiddleware
+    public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlerMiddleware> _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -21,29 +22,22 @@ namespace Booking_API_Project.Middleware
                 await _next(context);
 
             }
-            catch (ErrorException exception)
+            catch (Exception exception) 
             {
-                context.Response.StatusCode = exception.StatusCode ?? StatusCodes.Status500InternalServerError;
+                context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json";
                 var serverErrorResponse = new ServerErrorResponse()
                 {
-                    Title = exception.Message ?? "An unexpected error occurred",
+                    Title = "An unexpected error occurred",
                     Status = context.Response.StatusCode,
                     TraceId = context.TraceIdentifier
                 };
                 string logError = $"""
-                                 Error Message: {serverErrorResponse.Title}
+                                 Error Message: {exception.Message}
                                  TraceId: {serverErrorResponse.TraceId}
                                  Inner Exception Message: {exception.InnerException?.Message}
                                  """;
-                if (exception.LoggerLevel == LoggerLevel.Critical)
-                {
-                    _logger.LogCritical(logError);
-                }
-                else
-                {
-                    _logger.LogError(logError);
-                }
+                _logger.LogError(logError);
                 await context.Response.WriteAsJsonAsync(serverErrorResponse);
             }
         }
