@@ -42,8 +42,14 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Include(o => o.BookingRooms)
-                .Where(b => b.UserId == userId && b.Id == bookingId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(b => b.UserId == userId && b.Id == bookingId);
+        }
+
+        public async Task<Booking?> GetByPaymentIntentIdAsync(string paymentIntentId)
+        {
+            return await _dbContext.Bookings
+                 .Include(o => o.BookingRooms)
+                 .FirstOrDefaultAsync(b => b.PaymentIntentId == paymentIntentId);
         }
     }
 }

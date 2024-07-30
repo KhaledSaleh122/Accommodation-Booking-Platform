@@ -8,12 +8,17 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.NotFound;
 using Presentation.Responses.Pagination;
 using Presentation.Responses.ServerErrors;
 using Presentation.Responses.Validation;
+using Stripe;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
+using Application.CommandsAndQueries.BookingCQ.Commands.Confirm;
 namespace Presentation.Controllers
 {
     [ApiController]
@@ -22,8 +27,10 @@ namespace Presentation.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<BookingController> _logger;
-        public BookingController(IMediator mediator, ILogger<BookingController> logger)
+        private readonly IConfiguration _configuration;
+        public BookingController(IMediator mediator, ILogger<BookingController> logger, IConfiguration configuration)
         {
+            _configuration = configuration;
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -47,7 +54,15 @@ namespace Presentation.Controllers
                 bookingRequest.Booking.Id);
             return Ok(bookingRequest);
         }
-
+        [HttpPost("/api/users/bookings/payments")]
+        public async Task<IActionResult> BookingConfirmation() {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var stripeEvent = EventUtility.ConstructEvent(json,
+                    Request.Headers["Stripe-Signature"], _configuration.GetValue<string>("Stripe:EndpointSecret"));
+            var command = new ConfirmBookingCommand() { Event = stripeEvent };
+            await _mediator.Send(command);
+            return Ok();
+        }
 
         [HttpGet]
         [Authorize(Roles = "User,Admin")]

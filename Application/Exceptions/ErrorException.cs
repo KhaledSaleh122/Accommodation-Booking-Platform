@@ -1,8 +1,11 @@
-﻿namespace Application.Execptions
+﻿using Application.Exceptions;
+
+namespace Application.Execptions
 {
     public class ErrorException : Exception
     {
         public int? StatusCode { get; set; }
+        public LoggerLevel? LoggerLevel { get; set; }
         public ErrorException() { }
 
         public ErrorException(string message)

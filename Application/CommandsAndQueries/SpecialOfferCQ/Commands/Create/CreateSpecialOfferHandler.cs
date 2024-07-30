@@ -7,7 +7,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands
+namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands.Create
 {
     internal class CreateSpecialOfferHandler : IRequestHandler<CreateSpecialOfferCommand, SpecialOfferDto>
     {
@@ -29,7 +29,7 @@ namespace Application.CommandsAndQueries.SpecialOfferCQ.Commands
         public async Task<SpecialOfferDto> Handle(CreateSpecialOfferCommand request, CancellationToken cancellationToken)
         {
             var specialOffer = _mapper.Map<SpecialOffer>(request);
-            var id = String.IsNullOrEmpty(request.Id) ? Guid.NewGuid().ToString() : request.Id;
+            var id = string.IsNullOrEmpty(request.Id) ? Guid.NewGuid().ToString() : request.Id;
             specialOffer.Id = id;
             try
             {
