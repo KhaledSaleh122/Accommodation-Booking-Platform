@@ -106,7 +106,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
             };
             mail.To.Add(toAddress);
 
-            var smtp = new SmtpClient("smtp.gmail.com", 587)
+            var smtp = new SmtpClient(_configuration.GetValue<string>("Mail:Host")!, _configuration.GetValue<int>("Mail:Port")!)
             {
                 Credentials = new NetworkCredential(fromAddress, fromPassword),
                 EnableSsl = true
