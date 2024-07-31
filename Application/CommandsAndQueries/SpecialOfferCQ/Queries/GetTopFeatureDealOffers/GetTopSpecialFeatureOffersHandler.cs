@@ -9,7 +9,7 @@ using System;
 
 namespace Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDealOffers
 {
-    internal class GetTopSpecialFeatureOffersHandler : IRequestHandler<GetTopSpecialFeatureOffersCommand, IEnumerable<FeaturedDealsDto>>
+    internal class GetTopSpecialFeatureOffersHandler : IRequestHandler<GetTopSpecialFeatureOffersQuery, IEnumerable<FeaturedDealsDto>>
     {
         private readonly IMapper _mapper;
         private readonly ISpecialOfferRepository _specialOfferRepository;
@@ -46,7 +46,7 @@ namespace Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDea
             _specialOfferRepository = specialOfferRepository;
         }
         public async Task<IEnumerable<FeaturedDealsDto>> Handle(
-            GetTopSpecialFeatureOffersCommand request,
+            GetTopSpecialFeatureOffersQuery request,
             CancellationToken cancellationToken)
         {
             try

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecentlyVisitedHotels
 {
-    public class GetRvhCommand : IRequest<IEnumerable<RvhDto>>
+    public class GetRvhQuery : IRequest<IEnumerable<RvhDto>>
     {
         public string UserId { get; set; }
     }

@@ -11,7 +11,7 @@ using System;
 
 namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecentlyVisitedHotels
 {
-    internal class GetRvhHandler : IRequestHandler<GetRvhCommand, IEnumerable<RvhDto>>
+    internal class GetRvhHandler : IRequestHandler<GetRvhQuery, IEnumerable<RvhDto>>
     {
         private readonly IRecentlyVisitedHotelRepository _repository;
         private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecen
             _mapper = configuration.CreateMapper();
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
-        public async Task<IEnumerable<RvhDto>> Handle(GetRvhCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<RvhDto>> Handle(GetRvhQuery request, CancellationToken cancellationToken)
         {
             try
             {

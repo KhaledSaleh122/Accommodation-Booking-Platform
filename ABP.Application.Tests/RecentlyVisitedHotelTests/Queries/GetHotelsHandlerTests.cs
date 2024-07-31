@@ -16,7 +16,7 @@ namespace ABP.Application.Tests.RecentlyVisitedHotelTests.Queries
         private readonly Mock<IRecentlyVisitedHotelRepository> _RecentlyVisitedHotelRepositoryMock;
         private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly IFixture _fixture;
-        private readonly GetRvhCommand _query;
+        private readonly GetRvhQuery _query;
         private readonly GetRvhHandler _handler;
 
         public GetRecentlyVisitedHotelHandlerTests()
@@ -29,7 +29,7 @@ namespace ABP.Application.Tests.RecentlyVisitedHotelTests.Queries
             _fixture = new Fixture();
             int page = _fixture.Create<int>();
             int pageSize = _fixture.Create<int>();
-            _query = new GetRvhCommand { UserId = _fixture.Create<string>() };
+            _query = new GetRvhQuery { UserId = _fixture.Create<string>() };
             _handler = new GetRvhHandler(_RecentlyVisitedHotelRepositoryMock.Object, _userManagerMock.Object);
         }
 

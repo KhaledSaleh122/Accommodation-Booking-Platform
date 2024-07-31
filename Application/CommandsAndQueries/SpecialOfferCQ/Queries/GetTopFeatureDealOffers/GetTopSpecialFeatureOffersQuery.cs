@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDealOffers
 {
-    public class GetTopSpecialFeatureOffersCommand : IRequest<IEnumerable<FeaturedDealsDto>>
+    public class GetTopSpecialFeatureOffersQuery : IRequest<IEnumerable<FeaturedDealsDto>>
     {
     }
 }
