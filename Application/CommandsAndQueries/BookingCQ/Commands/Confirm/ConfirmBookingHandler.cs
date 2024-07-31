@@ -75,7 +75,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
             string fromPassword = _configuration.GetValue<string>("Mail:AppPassword")!;
             string subject = "Booking Confirmation";
             string specialOffer = booking.SpecialOfferId is not null ? $"Special Offer: {booking.SpecialOfferId}" : "";
-            string body = $@"
+            string body = $"""
                     Dear {user.UserName},
 
                     We are pleased to inform you that your booking has been confirmed. Here are the details of your booking:
@@ -96,7 +96,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
 
                     Best regards,
                     Accommodation Booking Platform Team
-                    ";
+                    """;
 
             var mail = new MailMessage
             {

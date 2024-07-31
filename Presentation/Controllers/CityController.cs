@@ -119,7 +119,7 @@ namespace Presentation.Controllers
         [HttpGet("top-visited-cities")]
         [ProducesResponseType(typeof(CityTopDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CityTopDto>>> GetTopVisitedCities() {
-            var command = new GetTopVisitedCitiesCommand();
+            var command = new GetTopVisitedCitiesQuery();
             var cities = await _mediator.Send(command);
             return Ok(cities);
         }

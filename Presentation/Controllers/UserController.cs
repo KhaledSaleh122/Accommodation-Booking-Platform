@@ -34,7 +34,7 @@ namespace Presentation.Controllers
             {
                 return Forbid();
             }
-            var command = new GetRvhCommand() { UserId = userId };
+            var command = new GetRvhQuery() { UserId = userId };
             var visitedHotels = await _mediator.Send(command);
             return Ok(visitedHotels);
         }

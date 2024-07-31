@@ -44,7 +44,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ICollection<FeaturedDealsDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTopSpecialFeatureDealOffers()
         {
-            var command = new GetTopSpecialFeatureOffersCommand();
+            var command = new GetTopSpecialFeatureOffersQuery();
             var topSpecial = await _mediator.Send(command);
             return Ok(topSpecial);
         }

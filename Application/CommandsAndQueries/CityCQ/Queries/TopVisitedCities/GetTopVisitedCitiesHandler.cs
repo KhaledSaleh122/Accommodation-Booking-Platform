@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Queries.TopVisitedCities
 {
-    internal class GetTopVisitedCitiesHandler : IRequestHandler<GetTopVisitedCitiesCommand, IEnumerable<CityTopDto>>
+    internal class GetTopVisitedCitiesHandler : IRequestHandler<GetTopVisitedCitiesQuery, IEnumerable<CityTopDto>>
     {
         private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace Application.CommandsAndQueries.CityCQ.Queries.TopVisitedCities
         }
 
         public async Task<IEnumerable<CityTopDto>> Handle(
-            GetTopVisitedCitiesCommand request,
+            GetTopVisitedCitiesQuery request,
             CancellationToken cancellationToken)
         {
             try
