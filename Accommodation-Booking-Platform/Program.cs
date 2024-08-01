@@ -140,12 +140,15 @@ namespace Accommodation_Booking_Platform
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            string currentDir = Directory.GetCurrentDirectory();
+            string staticFolderPath = Path.Combine(currentDir, "Public");
+            Directory.CreateDirectory(staticFolderPath);
             app.UseStaticFiles(
                 new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider
                     (
-                        Path.Combine(Directory.GetCurrentDirectory(), "Public")
+                        staticFolderPath
                     ),
                     RequestPath = ""
                 }

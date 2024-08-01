@@ -6,13 +6,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 namespace ABPIntegrationTests
 {
     public class ABPWebApplicationFactory : WebApplicationFactory<Program>
     {
+        private readonly UserManager<User> userManager;
+
+        public ABPWebApplicationFactory(UserManager<User> userManager)
+        {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureTestServices(services =>
+            builder.ConfigureTestServices(async services =>
             {
                 // Remove the existing DbContext registration
                 var descriptor = services.SingleOrDefault(
@@ -37,6 +46,7 @@ namespace ABPIntegrationTests
                 using var scope = sp.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 db.Database.EnsureCreated();
+                await userManager.CreateAsync(new User { UserName = "test", Email = "test@gmail.com" }, "test123");
             });
         }
     }
