@@ -18,27 +18,31 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IHotelRepository _hotelRepository;
+        private readonly IEmailService _emailService;
 
         public ConfirmBookingHandler(
             IBookingRepository bookingRepository,
             IConfiguration configuration,
             UserManager<User> userManager,
-            IHotelRepository hotelRepository)
+            IHotelRepository hotelRepository,
+            IEmailService emailService)
         {
             _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
         public async Task Handle(ConfirmBookingCommand request, CancellationToken cancellationToken)
         {
-			try
-			{
+            try
+            {
                 if (request.Event.Type == Events.PaymentIntentSucceeded)
                 {
-                    var paymentIntent = request.Event.Data.Object as PaymentIntent ?? 
-                        throw new ErrorException("Payment Intent not found") { 
+                    var paymentIntent = request.Event.Data.Object as PaymentIntent ??
+                        throw new ErrorException("Payment Intent not found")
+                        {
                             StatusCode = StatusCodes.Status500InternalServerError,
                             LoggerLevel = LoggerLevel.Critical
                         };
@@ -54,25 +58,26 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
                             StatusCode = StatusCodes.Status500InternalServerError,
                             LoggerLevel = LoggerLevel.Critical
                         };
-                    var (hotel,avgRating) = await _hotelRepository.GetByIdAsync(booking.BookingRooms.First().HotelId) ??
+                    var (hotel, avgRating) = await _hotelRepository.GetByIdAsync(booking.BookingRooms.First().HotelId) ??
                         throw new ErrorException($"Hotel with ID '{booking.BookingRooms.First().HotelId}' not found")
                         {
                             StatusCode = StatusCodes.Status500InternalServerError,
                             LoggerLevel = LoggerLevel.Critical
                         };
-                    await SendBookingConfirmationEmail(booking,user,hotel);
+                    await SendBookingConfirmationEmail(booking, user, hotel);
                 }
             }
-			catch (Exception exception)
-			{
-
-				throw new ErrorException("Error happend during confirm the booking", exception);
-			}
+            catch (ErrorException) {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                throw new ErrorException("Error happend during confirm the booking", exception);
+            }
         }
 		private async Task SendBookingConfirmationEmail(Booking booking,User user,Hotel hotel) {
             string fromAddress = _configuration.GetValue<string>("Mail:Email")!;
             string toAddress = user.Email!;
-            string fromPassword = _configuration.GetValue<string>("Mail:AppPassword")!;
             string subject = "Booking Confirmation";
             string specialOffer = booking.SpecialOfferId is not null ? $"Special Offer: {booking.SpecialOfferId}" : "";
             string body = $"""
@@ -105,15 +110,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
                 Body = body,
             };
             mail.To.Add(toAddress);
-
-            var smtp = new SmtpClient(_configuration.GetValue<string>("Mail:Host")!, _configuration.GetValue<int>("Mail:Port")!)
-            {
-                Credentials = new NetworkCredential(fromAddress, fromPassword),
-                EnableSsl = true
-            };
-
             // Send the email
-            await smtp.SendMailAsync(mail);
+            await _emailService.SendEmailAsync(mail);
         }
     }
 }
