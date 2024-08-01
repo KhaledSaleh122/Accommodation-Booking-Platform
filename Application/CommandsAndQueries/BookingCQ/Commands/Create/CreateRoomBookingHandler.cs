@@ -17,6 +17,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
         private readonly IHotelRepository _hotelRepository;
         private readonly IHotelRoomRepository _hotelRoomRepository;
         private readonly ISpecialOfferRepository _specialOfferRepository;
+        private readonly IPaymentService<PaymentIntent, PaymentIntentCreateOptions> _paymentService;
         private readonly IMapper _mapper;
 
         public CreateRoomBookingHandler(
@@ -24,14 +25,15 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             IHotelRoomRepository hotelRoomRepository,
             ITransactionService transactionService,
             IHotelRepository hotelRepository,
-            ISpecialOfferRepository specialOfferRepository)
+            ISpecialOfferRepository specialOfferRepository,
+            IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Booking, BookingDto>()
                 .ForMember(dest => dest.HotelId,
                 opt => opt.MapFrom(src => src.BookingRooms.First().HotelId))
-                .ForMember(dest => dest.Rooms, 
+                .ForMember(dest => dest.Rooms,
                 opt => opt.MapFrom(src => src.BookingRooms.Select(x => x.RoomNumber).ToList()));
                 cfg.CreateMap<CreateRoomBookingCommand, Booking>();
             });
@@ -40,6 +42,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             _hotelRoomRepository = hotelRoomRepository ?? throw new ArgumentNullException(nameof(hotelRoomRepository));
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
             _specialOfferRepository = specialOfferRepository ?? throw new ArgumentNullException(nameof(specialOfferRepository));
+            _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
         }
 
         public async Task<BookingRequestDto> Handle(CreateRoomBookingCommand request, CancellationToken cancellationToken)
@@ -99,8 +102,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                         Enabled = true,
                     }
                 };
-                var service = new PaymentIntentService();
-                var paymentIntent = await service.CreateAsync(options,null,cancellationToken);
+                var paymentIntent = await _paymentService.CreateAsync(options,cancellationToken);
                 booking.PaymentIntentId = paymentIntent.Id;
                 var createdBooking =  await _bookingRepository.CreateRoomBookingAsync(booking);
                 var bookingDto = _mapper.Map<BookingDto>(createdBooking);
@@ -121,7 +123,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             }
             catch (Exception exception)
             {
-                throw new ErrorException("Error during creating the room booking ", exception);
+                throw new ErrorException("Error during creating the room booking", exception);
             }
         }
         private async Task<int> GetDiscountPercentage(string? specialOfferId,int hotelId)

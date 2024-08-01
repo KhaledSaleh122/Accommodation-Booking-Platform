@@ -68,7 +68,7 @@ namespace Accommodation_Booking_Platform
                 .AddControllers()
                 .AddApplicationPart(Assembly.Load("Presentation"));
 
-            services.AddRepositories();
+            services.AddServices(configuration);
             services.AddDBContextConfiguration(configuration);
             services.AddValidatorsFromAssembly(Assembly.Load("Application"));
             services.AddMediatrConfiguration();

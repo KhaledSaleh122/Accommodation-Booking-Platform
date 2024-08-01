@@ -5,9 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Options;
 using Stripe;
-using System;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
 {
@@ -15,8 +13,10 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
     {
         private readonly IMapper _mapper;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IPaymentService<PaymentIntent, PaymentIntentCreateOptions> _paymentService;
 
-        public GetUserBookingByIdHandler(IBookingRepository bookingRepository)
+        public GetUserBookingByIdHandler(IBookingRepository bookingRepository,
+            IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService)
         {
             _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
             var configuration = new MapperConfiguration(cfg =>
@@ -28,29 +28,30 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
                         opt => opt.MapFrom(src => src.BookingRooms.Select(x => x.RoomNumber).ToList())); ;
             });
             _mapper = configuration.CreateMapper();
+            _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
         }
 
         public async Task<BookingWithPaymentIntentDto> Handle(GetUserBookingByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var booking = await _bookingRepository.GetByIdAsync(request.UserId, request.BookingId) 
+                var booking = await _bookingRepository.GetByIdAsync(request.UserId, request.BookingId)
                     ?? throw new NotFoundException("Booking not found!");
-                var service = new PaymentIntentService();
-                var paymentIntent = await service.GetAsync(booking.PaymentIntentId, null, null, cancellationToken)
+                var paymentIntent = await _paymentService.GetAsync(booking.PaymentIntentId,cancellationToken)
                     ?? throw new ErrorException(
                         "We encountered an issue while processing your payment. Please contact customer support.")
                     {
                         StatusCode = 500
                     };
 
-                var bookingDto =  _mapper.Map<BookingWithPaymentIntentDto>(booking);
+                var bookingDto = _mapper.Map<BookingWithPaymentIntentDto>(booking);
                 bookingDto.PaymentIntentId = paymentIntent.Id;
                 bookingDto.PaymentIntentStatus = paymentIntent.Status;
                 bookingDto.ClientSecret = paymentIntent.ClientSecret;
                 return bookingDto;
             }
-            catch (NotFoundException) {
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (Exception exception)
