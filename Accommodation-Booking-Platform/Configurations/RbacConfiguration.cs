@@ -44,7 +44,7 @@ namespace Booking_API_Project.Configurations
                 throw new Exception("There is account with this email");
             if (user is null)
             {
-                user = new User { UserName = name, Email = email };
+                user = new User { UserName = name, Email = email , Thumbnail = "admin.jpg"};
                 await userManager.CreateAsync(user, password);
                 await userManager.AddToRoleAsync(user, "Admin");
             }
