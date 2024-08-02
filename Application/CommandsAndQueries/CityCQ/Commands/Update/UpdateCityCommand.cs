@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.CityDtos;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
@@ -14,5 +15,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
         public string Country { get; set; }
         [Required]
         public string PostOffice { get; set; }
+        [Required]
+        public IFormFile Thumbnail { get; set; }
     }
 }

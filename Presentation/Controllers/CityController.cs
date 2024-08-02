@@ -91,7 +91,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> UpdateCity(int cityId, UpdateCityCommand? command)
+        public async Task<IActionResult> UpdateCity(int cityId, [FromForm]UpdateCityCommand? command)
         {
             if (cityId <= 0) throw new NotFoundException("City not found!");
             if (command is null) return Ok();
