@@ -70,7 +70,7 @@ namespace Infrastructure.Repositories
         {
             var result = await _dbContext.Cities
                 .Include(h => h.Hotels).ThenInclude(r => r.RecentlyVisitedHotels)
-                .GroupBy(g => new { g.Id,g.Name,g.Thumbnail })
+                .GroupBy(g => new { g.Id,g.Name,g.Thumbnail})
                 .Select(g => new
                 {
                     City = new City() { Id = g.Key.Id, Name = g.Key.Name, Thumbnail = g.Key.Thumbnail },

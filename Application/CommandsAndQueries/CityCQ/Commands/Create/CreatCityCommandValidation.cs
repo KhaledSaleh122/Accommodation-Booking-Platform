@@ -24,10 +24,6 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
             RuleFor(city => city.PostOffice)
                 .NotEmpty()
                 .MaximumLength(20);
-            RuleFor(city => city.PostOffice)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .MaximumLength(20);
         }
     }
 }

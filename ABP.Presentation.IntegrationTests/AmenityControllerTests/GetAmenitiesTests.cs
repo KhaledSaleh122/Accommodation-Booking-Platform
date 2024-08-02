@@ -19,7 +19,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
 
         public GetAmenitiesTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_{Guid.NewGuid()}";
+            factory.DatabaseName = $"InMemoryDb_GetAmenities";
             _client = factory.CreateClient();
             _fixture = new Fixture();
             var scope = factory.Services.CreateScope();

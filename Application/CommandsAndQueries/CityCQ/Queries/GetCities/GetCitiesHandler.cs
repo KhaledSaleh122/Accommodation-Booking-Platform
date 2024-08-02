@@ -1,11 +1,9 @@
-﻿using Application.Dtos.AmenityDtos;
-using Application.Dtos.CityDtos;
+﻿using Application.Dtos.CityDtos;
 using Application.Execptions;
 using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
 {
@@ -30,16 +28,16 @@ namespace Application.CommandsAndQueries.CityCQ.Query.GetCities
             {
                 var (cities, totalRecords) = await _cityRepository.GetAsync
                     (
-                        request.Page, 
-                        request.PageSize, 
+                        request.Page,
+                        request.PageSize,
                         request.Country,
                         request.City
                     );
-                return 
+                return
                     (
-                        _mapper.Map<IEnumerable<CityDto>>(cities), 
+                        _mapper.Map<IEnumerable<CityDto>>(cities),
                         totalRecords,
-                        request.Page, 
+                        request.Page,
                         request.PageSize
                     );
             }

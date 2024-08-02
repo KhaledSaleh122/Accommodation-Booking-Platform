@@ -51,11 +51,17 @@ namespace ABPIntegrationTests
             {
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
-            var admin = new User { UserName = "Admin", Email = "Admin@gmail.com", Thumbnail = "test.png" };
-            await userManager.CreateAsync(admin, "admin123456");
-            await userManager.AddToRoleAsync(admin, "Admin");
-            var user = new User { UserName = "User", Email = "User@gmail.com", Thumbnail = "test.png" };
-            await userManager.AddToRoleAsync(admin, "User");
+            if (await userManager.FindByIdAsync("AdminId") is not null) {
+                var admin = new User { Id = "AdminId", UserName = "Admin", Email = "Admin@gmail.com", Thumbnail = "test.png" };
+                await userManager.CreateAsync(admin, "admin123456");
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+            if (await userManager.FindByIdAsync("UserId") is not null)
+            {
+                var user = new User { Id = "UserId", UserName = "User", Email = "User@gmail.com", Thumbnail = "test.png" };
+                await userManager.CreateAsync(user, "user123456");
+                await userManager.AddToRoleAsync(user, "User");
+            }
         }
 
     }
