@@ -57,7 +57,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                     HotelName = request.HotelName,
                     Adult = adult,
                     Children = children,
-                    Aminites = request.Aminites,
+                    Amenities = request.Amenities,
                     CheckIn = checkIn,
                     CheckOut = checkOut,
                     City = request.City,

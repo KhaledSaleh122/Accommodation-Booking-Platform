@@ -14,7 +14,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
             var pagination = new PaginationParameters(page, pageSize);
             Page = pagination.Page;
             PageSize = pagination.pageSize;
-            Aminites = [];
+            Amenities = [];
             HotelType = [];
         }
         public int Page { get; set; }
@@ -26,7 +26,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
         public HotelType[] HotelType { get; set; }
         public string? HotelName { get; set; }
         public string? Owner { get; set; }
-        public int[] Aminites { get; set; }
+        public int[] Amenities { get; set; }
         public DateOnly? CheckIn { get; set; }
         public DateOnly? CheckOut { get; set; }
         public int Adult { get; set; }

@@ -20,7 +20,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
 
         public GetCityTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_Update";
+            factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             var scope = factory.Services.CreateScope();
@@ -29,6 +29,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             JwtTokenHelper jwtTokenHelper = new(configuration, userManager);
             _dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
         }
         [Fact]
         public async Task GetCity_Should_ReturnCity_WhenSuccess()

@@ -19,7 +19,7 @@ namespace ABPIntegrationTests
         {
             builder.ConfigureTestServices(async services =>
             {
-                // Remove the existing DbContext registration
+                
                 var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>)
                     );
@@ -28,40 +28,32 @@ namespace ABPIntegrationTests
                     services.Remove(descriptor);
                 }
 
-                // Add DbContext using a unique in-memory database name
+                
                 services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
                 {
                     options.UseInMemoryDatabase(DatabaseName);
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                     options.ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                 });
-                var sp = services.BuildServiceProvider();
-                using var scope = sp.CreateScope();
-                await SetupDbContext(scope);
             });
         }
 
-        public async Task SetupDbContext(IServiceScope scope) {
-            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await db.Database.EnsureCreatedAsync();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        public async Task SetupDbContext(ApplicationDbContext dbContext) {
+            await dbContext.Database.EnsureDeletedAsync();
+            await dbContext.Database.EnsureCreatedAsync();
             var roles = new[] { "Admin", "User" };
             foreach (var role in roles)
             {
-                await roleManager.CreateAsync(new IdentityRole(role));
+                await dbContext.Roles.AddAsync(new IdentityRole(role) { Id = "Role"+role });
             }
-            if (await userManager.FindByIdAsync("AdminId") is not null) {
-                var admin = new User { Id = "AdminId", UserName = "Admin", Email = "Admin@gmail.com", Thumbnail = "test.png" };
-                await userManager.CreateAsync(admin, "admin123456");
-                await userManager.AddToRoleAsync(admin, "Admin");
-            }
-            if (await userManager.FindByIdAsync("UserId") is not null)
-            {
-                var user = new User { Id = "UserId", UserName = "User", Email = "User@gmail.com", Thumbnail = "test.png" };
-                await userManager.CreateAsync(user, "user123456");
-                await userManager.AddToRoleAsync(user, "User");
-            }
+            var admin = new User { Id = "AdminId", UserName = "Admin", Email = "Admin@gmail.com", Thumbnail = "test.png" };
+            await dbContext.Users.AddAsync(admin);
+            await dbContext.UserRoles.AddAsync(new IdentityUserRole<string>(){ RoleId = "RoleAdmin",UserId = "AdminId" });
+
+            var user = new User { Id = "UserId", UserName = "User", Email = "User@gmail.com", Thumbnail = "test.png" };
+            await dbContext.Users.AddAsync(user);
+            await dbContext.UserRoles.AddAsync(new IdentityUserRole<string>(){ RoleId = "RoleUser",UserId = "UserId" });
+            await dbContext.SaveChangesAsync();
         }
 
     }

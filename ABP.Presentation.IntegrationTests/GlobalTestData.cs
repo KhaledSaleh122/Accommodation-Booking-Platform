@@ -1,5 +1,4 @@
-﻿using Application.CommandsAndQueries.CityCQ.Commands.Create;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -19,6 +18,13 @@ namespace ABP.Presentation.IntegrationTests
                     fileContent.Headers.ContentType = new MediaTypeHeaderValue(formFile.ContentType);
                     content.Add(fileContent, property.Name, formFile.FileName);
                 }
+                else if (value is List<IFormFile> formFiles) {
+                    foreach (var file in formFiles) {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, property.Name, file.FileName);
+                    }
+                }
                 else if (value is not null)
                 {
                     content.Add(new StringContent(value.ToString()!), property.Name);
@@ -27,7 +33,8 @@ namespace ABP.Presentation.IntegrationTests
             return content;
         }
 
-        public static IFormFile GetFormFile() {
+        public static IFormFile GetFormFile()
+        {
             IFormFile testFile = new FormFile(
                     baseStream: new MemoryStream(Encoding.UTF8.GetBytes("Dummy image content")),
                     baseStreamOffset: 0,
@@ -49,11 +56,22 @@ namespace ABP.Presentation.IntegrationTests
             length: 20,
             name: "dummyFile",
             fileName: "dummy.gif")
-                {
-                    Headers = new HeaderDictionary(),
-                    ContentType = "image/gif"
-                };
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/gif"
+            };
             return testFile;
+        }
+
+        internal static List<IFormFile> GetFormFiles(int v)
+        {
+            IFormFile[] arr = new IFormFile[v];
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = GetFormFile();
+            }
+            return [.. arr];
         }
     }
 }

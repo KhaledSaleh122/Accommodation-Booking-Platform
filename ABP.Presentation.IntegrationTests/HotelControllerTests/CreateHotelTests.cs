@@ -1,8 +1,9 @@
 ﻿using ABPIntegrationTests;
-using Application.CommandsAndQueries.CityCQ.Commands.Create;
-using Application.Dtos.CityDtos;
+using Application.CommandsAndQueries.HotelCQ.Commands.Create;
+using Application.Dtos.HotelDtos;
 using AutoFixture;
 using Domain.Entities;
+using Domain.Enums;
 using FluentAssertions;
 using Infrastructure;
 using Microsoft.AspNetCore.Http;
@@ -13,24 +14,27 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace ABP.Presentation.IntegrationTests.CityControllerTests
+namespace ABP.Presentation.IntegrationTests.HotelControllerTests
 {
-    public class CreateCityTests : IClassFixture<ABPWebApplicationFactory>
+    public class CreateHotelTests : IClassFixture<ABPWebApplicationFactory>
     {
         private readonly HttpClient _client;
         private readonly Fixture _fixture;
         private readonly ApplicationDbContext _dbContext;
         private readonly string _adminToken;
         private readonly string _userToken;
-        private readonly CreateCityCommand _command;
+        private readonly CreateHotelCommand _command;
 
-        public CreateCityTests(ABPWebApplicationFactory factory)
+        public CreateHotelTests(ABPWebApplicationFactory factory)
         {
             factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             var scope = factory.Services.CreateScope();
             var serviceProvider = scope.ServiceProvider;
+            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             JwtTokenHelper jwtTokenHelper = new(configuration, userManager);
@@ -38,42 +42,56 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
             _adminToken = jwtTokenHelper.GetJwtTokenAsync("Admin").GetAwaiter().GetResult();
             _userToken = jwtTokenHelper.GetJwtTokenAsync("User").GetAwaiter().GetResult();
-            _command = _fixture.Build<CreateCityCommand>()
-                .With(x => x.PostOffice, _fixture.Create<string>()[0..20])
+            _command = _fixture.Build<CreateHotelCommand>()
                 .With(x => x.Thumbnail, GlobalTestData.GetFormFile())
+                .With(x => x.Images, GlobalTestData.GetFormFiles(3))
+                .With(x => x.HotelType, (int)_fixture.Create<HotelType>())
                 .Create();
         }
 
         [Fact]
-        public async void CreateCity_Should_ReturnCreatedCity_WhenSuccess()
+        public async void CreateHotel_Should_ReturnCreatedHotel_WhenSuccess()
         {
             // Arrange
-
+            var city = _fixture.Build<City>()
+                .Without(x => x.Hotels)
+                .With(x => x.Id,_command.CityId)
+                .Create();
+            await _dbContext.Cities.AddAsync(city);
+            await _dbContext.SaveChangesAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
-            var createdCity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
-                await response.Content.ReadFromJsonAsync<CityDto>() : null;
+            var response = await _client.PostAsync("/api/hotels", content);
+            var createdHotel = response.Content.Headers.ContentType?.MediaType == "application/json" ?
+                await response.Content.ReadFromJsonAsync<HotelMinDto>() : null;
 
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.Created);
-            createdCity.Should().NotBeNull();
-            createdCity?.Id.Should().BeGreaterThanOrEqualTo(1);
-            createdCity?.Name.Should().Be(_command.Name);
-            createdCity?.Country.Should().Be(_command.Country);
-            createdCity?.PostOffice.Should().Be(_command.PostOffice);
+            createdHotel.Should().NotBeNull();
+            createdHotel?.Id.Should().BeGreaterThanOrEqualTo(1);
+            createdHotel?.Name.Should().Be(_command.Name);
+            createdHotel?.Description.Should().Be(_command.Description);
+            createdHotel?.Address.Should().Be(_command.Address);
+            createdHotel?.HotelType.Should().Be(Enum.GetName(typeof(HotelType),_command.HotelType));
+            createdHotel?.Owner.Should().Be(_command.Owner);
+            createdHotel?.PricePerNight.Should().Be(_command.PricePerNight);
+            createdHotel?.City.Should().Be(city.Name);
+
+
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnUnauthorized_WhenTokenIsInvalidOrMissing()
+        public async Task CreateHotel_Should_ReturnUnauthorized_WhenTokenIsInvalidOrMissing()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -81,14 +99,15 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenNameIsEmpty()
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenNameIsEmpty()
         {
             // Arrange
             _command.Name = string.Empty;
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -96,7 +115,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenNameExceedsMaxLength()
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenNameExceedsMaxLength()
         {
             // Arrange
             _command.Name = new string('A', 51);
@@ -104,7 +123,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -112,14 +131,15 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenThumbnailIsEmpty()
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenThumbnailIsEmpty()
         {
             // Arrange
             _command.Thumbnail = null!;
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -127,14 +147,15 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenThumbnailExtensionInvaild()
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenThumbnailExtensionInvalid()
         {
             // Arrange
             _command.Thumbnail = GlobalTestData.GetInvaildFormFile();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -142,14 +163,15 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenCountryIsEmpty()
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenImagesAreEmpty()
         {
             // Arrange
-            _command.Country = string.Empty;
+            _command.Images.Clear();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -157,15 +179,15 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenCountryExceedsMaxLength()
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenImagesExceedMaxCount()
         {
             // Arrange
-            _command.Country = new string('A', 51);
+            _command.Images = GlobalTestData.GetFormFiles(21);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -173,92 +195,66 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenPostOfficeIsEmpty()
-        {
-            // Arrange
-            _command.PostOffice = string.Empty;
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
-            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
-            // Act
-            var response = await _client.PostAsync("/api/cities", content);
-
-            // Assert
-            response.Should().NotBeNull();
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task CreateCity_Should_ReturnBadRequest_WhenPostOfficeExceedsMaxLength()
-        {
-            // Arrange
-            _command.PostOffice = new string('A', 21);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
-            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
-
-            // Act
-            var response = await _client.PostAsync("/api/cities", content);
-
-            // Assert
-            response.Should().NotBeNull();
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task CreateCity_Should_ReturnConflict_WhenCityExistsInCountry()
-        {
-            // Arrange
-            var city = _fixture.Build<City>()
-                .With(x => x.PostOffice, _fixture.Create<string>()[0..20])
-                .Without(x => x.Hotels)
-                .Create();
-            await _dbContext.Cities.AddAsync(city);
-            await _dbContext.SaveChangesAsync();
-            _command.Country = city.Country;
-            _command.Name = city.Name;
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
-            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
-
-            // Act
-            var response = await _client.PostAsync("/api/cities", content);
-
-            // Assert
-            response.Should().NotBeNull();
-            response.StatusCode.Should().Be(HttpStatusCode.Conflict);
-        }
-        [Fact]
-        public async Task CreateCity_Should_ReturnConflict_WhenPostOfficeExists() {
-            // Arrange
-            var city = _fixture.Build<City>()
-                .With(x => x.PostOffice, _fixture.Create<string>()[0..20])
-                .Without(x => x.Hotels)
-                .Create();
-            await _dbContext.Cities.AddAsync(city);
-            await _dbContext.SaveChangesAsync();
-            _command.PostOffice = city.PostOffice;
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
-            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
-
-            // Act
-            var response = await _client.PostAsync("/api/cities", content);
-
-            // Assert
-            response.Should().NotBeNull();
-            response.StatusCode.Should().Be(HttpStatusCode.Conflict);
-        }
-
-        [Fact]
-        public async Task CreateCity_Should_ReturnForbidden_WhenUserIsNotAdmin()
+        public async Task CreateHotel_Should_ReturnForbidden_WhenUserIsNotAdmin()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
+            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.PostAsync("/api/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
+        [Fact]
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenCityNotFound()
+        {
+            // Arrange
+            _command.CityId = 0;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
+            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
+            // Act
+            var response = await _client.PostAsync("/api/hotels", content);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenPricePerNightIsNegative()
+        {
+            // Arrange
+            _command.PricePerNight = -100;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
+            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
+            // Act
+            var response = await _client.PostAsync("/api/hotels", content);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task CreateHotel_Should_ReturnBadRequest_WhenHotelTypeIsUnknown()
+        {
+            // Arrange
+            _command.HotelType = -1;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
+            var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
+
+            // Act
+            var response = await _client.PostAsync("/api/hotels", content);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
     }
 }

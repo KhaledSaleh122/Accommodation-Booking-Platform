@@ -19,12 +19,12 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
 
         public GetCitiesTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_{Guid.NewGuid()}";
+            factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             var scope = factory.Services.CreateScope();
-            factory.SetupDbContext(scope).GetAwaiter().GetResult();
             _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
         }
 
         [Fact]

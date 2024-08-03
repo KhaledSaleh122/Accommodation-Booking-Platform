@@ -13,7 +13,7 @@ namespace Domain.Params
         public HotelType[] HotelType { get; set; }
         public string? HotelName { get; set; }
         public string? Owner { get; set; }
-        public int[] Aminites { get; set; }
+        public int[] Amenities { get; set; }
         public DateOnly CheckIn { get; set; }
         public DateOnly CheckOut { get; set; }
         public int Children { get; set; }

@@ -23,7 +23,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
 
         public DeleteAmenityTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_Delete";
+            factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             var scope = factory.Services.CreateScope();
@@ -32,6 +32,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             JwtTokenHelper jwtTokenHelper = new(configuration, userManager);
             _dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
             _adminToken = jwtTokenHelper.GetJwtTokenAsync("Admin").GetAwaiter().GetResult();
             _userToken = jwtTokenHelper.GetJwtTokenAsync("User").GetAwaiter().GetResult();
         }

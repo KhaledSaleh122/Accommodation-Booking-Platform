@@ -18,7 +18,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
 
         public GetTopVisitedCitiesTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_{Guid.NewGuid()}";
+            factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
@@ -30,8 +30,8 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
                 return new DateOnly(now.Year, now.Month, now.Day);
             }));
             var scope = factory.Services.CreateScope();
-            factory.SetupDbContext(scope).GetAwaiter().GetResult();
             _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
         }
 
         [Fact]
