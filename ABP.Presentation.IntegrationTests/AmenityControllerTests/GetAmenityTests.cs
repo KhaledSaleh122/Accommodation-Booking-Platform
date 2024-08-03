@@ -18,10 +18,11 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
 
         public GetAmenityTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_GetOne";
+            factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             _dbContext = factory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
         }
 
         [Fact]

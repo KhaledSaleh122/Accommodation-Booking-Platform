@@ -1,5 +1,5 @@
 ﻿using ABPIntegrationTests;
-using Application.Dtos.CityDtos;
+using Application.Dtos.HotelDtos;
 using AutoFixture;
 using Domain.Entities;
 using FluentAssertions;
@@ -12,9 +12,9 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace ABP.Presentation.IntegrationTests.CityControllerTests
+namespace ABP.Presentation.IntegrationTests.HotelControllerTests
 {
-    public class DeleteCityTests : IClassFixture<ABPWebApplicationFactory>
+    public class DeleteHotelTests : IClassFixture<ABPWebApplicationFactory>
     {
         private readonly HttpClient _client;
         private readonly Fixture _fixture;
@@ -22,7 +22,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         private readonly string _adminToken;
         private readonly string _userToken;
 
-        public DeleteCityTests(ABPWebApplicationFactory factory)
+        public DeleteHotelTests(ABPWebApplicationFactory factory)
         {
             factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
@@ -31,6 +31,14 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var serviceProvider = scope.ServiceProvider;
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            _fixture.Customize<DateOnly>(composer => composer.FromFactory<int, int, int>((year, month, day) =>
+            {
+                var now = DateTime.Now;
+                return new DateOnly(now.Year, now.Month, now.Day);
+            }));
             JwtTokenHelper jwtTokenHelper = new(configuration, userManager);
             _dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
             factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
@@ -39,39 +47,40 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task DeleteCity_Should_ReturnOk_WhenSuccessful()
+        public async Task DeleteHotel_Should_ReturnOk_WhenSuccessful()
         {
             // Arrange
-            var city = _fixture.Build<City>()
-                .With(x => x.PostOffice, _fixture.Create<string>()[0..20])
-                .Without(x => x.Hotels)
-                .Create();
-            await _dbContext.Cities.AddAsync(city);
+            var hotel = _fixture.Create<Hotel>();
+            await _dbContext.Hotels.AddAsync(hotel);
             await _dbContext.SaveChangesAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/{city.Id}");
-            var deletedCity = await response.Content.ReadFromJsonAsync<CityDto>();
+            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}");
+            var deletedHotel = await response.Content.ReadFromJsonAsync<HotelMinDto>();
 
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            deletedCity.Should().NotBeNull();
-            deletedCity?.Id.Should().Be(city.Id);
-            deletedCity?.PostOffice.Should().Be(city.PostOffice);
-            deletedCity?.Country.Should().Be(city.Country);
-            deletedCity?.Name.Should().Be(city.Name);
+            deletedHotel.Should().NotBeNull();
+            deletedHotel?.Id.Should().BeGreaterThanOrEqualTo(1);
+            deletedHotel?.Name.Should().Be(hotel.Name);
+            deletedHotel?.Description.Should().Be(hotel.Description);
+            deletedHotel?.Address.Should().Be(hotel.Address);
+            deletedHotel?.HotelType.Should().Be(hotel.HotelType.ToString());
+            deletedHotel?.Owner.Should().Be(hotel.Owner);
+            deletedHotel?.PricePerNight.Should().Be(hotel.PricePerNight);
+            deletedHotel?.City.Should().Be(hotel.City.Name);
         }
 
         [Fact]
-        public async Task DeleteCity_Should_ReturnNotFound_WhenCityNotFound()
+        public async Task DeleteHotel_Should_ReturnNotFound_WhenHotelNotFound()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/0");
+            var response = await _client.DeleteAsync($"/api/hotels/0");
 
             // Assert
             response.Should().NotBeNull();
@@ -79,13 +88,13 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task DeleteCity_Should_ReturnUnauthorized_WhenTokenIsInvalidOrMissing()
+        public async Task DeleteHotel_Should_ReturnUnauthorized_WhenTokenIsInvalidOrMissing()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/hotels/1");
 
             // Assert
             response.Should().NotBeNull();
@@ -93,13 +102,13 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         }
 
         [Fact]
-        public async Task DeleteCity_Should_ReturnForbidden_WhenUserIsNotAdmin()
+        public async Task DeleteHotel_Should_ReturnForbidden_WhenUserIsNotAdmin()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/hotels/1");
 
             // Assert
             response.Should().NotBeNull();

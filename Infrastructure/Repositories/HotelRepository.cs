@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
                                   .Include(o => o.HotelAmenity).ThenInclude(o => o.Amenity)
                                   .Where(p => p.PricePerNight >= search.MinPrice)
                                   .Where(h =>
-                                    h.Rooms.Any(r => r.BookingRooms.Any(br =>
+                                    !h.Rooms.Any(r => r.BookingRooms.Any(br =>
                                         br.Booking.StartDate < search.CheckOut &&
                                         br.Booking.EndDate > search.CheckIn
                                     ))
@@ -45,12 +45,10 @@ namespace Infrastructure.Repositories
                                         )
                                   );
 
-            if (search.Aminites is not null && search.Aminites.Length > 0)
-                query = query.Where
-                    (
-                        am => am.HotelAmenity.Count > 0 &&
-                        search.Aminites.All(p => am.HotelAmenity.Any(o => o.AmenityId == p))
-                    );
+            if (search.Amenities is not null && search.Amenities.Length > 0) {
+                var amenityIds = search.Amenities.ToList();
+                query = query.Where(am => am.HotelAmenity.Any(o => amenityIds.Contains(o.AmenityId)));
+            }
 
             if (search.MaxPrice is not null)
                 query = query.Where(p => p.PricePerNight <= search.MaxPrice);

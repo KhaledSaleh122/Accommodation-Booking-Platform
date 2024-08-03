@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E95C1D34
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABP.Application.Tests", "ABP.Application.Tests\ABP.Application.Tests.csproj", "{53A0BEA8-0647-4522-A768-C6C0A2E4A25A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABP.Presentation.IntegrationTests", "ABP.Presentation.IntegrationTests\ABP.Presentation.IntegrationTests.csproj", "{39E23B84-E6FA-4963-BB8D-EE006F088A32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABP.Presentation.IntegrationTests", "ABP.Presentation.IntegrationTests\ABP.Presentation.IntegrationTests.csproj", "{39E23B84-E6FA-4963-BB8D-EE006F088A32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

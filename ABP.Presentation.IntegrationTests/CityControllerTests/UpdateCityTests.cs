@@ -26,7 +26,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
 
         public UpdateCityTests(ABPWebApplicationFactory factory)
         {
-            factory.DatabaseName = $"InMemoryDb_Update";
+            factory.DatabaseName = Guid.NewGuid().ToString();
             _client = factory.CreateClient();
             _fixture = new Fixture();
             var scope = factory.Services.CreateScope();
@@ -35,6 +35,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             JwtTokenHelper jwtTokenHelper = new(configuration, userManager);
             _dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            factory.SetupDbContext(_dbContext).GetAwaiter().GetResult();
             _adminToken = jwtTokenHelper.GetJwtTokenAsync("Admin").GetAwaiter().GetResult();
             _userToken = jwtTokenHelper.GetJwtTokenAsync("User").GetAwaiter().GetResult();
             _command = _fixture.Build<UpdateCityCommand>()
@@ -234,20 +235,21 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         public async Task UpdateCity_Should_ReturnConflict_WhenCityExistsInCountry()
         {
             // Arrange
-            var city = _fixture.Build<City>()
+            var cities = _fixture.Build<City>()
                 .With(x => x.PostOffice, _fixture.Create<string>()[0..20])
+                .With(x => x.Country, "USA")
                 .Without(x => x.Hotels)
-                .Create();
-            await _dbContext.Cities.AddAsync(city);
+                .CreateMany(2);
+            await _dbContext.Cities.AddRangeAsync(cities);
             await _dbContext.SaveChangesAsync();
-            _command.id = city.Id;
-            _command.Name = city.Name;
-            _command.Country = city.Country;
+            _command.id = cities.First().Id;
+            _command.Name = cities.ElementAt(1).Name;
+            _command.Country = cities.First().Country;
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/{city.Id}", content);
+            var response = await _client.PutAsync($"/api/cities/{cities.First().Id}", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -258,19 +260,22 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         public async Task UpdateCity_Should_ReturnConflict_WhenPostOfficeExists()
         {
             // Arrange
-            var city = _fixture.Build<City>()
-                .With(x => x.PostOffice, _fixture.Create<string>()[0..20])
+            var cities = _fixture.Build<City>()
                 .Without(x => x.Hotels)
-                .Create();
-            await _dbContext.Cities.AddAsync(city);
+                .CreateMany(2);
+            foreach (var item in cities)
+            {
+                item.PostOffice = "PostOffice" + _fixture.Create<int>();
+            }
+            await _dbContext.Cities.AddRangeAsync(cities);
             await _dbContext.SaveChangesAsync();
-            _command.id = city.Id;
-            _command.PostOffice = city.PostOffice;
+            _command.id = cities.First().Id;
+            _command.PostOffice = cities.ElementAt(1).PostOffice;
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/{city.Id}", content);
+            var response = await _client.PutAsync($"/api/cities/{cities.First().Id}", content);
 
             // Assert
             response.Should().NotBeNull();

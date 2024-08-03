@@ -22,7 +22,11 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
         {
             var configuration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Hotel, HotelMinDto>();
+                cfg.CreateMap<Hotel, HotelMinDto>()
+                    .ForMember(dest => dest.City,
+                       opt =>
+                            opt.MapFrom(src => src.City.Name)
+                    );
             });
             _mapper = configuration.CreateMapper();
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -38,6 +42,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
                 var (hotel, avgReviews) = await _repository.GetByIdAsync(request.Id) ?? throw new NotFoundException();
                 await _transactionService.BeginTransactionAsync();
                 deletedHotel = await _repository.DeleteAsync(hotel);
+                deletedHotel.City = hotel.City;
                 _imageRepository.DeleteFile(hotel.Thumbnail);
                 foreach (var image in hotel.Images)
                 {

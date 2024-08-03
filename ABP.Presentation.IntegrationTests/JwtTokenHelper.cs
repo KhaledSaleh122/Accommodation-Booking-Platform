@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,7 +29,7 @@ namespace ABP.Presentation.IntegrationTests
         }
         public async Task<string> GetJwtTokenAsync(string username)
         {
-            var user = await _userManager.FindByNameAsync(username) ?? throw new ArgumentNullException("Account not found");
+            var user = await _userManager.Users.Where(x => x.UserName == username).FirstOrDefaultAsync() ?? throw new ArgumentNullException("Account not found");
             var claims = new List<Claim>() {
                 new (ClaimTypes.Name, user.UserName!),
                 new (ClaimTypes.Email, user.Email!),
