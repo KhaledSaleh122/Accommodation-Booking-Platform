@@ -52,7 +52,11 @@ namespace ABPIntegrationTests
 
             var user = new User { Id = "UserId", UserName = "User", Email = "User@gmail.com", Thumbnail = "test.png" };
             await dbContext.Users.AddAsync(user);
-            await dbContext.UserRoles.AddAsync(new IdentityUserRole<string>(){ RoleId = "RoleUser",UserId = "UserId" });
+            await dbContext.UserRoles.AddAsync(new IdentityUserRole<string>(){ RoleId = "RoleUser",UserId = "UserId" });            
+            
+            var user1 = new User { Id = "User1Id", UserName = "User1", Email = "User1@gmail.com", Thumbnail = "test.png" };
+            await dbContext.Users.AddAsync(user1);
+            await dbContext.UserRoles.AddAsync(new IdentityUserRole<string>(){ RoleId = "RoleUser",UserId = "User1Id" });
             await dbContext.SaveChangesAsync();
         }
 
