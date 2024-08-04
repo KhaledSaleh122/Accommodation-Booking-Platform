@@ -38,7 +38,7 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
                     HotelId = request.HotelId
                 };
                 var isAmenityExist = await _hotelAmenityRepository.AmenityExistsAsync(request.HotelId, request.AmenityId);
-                if(isAmenityExist)
+                if (isAmenityExist)
                     throw new ErrorException("The hotel already has this amenity.")
                     {
                         StatusCode = StatusCodes.Status409Conflict
@@ -47,6 +47,9 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
             }
             catch (NotFoundException)
             {
+                throw;
+            }
+            catch (ErrorException) {
                 throw;
             }
             catch (Exception exception)

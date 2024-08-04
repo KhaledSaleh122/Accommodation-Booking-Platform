@@ -3,6 +3,7 @@ using Application.Execptions;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
 {
@@ -30,6 +31,12 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
                     ?? throw new NotFoundException("Hotel not found");
                 var amenity = await _amenityRepository.GetByIdAsync(request.AmenityId)
                     ?? throw new NotFoundException("Amenity not found");
+                var isAmenityExist = await _hotelAmenityRepository.AmenityExistsAsync(request.HotelId, request.AmenityId);
+                if (!isAmenityExist)
+                    throw new ErrorException("The hotel doesn’t have this amenity.")
+                    {
+                        StatusCode = StatusCodes.Status409Conflict
+                    };
                 var amenityHotel = new HotelAmenity()
                 {
                     AmenityId = request.AmenityId,
@@ -39,6 +46,9 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete
             }
             catch (NotFoundException)
             {
+                throw;
+            }
+            catch (ErrorException) {
                 throw;
             }
             catch (Exception exception)
