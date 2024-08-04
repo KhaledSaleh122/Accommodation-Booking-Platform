@@ -1,5 +1,4 @@
-﻿using Domain.Abstractions;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
@@ -10,6 +9,9 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
             RuleFor(review => review.Rating)
                 .Cascade(CascadeMode.Stop)
                 .InclusiveBetween(1, 5);
+            RuleFor(review => review.Comment)
+                .MaximumLength(255)
+                .When(x => x.Comment is not null); 
         }
     }
 }
