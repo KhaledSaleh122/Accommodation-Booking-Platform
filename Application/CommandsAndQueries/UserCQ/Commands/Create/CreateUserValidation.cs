@@ -18,7 +18,7 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                 .EmailAddress(EmailValidationMode.AspNetCoreCompatible);
             RuleFor(user => user.Password)
                 .NotEmpty()
-                .MaximumLength(30)
+                .MaximumLength(55)
                 .MinimumLength(6);
             RuleFor(user => user.UserName)
                 .Cascade(CascadeMode.Stop)

@@ -44,7 +44,7 @@ namespace ABPIntegrationTests
             var roles = new[] { "Admin", "User" };
             foreach (var role in roles)
             {
-                await dbContext.Roles.AddAsync(new IdentityRole(role) { Id = "Role"+role });
+                await dbContext.Roles.AddAsync(new IdentityRole(role) { Id = "Role"+role, NormalizedName = role.ToUpper() });
             }
             var admin = new User { Id = "AdminId", UserName = "Admin", Email = "Admin@gmail.com", Thumbnail = "test.png" };
             await dbContext.Users.AddAsync(admin);
