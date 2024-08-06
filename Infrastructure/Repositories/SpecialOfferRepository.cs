@@ -42,7 +42,7 @@ namespace Infrastructure.Repositories
                     sp => 
                         sp.OfferType == OfferType.FeatureDeal &&
                         sp.ExpireDate >= DateOnly.FromDateTime(DateTime.UtcNow) 
-                )
+                ).OrderByDescending(sp=> sp.DiscountPercentage)
                 .Take(5)
                 .ToListAsync();
         }
