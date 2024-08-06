@@ -1,14 +1,13 @@
-﻿using MediatR;
-using System.Net.Mail;
-using System.Net;
-using Stripe;
+﻿using Application.Exceptions;
 using Application.Execptions;
 using Domain.Abstractions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
-using Application.Exceptions;
-using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Stripe;
+using System.Net.Mail;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
 {
@@ -67,7 +66,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
                     await SendBookingConfirmationEmail(booking, user, hotel);
                 }
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (Exception exception)
@@ -75,7 +75,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
                 throw new ErrorException("Error happend during confirm the booking", exception);
             }
         }
-		private async Task SendBookingConfirmationEmail(Booking booking,User user,Hotel hotel) {
+        private async Task SendBookingConfirmationEmail(Booking booking, User user, Hotel hotel)
+        {
             string fromAddress = _configuration.GetValue<string>("Mail:Email")!;
             string toAddress = user.Email!;
             string subject = "Booking Confirmation";
@@ -88,7 +89,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
                     Country: {hotel.City.Country}
                     City: {hotel.City.Name}
                     Address: {hotel.Address}
-                    Rooms Numbers: {String.Join(",",booking.BookingRooms.Select(x=>x.RoomNumber))}
+                    Rooms Numbers: {String.Join(",", booking.BookingRooms.Select(x => x.RoomNumber))}
                     Start Date: {booking.StartDate}
                     End Date: {booking.EndDate}
                     {specialOffer}
