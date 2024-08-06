@@ -14,13 +14,15 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
     internal class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly ITransactionService _transactionService;
         private readonly IImageService _imageRepository;
         public CreateUserHandler(
             UserManager<User> userManager,
             ITransactionService transactionService,
-            IImageService imageRepository)
+            IImageService imageRepository,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             var configuration = new MapperConfiguration(cfg =>
@@ -30,6 +32,7 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
             _mapper = configuration.CreateMapper();
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
+            _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         }
         public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
@@ -75,7 +78,6 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                         })
                    );
                 }
-
                 await _userManager.AddToRoleAsync(user, "User");
                 _imageRepository.UploadFile(request.Thumbnail, $"{storePath}", thumnailName);
                 await _transactionService.CommitTransactionAsync();
