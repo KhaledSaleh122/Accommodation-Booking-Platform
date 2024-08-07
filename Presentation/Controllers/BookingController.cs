@@ -52,8 +52,9 @@ namespace Presentation.Controllers
             _logger.LogInformation(
                 "A new request with ID '{BookingId}' has been created to book a room.",
                 bookingRequest.Booking.Id);
-            return Ok(bookingRequest);
+            return CreatedAtAction(nameof(GetUserBooking), new { command.userId, bookingId = bookingRequest.Booking.Id }, bookingRequest);
         }
+
         [HttpPost("/api/users/bookings/payments")]
         public async Task<IActionResult> BookingConfirmation() {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
