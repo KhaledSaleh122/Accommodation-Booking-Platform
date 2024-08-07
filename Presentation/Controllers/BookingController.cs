@@ -19,6 +19,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Security.Claims;
 using Application.CommandsAndQueries.BookingCQ.Commands.Confirm;
+using Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport;
 namespace Presentation.Controllers
 {
     [ApiController]
@@ -56,7 +57,8 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("/api/users/bookings/payments")]
-        public async Task<IActionResult> BookingConfirmation() {
+        public async Task<IActionResult> BookingConfirmation()
+        {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var stripeEvent = EventUtility.ConstructEvent(json,
                     Request.Headers["Stripe-Signature"], _configuration.GetValue<string>("Stripe:EndpointSecret"));
@@ -124,6 +126,29 @@ namespace Presentation.Controllers
             return Ok(booking);
         }
 
+        [HttpGet("{bookingId}/report")]
+        [Authorize(Roles = "User,Admin")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(BookingDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GenerateConfirmationReport(string userId, int bookingId)
+        {
+            if (bookingId <= 0) throw new NotFoundException("Booking not found!");
+            var admin = User.FindFirst(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            if (admin is null && userId != currentUserId)
+            {
+                return Forbid();
+            }
+            var query = new GenerateConfirmationReportQuery()
+            {
+                BookingId = bookingId,
+                UserId = userId
+            };
 
+            var fileBytes = await _mediator.Send(query);
+
+            return File(fileBytes, "application/pdf", "Invoice.pdf");
+        }
     }
 }

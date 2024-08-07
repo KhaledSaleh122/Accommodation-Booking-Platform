@@ -1,13 +1,8 @@
 ﻿using Application.Dtos.UserDtos;
-using Application.Exceptions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
 {

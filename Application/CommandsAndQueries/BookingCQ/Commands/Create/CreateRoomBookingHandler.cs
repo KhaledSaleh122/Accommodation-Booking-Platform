@@ -6,6 +6,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
@@ -17,6 +18,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
         private readonly IHotelRoomRepository _hotelRoomRepository;
         private readonly ISpecialOfferRepository _specialOfferRepository;
         private readonly IPaymentService<PaymentIntent, PaymentIntentCreateOptions> _paymentService;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         public CreateRoomBookingHandler(
@@ -25,7 +27,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             ITransactionService transactionService,
             IHotelRepository hotelRepository,
             ISpecialOfferRepository specialOfferRepository,
-            IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService)
+            IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService,
+            UserManager<User> userManager)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -42,12 +45,14 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
             _specialOfferRepository = specialOfferRepository ?? throw new ArgumentNullException(nameof(specialOfferRepository));
             _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         public async Task<BookingRequestDto> Handle(CreateRoomBookingCommand request, CancellationToken cancellationToken)
         {
             try
             {
+                var user = await _userManager.FindByIdAsync(request.userId) ?? throw new NotFoundException("User not found");
                 var hotel = await _hotelRepository.FindRoomsAsync(
                     request.HotelId,
                     request.RoomsNumbers
