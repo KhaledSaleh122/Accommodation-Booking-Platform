@@ -4,12 +4,10 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings
 {
-    internal class GetUserBookingsHandler : IRequestHandler<GetUserBookingsQuery,(IEnumerable<BookingDto>, int, int, int)>
+    internal class GetUserBookingsHandler : IRequestHandler<GetUserBookingsQuery, (IEnumerable<BookingDto>, int, int, int)>
     {
         private readonly IMapper _mapper;
         private readonly IBookingRepository _bookingRepository;
@@ -23,12 +21,12 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings
                     .ForMember(dest => dest.HotelId,
                         opt => opt.MapFrom(src => src.BookingRooms.First().HotelId))
                     .ForMember(dest => dest.Rooms,
-                        opt => opt.MapFrom(src => src.BookingRooms.Select(x => x.RoomNumber).ToList()));;
+                        opt => opt.MapFrom(src => src.BookingRooms.Select(x => x.RoomNumber).ToList())); ;
             });
             _mapper = configuration.CreateMapper();
         }
 
-        public async Task<(IEnumerable<BookingDto>, int, int, int )> Handle(GetUserBookingsQuery request, CancellationToken cancellationToken)
+        public async Task<(IEnumerable<BookingDto>, int, int, int)> Handle(GetUserBookingsQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,7 +37,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings
                      request.StartDate,
                      request.EndDate
                 );
-                return (_mapper.Map<IEnumerable<BookingDto>>(bookings), totalRecords, request.Page,request.PageSize);
+                return (_mapper.Map<IEnumerable<BookingDto>>(bookings), totalRecords, request.Page, request.PageSize);
             }
             catch (Exception exception)
             {

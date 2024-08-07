@@ -6,7 +6,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
@@ -64,19 +63,19 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                         request.StartDate,
                         request.EndDate
                     );
-                    if(!isRoomAvailable)
+                    if (!isRoomAvailable)
                         throw new ErrorException($"Room with number {roomNumber} not available for selected date")
                         {
                             StatusCode = StatusCodes.Status409Conflict
                         };
                 }
-                var discountPercentage = await GetDiscountPercentage(request.SpecialOfferId,request.HotelId);
+                var discountPercentage = await GetDiscountPercentage(request.SpecialOfferId, request.HotelId);
 
                 decimal discountedPricePerNight = hotel.PricePerNight * (1 - ((decimal)discountPercentage / 100));
                 var startDate = DateTime.Parse(request.StartDate.ToString());
                 var endData = DateTime.Parse(request.EndDate.ToString());
                 var daysToStay = (endData - startDate).Days;
-                decimal originalTotalPrice = (daysToStay *  hotel.PricePerNight) * request.RoomsNumbers.Count();
+                decimal originalTotalPrice = (daysToStay * hotel.PricePerNight) * request.RoomsNumbers.Count();
                 decimal discountedTotalPrice = (daysToStay * discountedPricePerNight) * request.RoomsNumbers.Count();
 
                 var booking = new Booking()
@@ -102,12 +101,13 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                         Enabled = true,
                     }
                 };
-                var paymentIntent = await _paymentService.CreateAsync(options,cancellationToken);
+                var paymentIntent = await _paymentService.CreateAsync(options, cancellationToken);
                 booking.PaymentIntentId = paymentIntent.Id;
-                var createdBooking =  await _bookingRepository.CreateRoomBookingAsync(booking);
+                var createdBooking = await _bookingRepository.CreateRoomBookingAsync(booking);
                 var bookingDto = _mapper.Map<BookingDto>(createdBooking);
 
-                return new BookingRequestDto() { 
+                return new BookingRequestDto()
+                {
                     ClientSecret = paymentIntent.ClientSecret,
                     PaymentIntentId = paymentIntent.Id,
                     Booking = bookingDto
@@ -126,7 +126,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                 throw new ErrorException("Error during creating the room booking", exception);
             }
         }
-        private async Task<int> GetDiscountPercentage(string? specialOfferId,int hotelId)
+        private async Task<int> GetDiscountPercentage(string? specialOfferId, int hotelId)
         {
             if (string.IsNullOrEmpty(specialOfferId)) return 0;
 
