@@ -42,6 +42,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Include(o => o.BookingRooms)
+                .Include(b => b.SpecialOffer)
                 .FirstOrDefaultAsync(b => b.UserId == userId && b.Id == bookingId);
         }
 

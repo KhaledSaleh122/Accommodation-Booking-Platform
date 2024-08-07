@@ -9,8 +9,9 @@
 *.user
 *.userosscache
 *.sln.docstates
-public/
+public/*
 !public/admin.jpg
+!public/user.jpg
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

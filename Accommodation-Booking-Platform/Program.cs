@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -41,17 +40,18 @@ namespace Accommodation_Booking_Platform
                 options.SuppressMapClientErrors = true;
             });
             services.AddDateOnlyTimeOnlyStringConverters();
+
             services.AddSwaggerGen(c =>
              {
-                c.AddSecurityDefinition("ABPApiBearerAuth", new()
-                {
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    Description = "Input a valid token to access this API"
-                });
+                 c.AddSecurityDefinition("ABPApiBearerAuth", new()
+                 {
+                     Type = SecuritySchemeType.Http,
+                     Scheme = "Bearer",
+                     Description = "Input a valid token to access this API"
+                 });
                  c.UseDateOnlyTimeOnlyStringConverters();
 
-                c.AddSecurityRequirement(new()
+                 c.AddSecurityRequirement(new()
                 {
                     {
                         new ()
@@ -80,7 +80,8 @@ namespace Accommodation_Booking_Platform
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddIdentity<User, IdentityRole>(option => {
+            services.AddIdentity<User, IdentityRole>(option =>
+            {
                 option.Password.RequiredLength = 6;
                 option.Password.RequireNonAlphanumeric = false;
                 option.Password.RequireDigit = true;
@@ -92,7 +93,8 @@ namespace Accommodation_Booking_Platform
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-            services.AddAuthorization(option => {
+            services.AddAuthorization(option =>
+            {
                 option.AddPolicy("Guest", policy =>
                 {
                     policy.RequireAssertion(context =>
@@ -106,8 +108,8 @@ namespace Accommodation_Booking_Platform
                 {
                     policy.RequireAssertion(context =>
                     {
-                        return 
-                        context.User?.Identity is null  || 
+                        return
+                        context.User?.Identity is null ||
                         !context.User.Identity.IsAuthenticated ||
                         context.User.IsInRole("User");
                     });
@@ -162,7 +164,7 @@ namespace Accommodation_Booking_Platform
                     RequestPath = ""
                 }
             );
-           
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

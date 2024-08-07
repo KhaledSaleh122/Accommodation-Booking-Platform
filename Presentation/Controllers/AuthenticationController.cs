@@ -4,14 +4,13 @@ using Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle;
 using Application.Dtos.UserDtos;
 using Application.Exceptions;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.Validation;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace Presentation.Controllers
 {
@@ -32,7 +31,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterUser([FromForm]CreateUserCommand? command)
+        public async Task<IActionResult> RegisterUser([FromForm] CreateUserCommand? command)
         {
             if (command is null) throw new CustomValidationException("The body for this request required");
             var createdUser = await _mediator.Send(command);
@@ -52,7 +51,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> LoginInUser(SignInUserCommand? command)
         {
-            if (command is null) 
+            if (command is null)
                 throw new CustomValidationException("The body for this request required");
             var signInDto = await _mediator.Send(command);
             if (signInDto is null) return Unauthorized();
@@ -67,7 +66,8 @@ namespace Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(UserSignInDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GoogleResponse() {
+        public async Task<IActionResult> GoogleResponse()
+        {
             var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
             if (result.Principal is null) return Unauthorized();
 

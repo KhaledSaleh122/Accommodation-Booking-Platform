@@ -16,7 +16,8 @@ namespace Application.CommandsAndQueries.UserCQ.Commands
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public UserSignInDto SignIn(User user,IList<String> roles){
+        public UserSignInDto SignIn(User user, IList<String> roles)
+        {
             var tokenhandler = new JwtSecurityTokenHandler();
             var tkey = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTToken:Key")!);
             var claims = new List<Claim>() {

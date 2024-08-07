@@ -2,19 +2,14 @@
 using Application.Execptions;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
 {
-    internal class SignInGoogleHandler : IRequestHandler<SignInGoogleCommand,UserSignInDto>
+    internal class SignInGoogleHandler : IRequestHandler<SignInGoogleCommand, UserSignInDto>
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
@@ -32,7 +27,7 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
                 var name = string.Empty;
                 foreach (var letter in username)
                 {
-                    if (Char.IsLetterOrDigit(letter)) name += letter; 
+                    if (Char.IsLetterOrDigit(letter)) name += letter;
                 }
                 var email = request.Claims.Where(x => x.Type == ClaimTypes.Email).First().Value;
                 var id = request.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value;
@@ -56,7 +51,8 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
                 var tokenInfo = signHandler.SignIn(userAccount ?? user, userRoles);
                 return tokenInfo;
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (Exception exception)
