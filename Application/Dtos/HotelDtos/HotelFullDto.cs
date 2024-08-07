@@ -24,7 +24,7 @@ namespace Application.Dtos.HotelDtos
 
         public ICollection<AmenityDto> Amenities { get; set; }
 
-        public ICollection<RoomDto> Rooms { get; set; }
+        public ICollection<RoomWithBookingDto> Rooms { get; set; }
 
         public ICollection<ReviewWithUserIdDto> Reviews { get; set; }
     }

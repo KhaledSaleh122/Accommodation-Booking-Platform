@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Stripe;
 using System.Reflection;
 using System.Text;
@@ -65,7 +67,10 @@ namespace Accommodation_Booking_Platform
             StripeConfiguration.ApiKey = configuration.GetValue<string>("Stripe:SecretKey");
 
             services
-                .AddControllers()
+            .AddControllers()
+                .AddNewtonsoftJson(options => options
+                    .SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                )
                 .AddApplicationPart(Assembly.Load("Presentation"));
 
             services.AddServices(configuration);
@@ -127,6 +132,10 @@ namespace Accommodation_Booking_Platform
                         Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWTToken:Key")!)
                     )
                 };
+            }).AddGoogle(options =>
+            {
+                options.ClientId = configuration.GetValue<string>("OAuth:ClientID")!;
+                options.ClientSecret = configuration.GetValue<string>("OAuth:ClientSecret")!;
             });
         }
 
