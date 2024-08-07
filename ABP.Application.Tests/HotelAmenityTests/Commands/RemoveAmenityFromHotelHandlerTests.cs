@@ -37,6 +37,7 @@ namespace ABP.Application.Tests.HotelAmenityTests.Commands
         {
             //Arrange
             _amenityRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Amenity());
+            _hotelAmenityRepositoryMock.Setup(x => x.AmenityExistsAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             _hotelRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((new Hotel(), default));
             //Act
             await _handler.Handle(_command, default);

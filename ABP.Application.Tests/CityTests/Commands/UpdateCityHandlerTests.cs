@@ -45,7 +45,11 @@ namespace ABP.Application.Tests.CityTests.Commands
             //Arrange
             _cityRepositoryMock.Setup(
                 x => x.GetByIdAsync(It.IsAny<int>())
-            ).ReturnsAsync(new City());
+            ).ReturnsAsync(
+                _fixture.Build<City>()
+                    .With(x => x.Id,_command.id)
+                    .Without(x => x.Hotels)
+                .Create());
             _cityRepositoryMock.Setup(
                 x => x.UpdateAsync(It.IsAny<City>())
             );
