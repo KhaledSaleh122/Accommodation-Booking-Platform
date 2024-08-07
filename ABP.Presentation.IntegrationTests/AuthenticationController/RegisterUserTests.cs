@@ -15,7 +15,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net.Mail;
 
-namespace ABP.Presentation.IntegrationTests.UserControllerTests
+namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
 {
     public class RegisterUserTests : IClassFixture<ABPWebApplicationFactory>
     {
