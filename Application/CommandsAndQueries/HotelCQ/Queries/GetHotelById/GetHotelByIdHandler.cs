@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.AmenityDtos;
+using Application.Dtos.BookingDtos;
 using Application.Dtos.HotelDtos;
 using Application.Dtos.ReviewDtos;
 using Application.Dtos.RoomDtos;
@@ -43,12 +44,18 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
                         opt.MapFrom(src => src.City.Country)
                    );
                 cfg.CreateMap<Amenity, AmenityDto>();
-                cfg.CreateMap<Room, RoomDto>()
+                cfg.CreateMap<Room, RoomWithBookingDto>()
                     .ForMember(dest => dest.Images, opt =>
                         opt.MapFrom(
                           src => src.Images.Select(x => x.Path).ToList()
                         )
+                    )
+                    .ForMember(dest => dest.Bookings, opt => opt
+                        .MapFrom(src => src
+                            .BookingRooms.Select(x => x.Booking).ToList()
+                        )
                     );
+                cfg.CreateMap<Booking, BookingRoomDto>();
                 cfg.CreateMap<Review, ReviewWithUserIdDto>();
             });
             _mapper = configuration.CreateMapper();

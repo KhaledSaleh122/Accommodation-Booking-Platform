@@ -1,13 +1,17 @@
 ﻿using Application.CommandsAndQueries.UserCQ.Commands.Create;
 using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
+using Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle;
 using Application.Dtos.UserDtos;
 using Application.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Responses.Validation;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace Presentation.Controllers
 {
@@ -57,6 +61,26 @@ namespace Presentation.Controllers
                 command.UserName
             );
             return Ok(signInDto);
+        }
+
+        [HttpGet("sessions/google-response")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(UserSignInDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GoogleResponse() {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (result.Principal is null) return Unauthorized();
+
+            var signInInformarion = await _mediator.Send(new SignInGoogleCommand(result.Principal.Claims));
+            return Ok(signInInformarion);
+        }
+
+        [HttpGet("sessions/google")]
+        public IActionResult SignInWithGoogle()
+        {
+            var redirectUrl = Url.Action(nameof(GoogleResponse));
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
     }

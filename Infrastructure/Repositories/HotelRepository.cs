@@ -88,15 +88,26 @@ namespace Infrastructure.Repositories
                 .Include(inc => inc.City)
                 .Include(inc => inc.Images)
                 .Include(inc => inc.Rooms).ThenInclude(o => o.Images)
+                .Include(inc => inc.Rooms).ThenInclude(o => o.BookingRooms).ThenInclude(o => o.Booking)
                 .Select(h => new
                 {
                     Hotel = h,
                     Reviews = h.Reviews.Take(10).ToList(),
+                    BookingRooms = h.Rooms.Select(x => x.BookingRooms
+                    .Where(b =>
+                        b.Booking.StartDate >= DateOnly.FromDateTime(DateTime.UtcNow) ||
+                        b.Booking.EndDate >= DateOnly.FromDateTime(DateTime.UtcNow))
+                    ).FirstOrDefault(),
                     AvgReviewScore = h.Reviews.Count != 0 ? h.Reviews.Average(r => r.Rating) : 0
                 })
                 .FirstOrDefaultAsync(h => h.Hotel.Id == hotelId);
-            if (result is not null)
+            if (result is not null) { 
                 result.Hotel.Reviews = result.Reviews;
+                foreach (var room in result.Hotel.Rooms)
+                {
+                    room.BookingRooms = result.BookingRooms?.Where(x => x.RoomNumber == room.RoomNumber).ToList() ?? [];
+                }
+            }
 
             return result is null ? null : (result.Hotel,result.AvgReviewScore);
         }
