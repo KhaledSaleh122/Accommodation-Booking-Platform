@@ -1,5 +1,7 @@
 using Accommodation_Booking_Platform.Configurations;
 using Accommodation_Booking_Platform.Middleware;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Booking_API_Project.Configurations;
 using Booking_API_Project.Middleware;
 using Domain.Entities;
@@ -39,19 +41,34 @@ namespace Accommodation_Booking_Platform
                 options.SuppressModelStateInvalidFilter = true;
                 options.SuppressMapClientErrors = true;
             });
+
+            services.AddApiVersioning(options =>
+                 {
+                     options.DefaultApiVersion = new ApiVersion(1);
+                     options.ReportApiVersions = true;
+                     options.AssumeDefaultVersionWhenUnspecified = true;
+                     options.ApiVersionReader = ApiVersionReader.Combine(
+                         new UrlSegmentApiVersionReader(),
+                         new HeaderApiVersionReader("X-Api-Version"));
+                 }).AddApiExplorer(options =>
+                 {
+                     options.GroupNameFormat = "'v'V";
+                     options.SubstituteApiVersionInUrl = true;
+                 });
+
             services.AddDateOnlyTimeOnlyStringConverters();
 
             services.AddSwaggerGen(c =>
-             {
-                 c.AddSecurityDefinition("ABPApiBearerAuth", new()
-                 {
-                     Type = SecuritySchemeType.Http,
-                     Scheme = "Bearer",
-                     Description = "Input a valid token to access this API"
-                 });
-                 c.UseDateOnlyTimeOnlyStringConverters();
+            {
+                c.AddSecurityDefinition("ABPApiBearerAuth", new()
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    Description = "Input a valid token to access this API"
+                });
+                c.UseDateOnlyTimeOnlyStringConverters();
 
-                 c.AddSecurityRequirement(new()
+                c.AddSecurityRequirement(new()
                 {
                     {
                         new ()
@@ -63,7 +80,7 @@ namespace Accommodation_Booking_Platform
                         new List<string>()
                     }
                 });
-             });
+            });
             StripeConfiguration.ApiKey = configuration.GetValue<string>("Stripe:SecretKey");
 
             services
@@ -150,6 +167,7 @@ namespace Accommodation_Booking_Platform
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
             }
             string currentDir = Directory.GetCurrentDirectory();
             string staticFolderPath = Path.Combine(currentDir, "Public");

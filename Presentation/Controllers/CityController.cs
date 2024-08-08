@@ -6,6 +6,7 @@ using Application.CommandsAndQueries.CityCQ.Query.GetCities;
 using Application.CommandsAndQueries.CityCQ.Query.GetCityById;
 using Application.Dtos.CityDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,8 @@ using Presentation.Responses.Validation;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/cities")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/cities")]
     public class CityController : ControllerBase
     {
         private readonly ILogger<CityController> _logger;

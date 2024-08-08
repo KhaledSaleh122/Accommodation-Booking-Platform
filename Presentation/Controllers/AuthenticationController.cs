@@ -3,6 +3,7 @@ using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
 using Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle;
 using Application.Dtos.UserDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -15,7 +16,8 @@ using Presentation.Responses.Validation;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     [Authorize(Policy = "Guest")]
     public class AuthenticationController : ControllerBase
     {
