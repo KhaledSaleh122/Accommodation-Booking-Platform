@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public sealed class Review
+    public sealed class Review : BaseEntity
     {
         public int Rating { get; set; }
         public string Comment { get; set; }

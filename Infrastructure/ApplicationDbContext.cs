@@ -30,6 +30,36 @@ namespace Infrastructure
         {
             base.OnConfiguring(optionsBuilder);
         }
+
+        public override int SaveChanges()
+        {
+            UpdateTimestamps();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimestamps();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+        private void UpdateTimestamps()
+        {
+            var entities = ChangeTracker.Entries()
+                .Where(e => e.Entity is BaseEntity &&
+                           (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entity in entities)
+            {
+                var now = DateTime.UtcNow;
+
+                if (entity.State == EntityState.Added)
+                {
+                    ((BaseEntity)entity.Entity).CreatedAt = now;
+                }
+
+                ((BaseEntity)entity.Entity).UpdatedAt = now;
+            }
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

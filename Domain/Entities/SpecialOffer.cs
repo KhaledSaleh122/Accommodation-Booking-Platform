@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class SpecialOffer
+    public class SpecialOffer : BaseEntity
     {
         public string Id { get; set; }
         public int HotelId { get; set; }

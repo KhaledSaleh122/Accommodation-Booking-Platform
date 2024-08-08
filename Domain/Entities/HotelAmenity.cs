@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public sealed class HotelAmenity
+    public sealed class HotelAmenity : BaseEntity
     {
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
