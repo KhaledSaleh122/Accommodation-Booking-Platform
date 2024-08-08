@@ -5,6 +5,7 @@ using Application.CommandsAndQueries.HotelCQ.Query.GetHotelById;
 using Application.CommandsAndQueries.HotelCQ.Query.GetHotels;
 using Application.Dtos.HotelDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,8 @@ using System.Security.Claims;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/hotels")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/hotels")]
     public class HotelController : ControllerBase
     {
         private readonly ILogger<HotelController> _logger;

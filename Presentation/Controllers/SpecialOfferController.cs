@@ -2,6 +2,7 @@
 using Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDealOffers;
 using Application.Dtos.SpecialOfferDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,8 @@ using Microsoft.Extensions.Logging;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     public class SpecialOfferController : ControllerBase
     {
         private readonly ILogger<SpecialOfferController> _logger;

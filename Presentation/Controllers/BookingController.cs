@@ -5,6 +5,7 @@ using Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById;
 using Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings;
 using Application.Dtos.BookingDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +21,8 @@ using System.Security.Claims;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/users/{userId}/bookings")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/users/{userId}/bookings")]
     public class BookingController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -33,8 +35,8 @@ namespace Presentation.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-
-        [HttpPost("/api/users/bookings")]
+        [ApiVersion("1.0")]
+        [HttpPost("/api/v{version:apiVersion}/users/bookings")]
         [Authorize(Roles = "User")]
         [ProducesResponseType(typeof(ServerErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -52,8 +54,8 @@ namespace Presentation.Controllers
                 bookingRequest.Booking.Id);
             return CreatedAtAction(nameof(GetUserBooking), new { command.userId, bookingId = bookingRequest.Booking.Id }, bookingRequest);
         }
-
-        [HttpPost("/api/users/bookings/payments")]
+        [ApiVersion("1.0")]
+        [HttpPost("/api/v{version:apiVersion}/users/bookings/payments")]
         public async Task<IActionResult> BookingConfirmation()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();

@@ -2,6 +2,7 @@
 using Application.CommandsAndQueries.ReviewCQ.Commands.Delete;
 using Application.Dtos.ReviewDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,8 @@ using System.Security.Claims;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/hotels/{hotelId}/reviews")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/hotels/{hotelId}/reviews")]
     public class ReviewController : ControllerBase
     {
         private readonly ILogger<ReviewController> _logger;

@@ -2,6 +2,7 @@
 using Application.CommandsAndQueries.RoomCQ.Commands.Delete;
 using Application.Dtos.RoomDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,8 @@ using Presentation.Responses.Validation;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/hotels/{hotelId}/rooms")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/hotels/{hotelId}/rooms")]
     public class RoomController : ControllerBase
     {
         private readonly ILogger<RoomController> _logger;

@@ -5,6 +5,7 @@ using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities;
 using Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById;
 using Application.Dtos.AmenityDtos;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,9 @@ namespace Presentation.Controllers
 {
 
     [ApiController]
-    [Route("api/amenities")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/amenities")]
+
     public class AmenityController : ControllerBase
     {
         private readonly IMediator _mediator;

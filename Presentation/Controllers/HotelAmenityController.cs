@@ -1,6 +1,7 @@
 ﻿using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create;
 using Application.CommandsAndQueries.HotelAmenityCQ.Commands.Delete;
 using Application.Exceptions;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,8 @@ using Presentation.Responses.NotFound;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/hotels/{hotelId}/amenities")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/hotels/{hotelId}/amenities")]
     public class HotelAmenityController : ControllerBase
     {
         private readonly ILogger<HotelAmenityController> _logger;
