@@ -152,3 +152,5 @@ namespace Presentation.Controllers
         }
     }
 }
+// check for user existance
+// remove pic from public
