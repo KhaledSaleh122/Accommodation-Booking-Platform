@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
@@ -14,9 +15,11 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
         private readonly IMapper _mapper;
         private readonly IBookingRepository _bookingRepository;
         private readonly IPaymentService<PaymentIntent, PaymentIntentCreateOptions> _paymentService;
+        private readonly UserManager<User> _userManager;
 
         public GetUserBookingByIdHandler(IBookingRepository bookingRepository,
-            IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService)
+            IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService,
+            UserManager<User> userManager)
         {
             _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
             var configuration = new MapperConfiguration(cfg =>
@@ -29,12 +32,14 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
             });
             _mapper = configuration.CreateMapper();
             _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         public async Task<BookingWithPaymentIntentDto> Handle(GetUserBookingByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
+                var user = await _userManager.FindByIdAsync(request.UserId) ?? throw new NotFoundException("User not found!");
                 var booking = await _bookingRepository.GetByIdAsync(request.UserId, request.BookingId)
                     ?? throw new NotFoundException("Booking not found!");
                 var paymentIntent = await _paymentService.GetAsync(booking.PaymentIntentId,cancellationToken)

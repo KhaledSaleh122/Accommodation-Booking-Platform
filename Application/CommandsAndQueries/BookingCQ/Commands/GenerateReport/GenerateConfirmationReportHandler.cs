@@ -47,7 +47,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
                         StatusCode = 409
                     };
 
-                var user = await _userManager.FindByIdAsync(request.UserId);
+                var user = await _userManager.FindByIdAsync(request.UserId) ?? throw new NotFoundException("User not found!");
                 var (hotel, avgRate) = await _hotelRepository.GetByIdAsync(booking.BookingRooms.First().HotelId)
                     ?? throw new ErrorException("Hotel not found") { StatusCode = 500 };
 
@@ -76,6 +76,9 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
                 byte[] pdfBytes = memoryStream.ToArray();
 
                 return pdfBytes;
+            }
+            catch (NotFoundException) {
+                throw;
             }
             catch (ErrorException)
             {

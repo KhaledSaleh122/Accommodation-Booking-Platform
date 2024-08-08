@@ -6,6 +6,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
@@ -14,8 +15,9 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
         private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public CreateReviewHandler(IReviewHotelRepository reviewRepository, IHotelRepository hotelRepository)
+        public CreateReviewHandler(IReviewHotelRepository reviewRepository, IHotelRepository hotelRepository, UserManager<User> userManager)
         {
             _reviewRepository = reviewRepository ?? throw new ArgumentNullException(nameof(reviewRepository));
             var configuration = new MapperConfiguration(cfg =>
@@ -25,6 +27,7 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
             });
             _mapper = configuration.CreateMapper();
             _hotelRepository = hotelRepository ?? throw new ArgumentNullException(nameof(hotelRepository));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         public async Task<ReviewDto> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
@@ -32,6 +35,7 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
             var review = _mapper.Map<Review>(request);
             try
             {
+                var user = await _userManager.FindByIdAsync(request.userId) ?? throw new NotFoundException("User not found!");
                 var hotel = await _hotelRepository.GetByIdAsync(request.hotelId)
                     ?? throw new NotFoundException("Hotel not found!");
                 review.HotelId = request.hotelId;
