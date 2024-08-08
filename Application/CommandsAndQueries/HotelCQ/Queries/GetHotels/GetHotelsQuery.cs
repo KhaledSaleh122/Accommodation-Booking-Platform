@@ -4,10 +4,10 @@ using MediatR;
 
 namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
 {
-    public class GetHotelsQuery: IRequest<(IEnumerable<HotelDto>, int, int, int)>
+    public class GetHotelsQuery : IRequest<(IEnumerable<HotelDto>, int, int, int)>
     {
         public GetHotelsQuery(
-                int page, 
+                int page,
                 int pageSize
             )
         {

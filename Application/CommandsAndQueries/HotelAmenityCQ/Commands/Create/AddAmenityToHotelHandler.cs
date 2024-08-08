@@ -15,7 +15,7 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
 
         public AddAmenityToHotelHandler(
                 IAmenityRepository amenityRepository,
-                IHotelRepository hotelRepository, 
+                IHotelRepository hotelRepository,
                 IHotelAmenityRepository hotelAmenityRepository
             )
         {
@@ -49,7 +49,8 @@ namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
             {
                 throw;
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (Exception exception)

@@ -5,7 +5,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Create
 {
@@ -18,7 +17,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
 
         public CreateCityHandler(
             ICityRepository cityRepository,
-            IImageService imageRepository, 
+            IImageService imageRepository,
             ITransactionService transactionService)
         {
             var configuration = new MapperConfiguration(cfg =>
@@ -41,7 +40,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
                     request.Name, request.Country
                 );
                 if (isCityExist)
-                    throw new ErrorException("A city with this name already exists in the country.") { 
+                    throw new ErrorException("A city with this name already exists in the country.")
+                    {
                         StatusCode = StatusCodes.Status409Conflict
                     };
                 var isPostExist = await _cityRepository.DoesPostOfficeExistsAsync(request.PostOffice);
@@ -52,7 +52,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
                     };
                 var storePath = "CityThumbnails";
                 var thumnailName = Guid.NewGuid().ToString();
-                city.Thumbnail =$"{storePath}/{thumnailName}{Path.GetExtension(request.Thumbnail.FileName)}";
+                city.Thumbnail = $"{storePath}/{thumnailName}{Path.GetExtension(request.Thumbnail.FileName)}";
                 await _transactionService.BeginTransactionAsync();
                 _imageRepository.UploadFile(request.Thumbnail, $"{storePath}", thumnailName);
                 await _cityRepository.CreateAsync(city);
@@ -60,7 +60,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
                 var cityDto = _mapper.Map<CityDto>(city);
                 return cityDto;
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (Exception exception)

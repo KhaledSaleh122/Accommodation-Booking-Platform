@@ -1,5 +1,4 @@
 ﻿using Application.Dtos.SpecialOfferDtos;
-using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 using System.ComponentModel.DataAnnotations;

@@ -2,7 +2,6 @@
 using Domain.Abstractions;
 using Domain.Enums;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
 {
@@ -30,14 +29,15 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Create
               .WithMessage("You can upload up to 20 images.")
               .Custom((images, context) =>
               images.ForEach(
-                  (image) => 
-                    imageRepository.ValidateImage(image,context,"Images")
+                  (image) =>
+                    imageRepository.ValidateImage(image, context, "Images")
                 )
               );
 
             RuleFor(hotel => hotel.CityId).NotEmpty()
               .MustAsync(
-                async (cityId, token) => {
+                async (cityId, token) =>
+                {
                     var city = await cityRepository.GetByIdAsync(cityId);
                     return city is not null;
                 }

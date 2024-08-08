@@ -10,8 +10,9 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
             HotelId = hotelId;
         }
 
-        public GetHotelByIdQuery() { 
-        
+        public GetHotelByIdQuery()
+        {
+
         }
 
         public int HotelId { get; set; }

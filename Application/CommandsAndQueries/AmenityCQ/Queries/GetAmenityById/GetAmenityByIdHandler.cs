@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
 {
@@ -31,7 +30,8 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenityById
                      ?? throw new NotFoundException("Amenity not found!");
                 return _mapper.Map<AmenityDto>(amenity);
             }
-            catch (NotFoundException) {
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (Exception exception)

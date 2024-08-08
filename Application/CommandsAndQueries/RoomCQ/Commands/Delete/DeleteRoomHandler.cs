@@ -43,9 +43,9 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
         {
             try
             {
-                var hotel = await _hotelRepository.GetByIdAsync(request.HotelId) 
+                var hotel = await _hotelRepository.GetByIdAsync(request.HotelId)
                     ?? throw new NotFoundException("Hotel not found!");
-                var room = await _hotelRoomRepository.GetHotelRoomAsync(request.HotelId, request.RoomNumber) 
+                var room = await _hotelRoomRepository.GetHotelRoomAsync(request.HotelId, request.RoomNumber)
                     ?? throw new NotFoundException("Room not found");
                 await _transactionService.BeginTransactionAsync();
                 await _hotelRoomRepository.DeleteRoomAsync(room);
@@ -57,7 +57,8 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
                 await _transactionService.CommitTransactionAsync();
                 return _mapper.Map<RoomDto>(room);
             }
-            catch (NotFoundException) {
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (Exception exception)

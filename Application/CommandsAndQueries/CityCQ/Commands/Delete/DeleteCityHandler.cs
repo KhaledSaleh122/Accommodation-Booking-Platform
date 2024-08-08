@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
 {
@@ -17,7 +16,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Delete
         private readonly ITransactionService _transactionService;
 
         public DeleteCityHandler(
-            ICityRepository repository, 
+            ICityRepository repository,
             IImageService imageRepository,
             ITransactionService transactionService)
         {

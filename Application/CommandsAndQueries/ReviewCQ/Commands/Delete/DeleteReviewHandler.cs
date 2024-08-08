@@ -6,8 +6,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using System;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
 {
@@ -36,16 +34,17 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
         public async Task<ReviewDto> Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
         {
             try
-			{
+            {
                 var hotel = await _hotelRepository.GetByIdAsync(request.HotelId)
                                 ?? throw new NotFoundException("Hotel not found!");
-                var user = await _userManager.FindByIdAsync(request.UserId) 
+                var user = await _userManager.FindByIdAsync(request.UserId)
                                 ?? throw new NotFoundException("User not found!");
                 var review = await _reviewRepository.GetReviewAsync(request.HotelId, request.UserId)
                                 ?? throw new NotFoundException("Review not found!");
                 var deletedReview = await _reviewRepository.DeleteHotelReviewAsync(review);
                 return _mapper.Map<ReviewDto>(deletedReview);
-            } catch (NotFoundException)
+            }
+            catch (NotFoundException)
             {
                 throw;
             }

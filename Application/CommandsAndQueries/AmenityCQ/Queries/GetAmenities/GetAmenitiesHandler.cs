@@ -4,11 +4,10 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
 {
-    internal class GetAmenitiesHandler : IRequestHandler<GetAmenitiesQuery, 
+    internal class GetAmenitiesHandler : IRequestHandler<GetAmenitiesQuery,
         (IEnumerable<AmenityDto> Amenities, int TotalRecords, int Page, int PageSize)>
     {
         private readonly IMapper _mapper;
@@ -30,7 +29,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Query.GetAmenities
             try
             {
                 var (amenities, totalRecords) = await _amenityRepository.GetAsync(request.Page, request.PageSize);
-                return 
+                return
                     (
                         _mapper.Map<IEnumerable<AmenityDto>>(amenities),
                         totalRecords,

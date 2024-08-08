@@ -6,7 +6,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
     public class UpdateCityCommandValidation : AbstractValidator<UpdateCityCommand>
     {
-        public UpdateCityCommandValidation(IImageService imageService) {
+        public UpdateCityCommandValidation(IImageService imageService)
+        {
             RuleFor(city => city.Name)
                 .NotEmpty()
                 .MaximumLength(50);

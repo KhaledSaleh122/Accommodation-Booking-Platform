@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Query.GetCityById
 {

@@ -4,7 +4,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Create
 {

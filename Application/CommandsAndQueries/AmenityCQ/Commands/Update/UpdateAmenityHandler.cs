@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System.Runtime.CompilerServices;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
 {

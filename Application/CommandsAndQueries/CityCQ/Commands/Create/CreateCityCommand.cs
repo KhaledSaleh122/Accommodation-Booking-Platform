@@ -7,7 +7,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Create
 {
     public class CreateCityCommand : IRequest<CityDto>
     {
-        public CreateCityCommand() { 
+        public CreateCityCommand()
+        {
         }
         public CreateCityCommand(string name, string country, string postOffice)
         {
