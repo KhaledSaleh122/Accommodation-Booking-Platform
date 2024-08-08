@@ -1,16 +1,15 @@
 ﻿using Application.Validation;
 using Domain.Abstractions;
-using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Validators;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.Create
 {
     public class CreateUserValidation : AbstractValidator<CreateUserCommand>
     {
 
-        public CreateUserValidation(IImageService imageService) {
+        public CreateUserValidation(IImageService imageService)
+        {
             RuleFor(user => user.Email)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()

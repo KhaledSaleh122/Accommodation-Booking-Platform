@@ -7,7 +7,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using System;
 
 namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecentlyVisitedHotels
 {
@@ -39,7 +38,7 @@ namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecen
                 var user = await _userManager.FindByIdAsync(request.UserId)
                 ?? throw new NotFoundException("User not found!");
                 var result = await _repository.GetAsync(request.UserId);
-                var recentlyVisitedDto =  _mapper.Map<IEnumerable<RvhDto>>(result.Keys);
+                var recentlyVisitedDto = _mapper.Map<IEnumerable<RvhDto>>(result.Keys);
                 for (var i = 0; i < result.Count; i++)
                 {
                     recentlyVisitedDto.ElementAt(i).hotel.Rating = result.ElementAt(i).Value;
@@ -47,7 +46,8 @@ namespace Application.CommandsAndQueries.RecentlyVisitedHotelCQ.Queries.GetRecen
                 return recentlyVisitedDto;
 
             }
-            catch (NotFoundException) {
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (Exception exception)

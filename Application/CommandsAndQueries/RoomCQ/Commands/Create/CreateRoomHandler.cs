@@ -89,7 +89,8 @@ namespace Application.CommandsAndQueries.RoomCQ.Commands.Create
             {
                 throw;
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (Exception exception)

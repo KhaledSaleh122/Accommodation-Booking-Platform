@@ -1,6 +1,5 @@
 ﻿using Application.Dtos.UserDtos;
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn

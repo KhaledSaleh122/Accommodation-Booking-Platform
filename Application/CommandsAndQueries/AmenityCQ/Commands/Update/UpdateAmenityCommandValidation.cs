@@ -4,7 +4,8 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
 {
     public class UpdateAmenityCommandValidation : AbstractValidator<UpdateAmenityCommand>
     {
-        public UpdateAmenityCommandValidation() {
+        public UpdateAmenityCommandValidation()
+        {
             RuleFor(amenity => amenity.Name)
                 .NotEmpty()
                 .MaximumLength(60);

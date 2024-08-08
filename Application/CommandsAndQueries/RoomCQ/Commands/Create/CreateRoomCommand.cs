@@ -1,5 +1,4 @@
 ﻿using Application.Dtos.RoomDtos;
-using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;

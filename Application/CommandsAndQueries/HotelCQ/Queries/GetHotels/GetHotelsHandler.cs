@@ -40,7 +40,8 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
             decimal? maxPrice = request.MaxPrice >= request.MinPrice ? request.MaxPrice : null;
             var checkIn = request.CheckIn ?? DateOnly.FromDateTime(DateTime.UtcNow);
             var checkOut = request.CheckOut ?? DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
-            if (checkIn > checkOut || checkIn < DateOnly.FromDateTime(DateTime.UtcNow)) {
+            if (checkIn > checkOut || checkIn < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
                 checkIn = DateOnly.FromDateTime(DateTime.UtcNow);
                 checkOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
             }
@@ -63,11 +64,12 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotels
                     City = request.City,
                     Country = request.Country,
                     HotelType = request.HotelType,
-                    Owner = request.Owner 
+                    Owner = request.Owner
                 };
                 var (result, totalRecords) = await _hotelRepository.GetAsync(search);
                 var hotels = _mapper.Map<IEnumerable<HotelDto>>(result.Keys);
-                for (int i = 0; i < result.Count; i++){
+                for (int i = 0; i < result.Count; i++)
+                {
                     hotels.ElementAt(i).Rating = result.ElementAt(i).Value;
                 }
                 return

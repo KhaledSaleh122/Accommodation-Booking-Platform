@@ -6,7 +6,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update
 {
@@ -35,7 +34,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
             try
             {
                 var city = await _repository.GetByIdAsync(request.id) ?? throw new NotFoundException($"Not Found");
-                if (!city.Name.Equals(updatedCity.Name,StringComparison.CurrentCultureIgnoreCase)) {
+                if (!city.Name.Equals(updatedCity.Name, StringComparison.CurrentCultureIgnoreCase))
+                {
                     var isCityExist = await _repository.DoesCityExistInCountryAsync(
                         request.Name, request.Country
                     );
@@ -68,7 +68,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
             {
                 throw;
             }
-            catch (ErrorException) {
+            catch (ErrorException)
+            {
                 throw;
             }
             catch (Exception exception)

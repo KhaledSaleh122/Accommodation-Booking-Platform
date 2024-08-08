@@ -69,17 +69,19 @@ namespace Application.CommandsAndQueries.HotelCQ.Query.GetHotelById
         {
             try
             {
-                var (hotel,avgReviews) = await _hotelRepository.GetByIdAsync(request.HotelId) ??
+                var (hotel, avgReviews) = await _hotelRepository.GetByIdAsync(request.HotelId) ??
                     throw new NotFoundException("Hotel not found!");
-                if (request.UserId is not null) {
-                    var recentlyVisited = new RecentlyVisitedHotel() {
+                if (request.UserId is not null)
+                {
+                    var recentlyVisited = new RecentlyVisitedHotel()
+                    {
                         UserId = request.UserId,
                         HotelId = hotel.Id,
                         VisitedDate = DateTime.UtcNow
                     };
                     await _recentlyVisitedHotel.AddAsync(recentlyVisited);
                 }
-                var hotelDto =  _mapper.Map<HotelFullDto>(hotel);
+                var hotelDto = _mapper.Map<HotelFullDto>(hotel);
                 hotelDto.Rating = avgReviews;
                 return hotelDto;
             }

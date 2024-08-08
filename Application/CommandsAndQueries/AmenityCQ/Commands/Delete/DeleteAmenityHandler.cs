@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
 {
@@ -30,11 +29,12 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Delete
             Amenity deletedAmenity;
             try
             {
-                var amenity = await _repository.GetByIdAsync(request.Id) 
+                var amenity = await _repository.GetByIdAsync(request.Id)
                     ?? throw new NotFoundException("Amenity not found!");
                 deletedAmenity = await _repository.DeleteAsync(amenity);
             }
-            catch (NotFoundException) {
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (Exception exception)

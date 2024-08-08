@@ -42,7 +42,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById
                 var user = await _userManager.FindByIdAsync(request.UserId) ?? throw new NotFoundException("User not found!");
                 var booking = await _bookingRepository.GetByIdAsync(request.UserId, request.BookingId)
                     ?? throw new NotFoundException("Booking not found!");
-                var paymentIntent = await _paymentService.GetAsync(booking.PaymentIntentId,cancellationToken)
+                var paymentIntent = await _paymentService.GetAsync(booking.PaymentIntentId, cancellationToken)
                     ?? throw new ErrorException(
                         "We encountered an issue while processing your payment. Please contact customer support.")
                     {

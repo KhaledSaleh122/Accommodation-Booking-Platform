@@ -4,7 +4,8 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Create
 {
     public sealed class CreateAmenityCommandValidation : AbstractValidator<CreateAmenityCommand>
     {
-        public CreateAmenityCommandValidation() {
+        public CreateAmenityCommandValidation()
+        {
             RuleFor(amenity => amenity.Name)
                 .NotEmpty()
                 .MaximumLength(60);

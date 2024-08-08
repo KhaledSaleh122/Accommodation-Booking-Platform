@@ -1,5 +1,4 @@
 ﻿using Application.CommandsAndQueries.CityCQ.Commands.Update;
-using Application.CommandsAndQueries.HotelCQ.Commands.Create;
 using Application.Dtos.HotelDtos;
 using Application.Exceptions;
 using Application.Execptions;
@@ -21,17 +20,17 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Update
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<UpdateHotelCommand, Hotel>()
-                    .ForMember(dest => dest.Address, 
+                    .ForMember(dest => dest.Address,
                         opt => opt.Condition((src, dest, srcMember) => srcMember != null))
-                    .ForMember(dest => dest.Description, 
+                    .ForMember(dest => dest.Description,
                         opt => opt.Condition((src, dest, srcMember) => srcMember != null))
-                    .ForMember(dest => dest.Name, 
+                    .ForMember(dest => dest.Name,
                         opt => opt.Condition((src, dest, srcMember) => srcMember != null))
-                    .ForMember(dest => dest.Owner, 
+                    .ForMember(dest => dest.Owner,
                         opt => opt.Condition((src, dest, srcMember) => srcMember != null))
-                    .ForMember(dest => dest.PricePerNight, 
+                    .ForMember(dest => dest.PricePerNight,
                         opt => opt.Condition((src, dest, srcMember) => src.PricePerNight != null))
-                    .ForMember(dest => dest.HotelType, 
+                    .ForMember(dest => dest.HotelType,
                         opt =>
                             {
                                 opt.PreCondition((src, dest, srcMember) => src.HotelType != null);

@@ -59,7 +59,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
                 // Add header section with company info and invoice header
                 AddHeaderSection(document, booking.Id);
 
-                // Add billing and shipping information
+                // Add billing
                 AddCustomerAndHotelInfo(document, user, hotel);
 
                 // Add table for items
@@ -77,7 +77,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
 
                 return pdfBytes;
             }
-            catch (NotFoundException) {
+            catch (NotFoundException)
+            {
                 throw;
             }
             catch (ErrorException)

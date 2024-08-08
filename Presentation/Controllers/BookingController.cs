@@ -1,9 +1,10 @@
-﻿using Application.CommandsAndQueries.BookingCQ.Commands.Create;
+﻿using Application.CommandsAndQueries.BookingCQ.Commands.Confirm;
+using Application.CommandsAndQueries.BookingCQ.Commands.Create;
+using Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport;
 using Application.CommandsAndQueries.BookingCQ.Queries.GetUserbookingById;
 using Application.CommandsAndQueries.BookingCQ.Queries.GetUserBookings;
 using Application.Dtos.BookingDtos;
 using Application.Exceptions;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,11 +16,7 @@ using Presentation.Responses.Pagination;
 using Presentation.Responses.ServerErrors;
 using Presentation.Responses.Validation;
 using Stripe;
-using System.Net.Mail;
-using System.Net;
 using System.Security.Claims;
-using Application.CommandsAndQueries.BookingCQ.Commands.Confirm;
-using Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport;
 namespace Presentation.Controllers
 {
     [ApiController]
@@ -152,5 +149,3 @@ namespace Presentation.Controllers
         }
     }
 }
-// check for user existance
-// remove pic from public

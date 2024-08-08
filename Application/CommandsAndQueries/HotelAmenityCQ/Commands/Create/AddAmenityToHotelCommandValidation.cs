@@ -1,5 +1,4 @@
-﻿using Domain.Abstractions;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Application.CommandsAndQueries.HotelAmenityCQ.Commands.Create
 {

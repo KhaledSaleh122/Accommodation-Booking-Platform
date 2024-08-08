@@ -17,7 +17,7 @@ namespace Application.CommandsAndQueries.HotelCQ.Commands.Delete
 
         public DeleteHotelHandler(
             IHotelRepository repository,
-            IImageService imageRepository, 
+            IImageService imageRepository,
             ITransactionService transactionService)
         {
             var configuration = new MapperConfiguration(cfg =>

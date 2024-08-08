@@ -11,7 +11,7 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
                 .InclusiveBetween(1, 5);
             RuleFor(review => review.Comment)
                 .MaximumLength(255)
-                .When(x => x.Comment is not null); 
+                .When(x => x.Comment is not null);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Booking_API_Project.Middleware;
 using Presentation.Responses.ServerErrors;
-using System;
 
 namespace Accommodation_Booking_Platform.Middleware
 {
@@ -22,7 +21,7 @@ namespace Accommodation_Booking_Platform.Middleware
                 await _next(context);
 
             }
-            catch (Exception exception) 
+            catch (Exception exception)
             {
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json";

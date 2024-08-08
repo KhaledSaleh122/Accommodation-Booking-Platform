@@ -1,6 +1,5 @@
 ﻿using Application.Dtos.RoomDtos;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.CommandsAndQueries.RoomCQ.Commands.Delete
 {

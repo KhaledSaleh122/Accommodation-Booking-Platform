@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
-using System;
 
 namespace Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDealOffers
 {
@@ -23,7 +22,7 @@ namespace Application.CommandsAndQueries.SpecialOfferCQ.Queries.GetTopFeatureDea
                     .ForMember(dest => dest.DiscountedPrice,
                         opt => opt.MapFrom(
                             src =>
-                                src.Hotel.PricePerNight * ( 1 - ( (decimal)src.DiscountPercentage / 100))
+                                src.Hotel.PricePerNight * (1 - ((decimal)src.DiscountPercentage / 100))
                         )
                     )
                     .ForMember(dest => dest.OriginalPrice,

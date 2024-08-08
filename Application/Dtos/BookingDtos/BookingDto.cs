@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.Dtos.BookingDtos
+﻿namespace Application.Dtos.BookingDtos
 {
     public class BookingDto
     {

@@ -1,5 +1,4 @@
 ﻿using Application.Dtos.HotelDtos;
-using Domain.Enums;
 using MediatR;
 
 namespace Application.CommandsAndQueries.CityCQ.Commands.Update

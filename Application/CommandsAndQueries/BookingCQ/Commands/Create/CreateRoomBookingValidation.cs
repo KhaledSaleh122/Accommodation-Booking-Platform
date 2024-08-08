@@ -4,7 +4,8 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
 {
     public class CreateRoomBookingValidation : AbstractValidator<CreateRoomBookingCommand>
     {
-        public CreateRoomBookingValidation() {
+        public CreateRoomBookingValidation()
+        {
             RuleFor(booking => booking.EndDate)
                 .Must((x, endDate) => x.StartDate < endDate)
                 .WithMessage("End date must be after start date");
@@ -15,7 +16,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
                 .NotEmpty()
                 .ForEach((x) => x.NotEmpty().MaximumLength(20));
             RuleFor(booking => booking.SpecialOfferId)
-                .MaximumLength(100);         
-        }           
+                .MaximumLength(100);
+        }
     }
 }
