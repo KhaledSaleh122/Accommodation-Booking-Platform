@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public sealed class City
+    public sealed class City : BaseEntity
     {
         public int Id { get; set; }
         public string Thumbnail { get; set; }

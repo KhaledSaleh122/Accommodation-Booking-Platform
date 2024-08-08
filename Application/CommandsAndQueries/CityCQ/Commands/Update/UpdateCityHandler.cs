@@ -30,11 +30,11 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
         }
         public async Task<CityDto> Handle(UpdateCityCommand request, CancellationToken cancellationToken)
         {
-            var updatedCity = _mapper.Map<City>(request);
+            City? updatedCity = null;
             try
             {
                 var city = await _repository.GetByIdAsync(request.id) ?? throw new NotFoundException($"Not Found");
-                if (!city.Name.Equals(updatedCity.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (!city.Name.Equals(request.Name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var isCityExist = await _repository.DoesCityExistInCountryAsync(
                         request.Name, request.Country
@@ -45,7 +45,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
                             StatusCode = StatusCodes.Status409Conflict
                         };
                 }
-                if (!city.PostOffice.Equals(updatedCity.PostOffice, StringComparison.CurrentCultureIgnoreCase))
+                if (!city.PostOffice.Equals(request.PostOffice, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var isPostExist = await _repository.DoesPostOfficeExistsAsync(request.PostOffice);
                     if (isPostExist)
@@ -54,6 +54,8 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
                             StatusCode = StatusCodes.Status409Conflict
                         };
                 }
+
+                updatedCity = _mapper.Map(request,city);
                 var storePath = "CityThumbnails";
                 var thumnailName = Guid.NewGuid().ToString();
                 updatedCity.Thumbnail = $"{storePath}/{thumnailName}{Path.GetExtension(request.Thumbnail.FileName)}";
@@ -75,6 +77,7 @@ namespace Application.CommandsAndQueries.CityCQ.Commands.Update
             catch (Exception exception)
             {
                 await _transactionService.RollbackTransactionAsync();
+                if(updatedCity is not null)
                 _imageService.DeleteFile(updatedCity.Thumbnail, true);
                 throw new ErrorException($"Error during updaing city with id '{request.id}'.", exception);
             }

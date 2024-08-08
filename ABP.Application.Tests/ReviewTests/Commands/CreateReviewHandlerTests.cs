@@ -6,6 +6,7 @@ using AutoFixture;
 using Domain.Abstractions;
 using Domain.Entities;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 
 namespace ABP.Application.Tests.ReviewTests.Commands
@@ -15,12 +16,16 @@ namespace ABP.Application.Tests.ReviewTests.Commands
         private readonly Mock<IReviewHotelRepository> _reviewRepositoryMock;
         private readonly Mock<IHotelRepository> _hotelRepositoryMock;
         private readonly CreateReviewHandler _handler;
+        private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly IFixture _fixture;
         private readonly CreateReviewCommand _command;
         public CreateReviewHandlerTests()
         {
             _reviewRepositoryMock = new();
             _hotelRepositoryMock = new();
+            var store = new Mock<IUserStore<User>>();
+            _userManagerMock = new Mock<UserManager<User>>(
+                store.Object, null, null, null, null, null, null, null, null);
             _fixture = new Fixture();
             _command = new CreateReviewCommand()
             {
@@ -30,7 +35,7 @@ namespace ABP.Application.Tests.ReviewTests.Commands
                 userId = _fixture.Create<string>()
             };
             _handler = new CreateReviewHandler(
-                _reviewRepositoryMock.Object, _hotelRepositoryMock.Object);
+                _reviewRepositoryMock.Object, _hotelRepositoryMock.Object, _userManagerMock.Object);
         }
         [Fact]
         public async Task Handler_Should_ReturnCreatedReview_WhenSuccess()

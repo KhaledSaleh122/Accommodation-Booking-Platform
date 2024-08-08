@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public sealed class Booking
+    public sealed class Booking : BaseEntity
     {
         #nullable disable
         public int Id { get; set; }

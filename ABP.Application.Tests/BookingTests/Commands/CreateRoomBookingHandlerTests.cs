@@ -5,6 +5,7 @@ using AutoFixture;
 using Domain.Abstractions;
 using Domain.Entities;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using Stripe;
 
@@ -20,6 +21,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
         private readonly CreateRoomBookingCommand _command;
         private readonly CreateRoomBookingHandler _handler;
         private readonly Mock<ITransactionService> _transactionServiceMock;
+        private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly Fixture _fixture;
 
         public CreateRoomBookingHandlerTests()
@@ -30,6 +32,9 @@ namespace ABP.Application.Tests.BookingTests.Commands
             _hotelRoomRepositoryMock = new();
             _specialOfferRepositoryMock = new();
             _paymentServiceMock = new();
+            var store = new Mock<IUserStore<User>>();
+            _userManagerMock = new Mock<UserManager<User>>(
+                store.Object, null, null, null, null, null, null, null, null);
             _fixture = new Fixture();
             _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => _fixture.Behaviors.Remove(b));
@@ -56,7 +61,8 @@ namespace ABP.Application.Tests.BookingTests.Commands
                 _transactionServiceMock.Object,
                 _hotelRepositoryMock.Object,
                 _specialOfferRepositoryMock.Object,
-                _paymentServiceMock.Object);
+                _paymentServiceMock.Object,
+                _userManagerMock.Object);
         }
 
         [Fact]

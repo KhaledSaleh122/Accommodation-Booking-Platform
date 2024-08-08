@@ -29,7 +29,7 @@ namespace Application.CommandsAndQueries.AmenityCQ.Commands.Update
             {
                 var amenity = await _repository.GetByIdAsync(request.id) ??
                     throw new NotFoundException($"Amenity not found!");
-                var updatedAmenity = _mapper.Map<Amenity>(request);
+                var updatedAmenity = _mapper.Map(request,amenity);
                 await _repository.UpdateAsync(updatedAmenity);
                 return _mapper.Map<AmenityDto>(updatedAmenity);
             }

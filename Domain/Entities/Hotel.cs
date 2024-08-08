@@ -4,7 +4,7 @@ using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public sealed class Hotel
+    public sealed class Hotel : BaseEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

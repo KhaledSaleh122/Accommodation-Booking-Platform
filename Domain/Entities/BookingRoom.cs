@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public class BookingRoom
+    public class BookingRoom : BaseEntity
     {
         public int BookingId { get; set; }
         public int HotelId { get; set; }
