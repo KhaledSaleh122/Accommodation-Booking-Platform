@@ -13,6 +13,9 @@ using Presentation.Responses.Validation;
 
 namespace Presentation.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing rooms within a specific hotel.
+    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/hotels/{hotelId}/rooms")]
@@ -20,12 +23,32 @@ namespace Presentation.Controllers
     {
         private readonly ILogger<RoomController> _logger;
         private readonly IMediator _mediator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoomController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance for logging operations.</param>
+        /// <param name="mediator">The mediator instance for handling commands.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the logger or mediator is null.</exception>
         public RoomController(ILogger<RoomController> logger, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
+        /// <summary>
+        /// Creates a new room in the specified hotel.
+        /// </summary>
+        /// <param name="hotelId">The ID of the hotel where the room will be created.</param>
+        /// <param name="command">The command containing the room details.</param>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the operation.</returns>
+        /// <response code="201">If the room is successfully created.</response>
+        /// <response code="400">If the request body is invalid.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="403">If the user is not authorized.</response>
+        /// <response code="404">If the hotel is not found.</response>
+        /// <exception cref="NotFoundException">Thrown when the hotel is not found.</exception>
+        /// <exception cref="CustomValidationException">Thrown when the request body is invalid.</exception>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(RoomDto), StatusCodes.Status201Created)]
@@ -47,6 +70,17 @@ namespace Presentation.Controllers
             return CreatedAtRoute("GetHotelById", new { hotelId }, room);
         }
 
+        /// <summary>
+        /// Deletes a specific room from a hotel.
+        /// </summary>
+        /// <param name="hotelId">The ID of the hotel where the room is located.</param>
+        /// <param name="roomNumber">The number of the room to be deleted.</param>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the operation.</returns>
+        /// <response code="200">If the room is successfully deleted.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="403">If the user is not authorized.</response>
+        /// <response code="404">If the hotel or room is not found.</response>
+        /// <exception cref="NotFoundException">Thrown when the hotel or room is not found.</exception>
         [HttpDelete("{roomNumber}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(RoomDto), StatusCodes.Status200OK)]

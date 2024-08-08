@@ -18,8 +18,12 @@ using Presentation.Responses.ServerErrors;
 using Presentation.Responses.Validation;
 using Stripe;
 using System.Security.Claims;
+
 namespace Presentation.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing room bookings for users.
+    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/users/{userId}/bookings")]
@@ -28,6 +32,14 @@ namespace Presentation.Controllers
         private readonly IMediator _mediator;
         private readonly ILogger<BookingController> _logger;
         private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookingController"/> class.
+        /// </summary>
+        /// <param name="mediator">The mediator instance for handling commands.</param>
+        /// <param name="logger">The logger instance for logging operations.</param>
+        /// <param name="configuration">The configuration instance for accessing app settings.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the mediator or logger is null.</exception>
         public BookingController(IMediator mediator, ILogger<BookingController> logger, IConfiguration configuration)
         {
             _configuration = configuration;
@@ -35,6 +47,18 @@ namespace Presentation.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// Creates a new room booking.
+        /// </summary>
+        /// <param name="command">The command containing booking details.</param>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the operation.</returns>
+        /// <response code="201">Returns the created booking request.</response>
+        /// <response code="400">If the command is null or validation fails.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="403">If the user is not authorized.</response>
+        /// <response code="404">If the booking is not found.</response>
+        /// <response code="409">If there is a conflict during the request.</response>
+        /// <exception cref="CustomValidationException">Thrown when the command is null.</exception>
         [ApiVersion("1.0")]
         [HttpPost("/api/v{version:apiVersion}/users/bookings")]
         [Authorize(Roles = "User")]
@@ -54,6 +78,11 @@ namespace Presentation.Controllers
                 bookingRequest.Booking.Id);
             return CreatedAtAction(nameof(GetUserBooking), new { command.userId, bookingId = bookingRequest.Booking.Id }, bookingRequest);
         }
+
+        /// <summary>
+        /// Confirms a booking payment via Stripe.
+        /// </summary>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the payment confirmation.</returns>
         [ApiVersion("1.0")]
         [HttpPost("/api/v{version:apiVersion}/users/bookings/payments")]
         public async Task<IActionResult> BookingConfirmation()
@@ -66,6 +95,18 @@ namespace Presentation.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves a list of bookings made by a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose bookings are to be retrieved.</param>
+        /// <param name="startDate">Optional start date for filtering bookings.</param>
+        /// <param name="endDate">Optional end date for filtering bookings.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <param name="pageSize">The number of items per page for pagination.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the list of bookings.</returns>
+        /// <response code="200">Returns the list of bookings.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="403">If the user is not authorized.</response>
         [HttpGet]
         [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -102,6 +143,16 @@ namespace Presentation.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Retrieves the details of a specific booking made by a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose booking is to be retrieved.</param>
+        /// <param name="bookingId">The ID of the booking to be retrieved.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the booking details.</returns>
+        /// <response code="200">Returns the booking details.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="403">If the user is not authorized.</response>
+        /// <exception cref="NotFoundException">Thrown when the booking is not found.</exception>
         [HttpGet("{bookingId}")]
         [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -125,6 +176,16 @@ namespace Presentation.Controllers
             return Ok(booking);
         }
 
+        /// <summary>
+        /// Generates a confirmation report for a specific booking.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose booking report is to be generated.</param>
+        /// <param name="bookingId">The ID of the booking for which the report is to be generated.</param>
+        /// <returns>A PDF file containing the booking confirmation report.</returns>
+        /// <response code="200">Returns the booking confirmation report as a PDF.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        /// <response code="403">If the user is not authorized.</response>
+        /// <exception cref="NotFoundException">Thrown when the booking is not found.</exception>
         [HttpGet("{bookingId}/report")]
         [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -60,6 +61,11 @@ namespace Accommodation_Booking_Platform
 
             services.AddSwaggerGen(c =>
             {
+                var xmlFile = "Presentation.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                c.IncludeXmlComments(xmlPath);
+
                 c.AddSecurityDefinition("ABPApiBearerAuth", new()
                 {
                     Type = SecuritySchemeType.Http,

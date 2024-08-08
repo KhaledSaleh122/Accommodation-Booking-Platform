@@ -7,6 +7,7 @@
     <RootNamespace>Accommodation_Booking_Platform</RootNamespace>
     <UserSecretsId>950c7784-fd86-4b8f-b27c-4782412d7a06</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
