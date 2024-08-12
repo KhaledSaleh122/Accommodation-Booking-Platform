@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+appsettings.json
+appsettings.Development.json
 */public/**/*
 !*/public/admin.jpg
 !*/public/user.jpg
