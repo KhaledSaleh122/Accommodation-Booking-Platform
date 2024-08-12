@@ -103,11 +103,13 @@ namespace Presentation.Controllers
         /// <response code="400">If the request is null or validation fails.</response>
         /// <response code="401">If the user is not authenticated.</response>
         /// <response code="403">If the user is not authorized.</response>
+        /// <response code="409">If the a city with this name already exists in the country or this post office exists in a city.</response>
         /// <exception cref="CustomValidationException">Thrown when the request is null.</exception>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CityDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateCity([FromForm] CreateCityCommand? request)
@@ -132,6 +134,7 @@ namespace Presentation.Controllers
         /// <response code="401">If the user is not authenticated.</response>
         /// <response code="403">If the user is not authorized.</response>
         /// <response code="404">If the city is not found.</response>
+        /// <response code="409">If the a city with this name already exists in the country or this post office exists in a city.</response>
         /// <exception cref="NotFoundException">Thrown when the city is not found.</exception>
         [HttpPut("{cityId}")]
         [Authorize(Roles = "Admin")]

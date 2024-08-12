@@ -45,6 +45,7 @@ namespace Presentation.Controllers
         /// <response code="401">If the user is not authenticated.</response>
         /// <response code="403">If the user is not authorized.</response>
         /// <response code="404">If the hotel is not found.</response>
+        /// <response code="409">If a special offer with this id already exists.</response>
         /// <exception cref="NotFoundException">Thrown when the hotel is not found.</exception>
         /// <exception cref="CustomValidationException">Thrown when the request body is invalid.</exception>
         [HttpPost("hotels/{hotelId}/special-offers")]
