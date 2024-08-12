@@ -166,7 +166,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
     - `404 Not Found`: The hotel with the specified ID was not found.
-    - `409 Conflict`: the room Number already exist.
+    - `409 Conflict`: The room Number already exist.
 
 - **Delete Room**: `DELETE /api/v1/hotels/{hotelId}/rooms/{roomNumber}`
   - **Description**: Deletes a specific room from a hotel.
@@ -397,7 +397,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
     - `404 Not Found`: The hotel with the specified ID was not found.
-    - `409 Conflict`: the user has already rated this hotel.
+    - `409 Conflict`: The user has already rated this hotel.
 
 - **Delete Review**: `DELETE /api/v1/hotels/{hotelId}/reviews/{userId}`
   - **Description**: Deletes a specific review for a hotel.
