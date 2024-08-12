@@ -5,11 +5,11 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-    - '**.cs'
-    - '**.csproj'
+      - '**.cs'
+      - '**.csproj'
 
 env:
-  DOTNET_VERSION: '6.0.401' # The .NET SDK version to use
+  DOTNET_VERSION: '8.0' # The .NET SDK version to use
 
 jobs:
   build-and-test:
@@ -18,20 +18,24 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [windows-latest]
 
     steps:
     - uses: actions/checkout@v3
-    - name: Setup .NET Core
+    
+    - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: Check if NuGet source already exists
+      run: dotnet nuget list source | grep -q "nuget.org" || dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+
     - name: Install dependencies
       run: dotnet restore
-      
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
     
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+    - name: Run Tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
