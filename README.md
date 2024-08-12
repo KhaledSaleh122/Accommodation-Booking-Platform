@@ -1,5 +1,5 @@
 
-# 🏨 Accommodation Booking Platform
+# 🏨 Accommodation Booking Platform [![Tests Status](https://github.com/KhaledSaleh122/Accommodation-Booking-Platform/actions/workflows/Tests-status.yml/badge.svg)](https://github.com/KhaledSaleh122/Accommodation-Booking-Platform/actions/workflows/Tests-status.yml)
 
 ## 📝 Overview
 
