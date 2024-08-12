@@ -47,6 +47,7 @@ namespace Presentation.Controllers
         /// <response code="201">Returns the created user.</response>
         /// <response code="400">If the command is null or validation fails.</response>
         /// <response code="403">If the user is not authorized.</response>
+        /// <response code="409">If the user details exist.</response>
         /// <exception cref="CustomValidationException">Thrown when the command is null.</exception>
         [HttpPost("users")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -99,6 +100,7 @@ namespace Presentation.Controllers
         /// <response code="200">Returns the signed-in user details.</response>
         /// <response code="400">If the validation fails.</response>
         /// <response code="403">If the user is not authorized.</response>
+        /// <response code="409">If the user details exist.</response>
         [HttpGet("sessions/google-response")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(UserSignInDto), StatusCodes.Status200OK)]

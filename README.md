@@ -39,6 +39,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `201 Created`: The user was successfully created.
     - `400 Bad Request`: The request is invalid, possibly due to missing or incorrect fields.
     - `403 Forbidden`: The user is not authorized to perform this action.
+    - `409 Conflict`: The user details exist.
 
 - **User Login**: `POST /api/v1/sessions`
   - **Description**: Logs in a user.
@@ -65,6 +66,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
       - `200 OK`: The user was successfully authenticated.
       - `400 Bad Request`: The Google sign-in process failed.
       - `403 Forbidden`: The user is not authorized to perform this action.
+      - `409 Conflict`: The user details exist.
 
 ### 🏢 Hotel Management
 - **Create Hotel**: `POST /api/v1/hotels`
@@ -164,6 +166,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
     - `404 Not Found`: The hotel with the specified ID was not found.
+    - `409 Conflict`: the room Number already exist.
 
 - **Delete Room**: `DELETE /api/v1/hotels/{hotelId}/rooms/{roomNumber}`
   - **Description**: Deletes a specific room from a hotel.
@@ -318,6 +321,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `400 Bad Request`: The request is invalid, possibly due to missing or incorrect fields.
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
+    - `409 Conflict`: A city with this name already exists in the country or this post office exists in a city.
 
 - **Retrieve Cities**: 
   - **Filtered List**: `GET /api/v1/cities`
@@ -358,6 +362,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
     - `404 Not Found`: The city with the specified ID was not found.
+    - `409 Conflict`: A city with this name already exists in the country or this post office exists in a city.
 
 - **Delete City**: `DELETE /api/v1/cities/{cityId}`
   - **Description**: Deletes a city by its ID.
@@ -392,6 +397,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
     - `404 Not Found`: The hotel with the specified ID was not found.
+    - `409 Conflict`: the user has already rated this hotel.
 
 - **Delete Review**: `DELETE /api/v1/hotels/{hotelId}/reviews/{userId}`
   - **Description**: Deletes a specific review for a hotel.
@@ -423,6 +429,7 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `401 Unauthorized`: The user is not authenticated.
     - `403 Forbidden`: The user is not authorized to perform this action.
     - `404 Not Found`: The hotel with the specified ID was not found.
+    - `409 conflict`: A special offer with this id already exists.
 
 - **Retrieve Top Special Offers**: `GET /api/v1/special-offers`
   - **Description**: Retrieves the top special feature deal offers.

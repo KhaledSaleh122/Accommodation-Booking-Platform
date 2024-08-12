@@ -42,6 +42,12 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
                         {
                             StatusCode = StatusCodes.Status409Conflict
                         };
+                    var userByName = await _userManager.FindByNameAsync(user.UserName);
+                    if (userByName is not null)
+                        throw new ErrorException("User with this username already exist")
+                        {
+                            StatusCode = StatusCodes.Status409Conflict
+                        };
                     var result = await _userManager.CreateAsync(user);
                     await _userManager.AddToRoleAsync(user, "User");
                     userRoles.Add("User");
