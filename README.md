@@ -501,4 +501,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-[Khaled Saleh](mailto:khaled.s.saleh@hotmail.com).
+[Khaled Saleh](mailto:khaled.s.saleh@hotmail.com)
