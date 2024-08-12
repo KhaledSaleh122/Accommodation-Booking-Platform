@@ -66,7 +66,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/{hotel.Id}/reviews", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/{hotel.Id}/reviews", command);
             hotel = await _dbContext.Hotels.Include(o => o.Reviews).Where(x => x.Id == hotel.Id).FirstAsync();
             // Assert
             response.Should().NotBeNull();
@@ -81,7 +81,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             // Arrange
             var command = _fixture.Create<CreateReviewCommand>();
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/1/reviews", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/1/reviews", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -96,7 +96,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/1/reviews", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/1/reviews", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -111,7 +111,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/0/reviews", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/0/reviews", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -125,7 +125,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels/1/reviews", null);
+            var response = await _client.PostAsync("/api/v1/hotels/1/reviews", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -153,7 +153,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/{hotel.Id}/reviews", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/{hotel.Id}/reviews", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -169,7 +169,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/1/reviews", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/1/reviews", command);
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -186,7 +186,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/1/reviews", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/1/reviews", command);
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

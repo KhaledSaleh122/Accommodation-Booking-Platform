@@ -58,7 +58,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -76,7 +76,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
         public async Task GetHotels_Should_ReturnEmptyList_WhenNoHotelsExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -99,7 +99,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=2&pageSize=10");
+            var response = await _client.GetAsync("/api/v1/hotels?page=2&pageSize=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -122,7 +122,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act & Assert for PageSize=5
-            var responsePageSize5 = await _client.GetAsync("/api/hotels?page=1&pageSize=5");
+            var responsePageSize5 = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=5");
             var resultPageSize5 = responsePageSize5.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await responsePageSize5.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
             responsePageSize5.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -133,7 +133,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             resultPageSize5?.PageSize.Should().Be(5);
 
             // Act & Assert for PageSize=10
-            var responsePageSize10 = await _client.GetAsync("/api/hotels?page=1&pageSize=10");
+            var responsePageSize10 = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10");
             var resultPageSize10 = responsePageSize10.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await responsePageSize10.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
             responsePageSize10.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -153,7 +153,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=-1&pageSize=0");
+            var response = await _client.GetAsync("/api/v1/hotels?page=-1&pageSize=0");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -176,7 +176,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=10&pageSize=100");
+            var response = await _client.GetAsync("/api/v1/hotels?page=10&pageSize=100");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -208,7 +208,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10&city=New York");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10&city=New York");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -241,7 +241,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10&country=USA");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10&country=USA");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -275,7 +275,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.Hotels.AddRangeAsync(hotels.Concat(otherHotels));
             await _dbContext.SaveChangesAsync();
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10&amenities=10");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10&amenities=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -308,7 +308,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10&hotelType=Luxury");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10&hotelType=Luxury");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -341,7 +341,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10&minPrice=100&maxPrice=200");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10&minPrice=100&maxPrice=200");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 
@@ -387,7 +387,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/hotels?page=1&pageSize=10&city=New York&amenities=10&minPrice=100&maxPrice=200");
+            var response = await _client.GetAsync("/api/v1/hotels?page=1&pageSize=10&city=New York&amenities=10&minPrice=100&maxPrice=200");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<HotelDto>>>() : null;
 

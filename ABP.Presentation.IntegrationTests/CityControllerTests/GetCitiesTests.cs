@@ -38,7 +38,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities?page=1&pageSize=10");
+            var response = await _client.GetAsync("/api/v1/cities?page=1&pageSize=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
 
@@ -56,7 +56,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         public async Task GetCities_Should_ReturnEmptyList_WhenNoCitiesExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/cities?page=1&pageSize=10");
+            var response = await _client.GetAsync("/api/v1/cities?page=1&pageSize=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
 
@@ -81,7 +81,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities?page=2&pageSize=10");
+            var response = await _client.GetAsync("/api/v1/cities?page=2&pageSize=10");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
 
@@ -106,7 +106,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act & Assert for PageSize=5
-            var responsePageSize5 = await _client.GetAsync("/api/cities?page=1&pageSize=5");
+            var responsePageSize5 = await _client.GetAsync("/api/v1/cities?page=1&pageSize=5");
             var resultPageSize5 = responsePageSize5.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await responsePageSize5.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
             responsePageSize5.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -117,7 +117,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             resultPageSize5?.PageSize.Should().Be(5);
 
             // Act & Assert for PageSize=10
-            var responsePageSize10 = await _client.GetAsync("/api/cities?page=1&pageSize=10");
+            var responsePageSize10 = await _client.GetAsync("/api/v1/cities?page=1&pageSize=10");
             var resultPageSize10 = responsePageSize10.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await responsePageSize10.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
             responsePageSize10.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -139,7 +139,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities?page=-1&pageSize=0");
+            var response = await _client.GetAsync("/api/v1/cities?page=-1&pageSize=0");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
 
@@ -164,7 +164,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities?page=10&pageSize=100");
+            var response = await _client.GetAsync("/api/v1/cities?page=10&pageSize=100");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
 
@@ -194,7 +194,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities?page=1&pageSize=10&country=USA");
+            var response = await _client.GetAsync("/api/v1/cities?page=1&pageSize=10&country=USA");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
 
@@ -224,7 +224,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities?page=1&pageSize=10&city=New York");
+            var response = await _client.GetAsync("/api/v1/cities?page=1&pageSize=10&city=New York");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<ResultWithPaginationResponse<IEnumerable<CityDto>>>() : null;
             // Assert

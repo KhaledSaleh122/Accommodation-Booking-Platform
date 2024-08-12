@@ -71,7 +71,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/{hotel.Id}/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/{hotel.Id}/rooms", content);
             var createdRoom = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<RoomDto>() : null;
 
@@ -92,7 +92,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -108,7 +108,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -124,7 +124,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -149,7 +149,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/{hotel.Id}/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/{hotel.Id}/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -165,7 +165,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -181,7 +181,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -197,7 +197,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -213,7 +213,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -230,7 +230,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -246,7 +246,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/1/rooms", content);
+            var response = await _client.PostAsync($"/api/v1/hotels/1/rooms", content);
 
             // Assert
             response.Should().NotBeNull();

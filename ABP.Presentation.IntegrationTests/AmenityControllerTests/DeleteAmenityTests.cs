@@ -47,7 +47,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/amenities/{amenity.Id}");
+            var response = await _client.DeleteAsync($"/api/v1/amenities/{amenity.Id}");
             var returnedAmenity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<AmenityDto>() : null;
 
@@ -67,7 +67,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
 
             // Act
-            var response = await _client.DeleteAsync("/api/amenities/1");
+            var response = await _client.DeleteAsync("/api/v1/amenities/1");
 
             // Assert
             response.Should().NotBeNull();
@@ -81,7 +81,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync("/api/amenities/999");
+            var response = await _client.DeleteAsync("/api/v1/amenities/999");
 
             // Assert
             response.Should().NotBeNull();
@@ -95,7 +95,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();

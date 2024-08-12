@@ -67,7 +67,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
             var createdUser = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<UserDto>() : null;
 
@@ -87,7 +87,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -102,7 +102,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -122,7 +122,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -142,7 +142,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -157,7 +157,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -172,7 +172,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -187,7 +187,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -202,7 +202,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -217,7 +217,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync($"/api/users", content);
+            var response = await _client.PostAsync($"/api/v1/users", content);
 
             // Assert
             response.Should().NotBeNull();

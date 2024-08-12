@@ -68,7 +68,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/{hotel.Id}", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/{hotel.Id}", _command);
             var updatedHotel = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<HotelMinDto>() : null;
 
@@ -105,7 +105,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.SaveChangesAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/{hotel.Id}", command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/{hotel.Id}", command);
             var updatedHotel = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<HotelMinDto>() : null;
             // Assert
@@ -129,7 +129,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = JsonContent.Create(_command);
 
             // Act
-            var response = await _client.PatchAsync($"/api/hotels/1", content);
+            var response = await _client.PatchAsync($"/api/v1/hotels/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -142,7 +142,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/0", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/0", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -157,7 +157,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -172,7 +172,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -187,7 +187,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -202,7 +202,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = JsonContent.Create(_command);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -216,7 +216,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsync($"/api/hotels/1", null);
+            var response = await _client.PatchAsync($"/api/v1/hotels/1", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -231,7 +231,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -246,7 +246,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -261,7 +261,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PatchAsJsonAsync($"/api/hotels/1", _command);
+            var response = await _client.PatchAsJsonAsync($"/api/v1/hotels/1", _command);
 
             // Assert
             response.Should().NotBeNull();

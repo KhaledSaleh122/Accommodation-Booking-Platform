@@ -73,7 +73,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
 
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(hotel);
-
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
             _hotelRoomRepositoryMock.Setup(x => x.IsRoomAvailableAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DateOnly>(), It.IsAny<DateOnly>()))
                 .ReturnsAsync(true);
             _specialOfferRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<string>()))
@@ -101,6 +101,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
             // Arrange
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync((Hotel?)null);
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
 
             // Act
             Func<Task> act = async () => await _handler.Handle(_command, default);
@@ -117,6 +118,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
             hotel.Rooms.First().RoomNumber = _fixture.Create<Guid>().ToString();
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(hotel);
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
 
             // Act
             Func<Task> act = async () => await _handler.Handle(_command, default);
@@ -133,7 +135,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
 
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(hotel);
-
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
             _hotelRoomRepositoryMock.Setup(x => x.IsRoomAvailableAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DateOnly>(), It.IsAny<DateOnly>()))
                 .ReturnsAsync(false);
 
@@ -149,7 +151,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
         {
             // Arrange
             var hotel = _fixture.Create<Hotel>();
-
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(hotel);
 
@@ -173,7 +175,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
         {
             // Arrange
             var hotel = _fixture.Create<Hotel>();
-
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(hotel);
 
@@ -198,7 +200,7 @@ namespace ABP.Application.Tests.BookingTests.Commands
             // Arrange
             var hotel = _fixture.Create<Hotel>();
             hotel.Rooms.Add(new Room { RoomNumber = _command.RoomsNumbers.First() });
-
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(_fixture.Create<User>());
             _hotelRepositoryMock.Setup(x => x.FindRoomsAsync(It.IsAny<int>(), It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(hotel);
 

@@ -72,7 +72,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}/reviews/{"UserId"}");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/{hotel.Id}/reviews/{"UserId"}");
             var deletedReview = await response.Content.ReadFromJsonAsync<ReviewDto>();
 
             // Assert
@@ -103,7 +103,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}/reviews/{"UserId"}");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/{hotel.Id}/reviews/{"UserId"}");
             var deletedReview = await response.Content.ReadFromJsonAsync<ReviewDto>();
 
             // Assert
@@ -126,7 +126,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}/reviews/{"UserId"}");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/{hotel.Id}/reviews/{"UserId"}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -139,7 +139,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/1/reviews/userId");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/1/reviews/userId");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -162,7 +162,7 @@ namespace ABP.Presentation.IntegrationTests.ReviewControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}/reviews/{"User1Id"}");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/{hotel.Id}/reviews/{"User1Id"}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

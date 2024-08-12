@@ -73,7 +73,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             await _dbContext.SaveChangesAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
             //Act
-            var response = await _client.GetAsync($"api/users/{"UserId"}/bookings?page=1&pageSize=10");
+            var response = await _client.GetAsync($"api/v1/users/{"UserId"}/bookings?page=1&pageSize=10");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -90,7 +90,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
         public async Task GetUserBookings_Should_ReturnUnauthorized_WhenUserIsNotAuthenticated()
         {
             // Act
-            var response = await _client.GetAsync($"api/users/{"UserId"}/bookings?page=1&pageSize=10");
+            var response = await _client.GetAsync($"api/v1/users/{"UserId"}/bookings?page=1&pageSize=10");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -103,7 +103,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.GetAsync($"api/users/{"User1Id"}/bookings?page=1&pageSize=10");
+            var response = await _client.GetAsync($"api/v1/users/{"User1Id"}/bookings?page=1&pageSize=10");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -126,7 +126,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             await _dbContext.SaveChangesAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             //Act
-            var response = await _client.GetAsync($"api/users/{"UserId"}/bookings?page=1&pageSize=10");
+            var response = await _client.GetAsync($"api/v1/users/{"UserId"}/bookings?page=1&pageSize=10");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -176,7 +176,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             var bookings = await _dbContext.Bookings.Include(o => o.BookingRooms).ToListAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             //Act
-            var response = await _client.GetAsync($"api/users/{"UserId"}/bookings?page=2&pageSize=5");
+            var response = await _client.GetAsync($"api/v1/users/{"UserId"}/bookings?page=2&pageSize=5");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -63,7 +63,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
             var createdHotel = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<HotelMinDto>() : null;
 
@@ -91,7 +91,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -107,7 +107,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -123,7 +123,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -139,7 +139,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -155,7 +155,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -171,7 +171,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -187,7 +187,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -202,7 +202,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -218,7 +218,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -234,7 +234,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -250,7 +250,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels", content);
+            var response = await _client.PostAsync("/api/v1/hotels", content);
 
             // Assert
             response.Should().NotBeNull();

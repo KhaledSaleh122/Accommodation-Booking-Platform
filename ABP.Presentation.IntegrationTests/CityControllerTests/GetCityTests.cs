@@ -41,7 +41,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.Cities.AddAsync(city);
             await _dbContext.SaveChangesAsync();
             // Act
-            var response = await _client.GetAsync($"/api/cities/{city.Id}");
+            var response = await _client.GetAsync($"/api/v1/cities/{city.Id}");
             var returnedCity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<CityDto>() : null;
             // Assert
@@ -57,7 +57,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         public async Task GetCity_Should_ReturnNotFound_WhenCityDoesNotExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/cities/0");
+            var response = await _client.GetAsync("/api/v1/cities/0");
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

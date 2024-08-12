@@ -68,7 +68,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/{hotel.Id}/special-offers", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/{hotel.Id}/special-offers", command);
             var specialOffer = await response.Content.ReadFromJsonAsync<SpecialOfferDto>();
 
             // Assert
@@ -87,7 +87,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             var command = _fixture.Create<CreateSpecialOfferCommand>();
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/1/special-offers", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/1/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -102,7 +102,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/1/special-offers", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/1/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -117,7 +117,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/0/special-offers", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/0/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -131,7 +131,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels/1/special-offers", null);
+            var response = await _client.PostAsync("/api/v1/hotels/1/special-offers", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -149,7 +149,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/1/special-offers", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/1/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -167,7 +167,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/1/special-offers", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/1/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -186,7 +186,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/1/special-offers", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/1/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -213,7 +213,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/hotels/{hotel.Id}/special-offers", command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/hotels/{hotel.Id}/special-offers", command);
 
             // Assert
             response.Should().NotBeNull();

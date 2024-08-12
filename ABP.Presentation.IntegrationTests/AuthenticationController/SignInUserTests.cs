@@ -67,7 +67,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             await _userManager.AddToRoleAsync(user, "User");
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/sessions", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/sessions", _command);
             var signInDto = response.IsSuccessStatusCode
                 ? await response.Content.ReadFromJsonAsync<UserSignInDto>()
                 : null;
@@ -89,7 +89,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
 
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/sessions", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/sessions", _command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -102,7 +102,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             _command.UserName = string.Empty;
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/sessions", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/sessions", _command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -115,7 +115,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             _command.Password = string.Empty;
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/sessions", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/sessions", _command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -125,7 +125,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
         public async Task SignInUser_Should_ReturnBadRequest_WhenCommandIsNull()
         {
             // Act
-            var response = await _client.PostAsync("/api/sessions", null);
+            var response = await _client.PostAsync("/api/v1/sessions", null);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -138,7 +138,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/sessions", _command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/sessions", _command);
 
             // Assert
             response.Should().NotBeNull();
@@ -152,7 +152,7 @@ namespace ABP.Presentation.IntegrationTests.AuthenticationControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync($"/api/sessions", _command);
+            var response = await _client.PostAsJsonAsync($"/api/v1/sessions", _command);
 
             // Assert
             response.Should().NotBeNull();

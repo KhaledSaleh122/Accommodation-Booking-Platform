@@ -59,7 +59,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/{city.Id}", content);
+            var response = await _client.PutAsync($"/api/v1/cities/{city.Id}", content);
             var updatedCity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<CityDto>() : null;
 
@@ -81,7 +81,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/0", content);
+            var response = await _client.PutAsync($"/api/v1/cities/0", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -96,7 +96,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -112,7 +112,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -128,7 +128,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -144,7 +144,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -160,7 +160,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -176,7 +176,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -192,7 +192,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -208,7 +208,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -224,7 +224,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/1", content);
+            var response = await _client.PutAsync($"/api/v1/cities/1", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -249,7 +249,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/{cities.First().Id}", content);
+            var response = await _client.PutAsync($"/api/v1/cities/{cities.First().Id}", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -275,7 +275,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PutAsync($"/api/cities/{cities.First().Id}", content);
+            var response = await _client.PutAsync($"/api/v1/cities/{cities.First().Id}", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -289,7 +289,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();

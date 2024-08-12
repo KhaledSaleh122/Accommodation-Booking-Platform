@@ -83,7 +83,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/users/bookings", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/users/bookings", _command);
             var bookingRequestDto = response.IsSuccessStatusCode
                 ? await response.Content.ReadFromJsonAsync<BookingRequestDto>()
                 : null;
@@ -127,7 +127,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/users/bookings", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/users/bookings", _command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -140,7 +140,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsync("/api/users/bookings", null);
+            var response = await _client.PostAsync("/api/v1/users/bookings", null);
 
 
             // Assert
@@ -151,7 +151,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
         public async Task CreateRoomBooking_Should_ReturnUnauthorized_WhenUserIsNotAuthenticated()
         {
             // Act
-            var response = await _client.PostAsJsonAsync("/api/users/bookings", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/users/bookings", _command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -164,7 +164,7 @@ namespace ABP.Presentation.IntegrationTests.BookingControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/hotels/1/reviews", _command);
+            var response = await _client.PostAsJsonAsync("/api/v1/hotels/1/reviews", _command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

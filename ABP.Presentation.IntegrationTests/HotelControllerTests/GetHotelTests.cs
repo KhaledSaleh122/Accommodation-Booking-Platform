@@ -47,7 +47,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             await _dbContext.Hotels.AddAsync(hotel);
             await _dbContext.SaveChangesAsync();
             // Act
-            var response = await _client.GetAsync($"/api/hotels/{hotel.Id}");
+            var response = await _client.GetAsync($"/api/v1/hotels/{hotel.Id}");
             var returnedHotel = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<HotelDto>() : null;
             // Assert
@@ -68,7 +68,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
         public async Task GetHotel_Should_ReturnNotFound_WhenHotelDoesNotExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/hotels/0");
+            var response = await _client.GetAsync("/api/v1/hotels/0");
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

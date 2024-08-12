@@ -59,7 +59,7 @@ namespace ABP.Presentation.IntegrationTests.HotelAmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/{hotel.Id}/amenities/{amenity.Id}", null);
+            var response = await _client.PostAsync($"/api/v1/hotels/{hotel.Id}/amenities/{amenity.Id}", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -73,7 +73,7 @@ namespace ABP.Presentation.IntegrationTests.HotelAmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
 
             // Act
-            var response = await _client.PostAsync("/api/hotels/1/amenities/1", null);
+            var response = await _client.PostAsync("/api/v1/hotels/1/amenities/1", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -87,7 +87,7 @@ namespace ABP.Presentation.IntegrationTests.HotelAmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.PostAsync("/api/hotels/1/amenities/1", null);
+            var response = await _client.PostAsync("/api/v1/hotels/1/amenities/1", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -104,7 +104,7 @@ namespace ABP.Presentation.IntegrationTests.HotelAmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/0/amenities/{amenity.Id}", null);
+            var response = await _client.PostAsync($"/api/v1/hotels/0/amenities/{amenity.Id}", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -121,7 +121,7 @@ namespace ABP.Presentation.IntegrationTests.HotelAmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/{hotel.Id}/amenities/0", null);
+            var response = await _client.PostAsync($"/api/v1/hotels/{hotel.Id}/amenities/0", null);
 
             // Assert
             response.Should().NotBeNull();
@@ -146,7 +146,7 @@ namespace ABP.Presentation.IntegrationTests.HotelAmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsync($"/api/hotels/{hotel.Id}/amenities/{amenity.Id}", null);
+            var response = await _client.PostAsync($"/api/v1/hotels/{hotel.Id}/amenities/{amenity.Id}", null);
 
             // Assert
             response.Should().NotBeNull();

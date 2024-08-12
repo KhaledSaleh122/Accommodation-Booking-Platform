@@ -52,7 +52,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
             var createdCity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<CityDto>() : null;
 
@@ -73,7 +73,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -88,7 +88,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -104,7 +104,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -119,7 +119,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -134,7 +134,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -149,7 +149,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -165,7 +165,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -180,7 +180,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -196,7 +196,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -219,7 +219,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -239,7 +239,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             var content = GlobalTestData.GetMultiPartFormDataFromCommand(_command);
 
             // Act
-            var response = await _client.PostAsync("/api/cities", content);
+            var response = await _client.PostAsync("/api/v1/cities", content);
 
             // Assert
             response.Should().NotBeNull();
@@ -253,7 +253,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();

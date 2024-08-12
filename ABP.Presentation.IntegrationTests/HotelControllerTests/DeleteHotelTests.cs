@@ -56,7 +56,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/{hotel.Id}");
             var deletedHotel = await response.Content.ReadFromJsonAsync<HotelMinDto>();
 
             // Assert
@@ -80,7 +80,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/0");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/0");
 
             // Assert
             response.Should().NotBeNull();
@@ -94,7 +94,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/1");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/1");
 
             // Assert
             response.Should().NotBeNull();
@@ -108,7 +108,7 @@ namespace ABP.Presentation.IntegrationTests.HotelControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/1");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/1");
 
             // Assert
             response.Should().NotBeNull();

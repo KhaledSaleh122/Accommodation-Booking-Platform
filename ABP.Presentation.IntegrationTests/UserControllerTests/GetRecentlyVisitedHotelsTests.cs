@@ -69,7 +69,7 @@ namespace ABP.Presentation.IntegrationTests.UserControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.GetAsync($"/api/users/{"UserId"}/recently-visited-hotels");
+            var response = await _client.GetAsync($"/api/v1/users/{"UserId"}/recently-visited-hotels");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -82,7 +82,7 @@ namespace ABP.Presentation.IntegrationTests.UserControllerTests
         public async Task GetRecentlyVisitedHotels_Should_ReturnUnauthorized_WhenUserIsNotAuthenticated()
         {
             // Act
-            var response = await _client.GetAsync("/api/users/test/recently-visited-hotels");
+            var response = await _client.GetAsync("/api/v1/users/test/recently-visited-hotels");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -95,7 +95,7 @@ namespace ABP.Presentation.IntegrationTests.UserControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.GetAsync($"/api/users/{"User1Id"}/recently-visited-hotels");
+            var response = await _client.GetAsync($"/api/v1/users/{"User1Id"}/recently-visited-hotels");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -115,7 +115,7 @@ namespace ABP.Presentation.IntegrationTests.UserControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.GetAsync($"/api/users/{"UserId"}/recently-visited-hotels");
+            var response = await _client.GetAsync($"/api/v1/users/{"UserId"}/recently-visited-hotels");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

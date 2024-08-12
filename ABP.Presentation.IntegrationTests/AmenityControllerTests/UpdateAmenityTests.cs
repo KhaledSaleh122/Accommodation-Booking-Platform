@@ -47,7 +47,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             var command = _fixture.Build<UpdateAmenityCommand>().With(c => c.id, amenity.Id).Create();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             //Act
-            var response = await _client.PutAsJsonAsync($"/api/amenities/{amenity.Id}", command);
+            var response = await _client.PutAsJsonAsync($"/api/v1/amenities/{amenity.Id}", command);
             var returnedAmenity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<AmenityDto>() : null;
             //Assert
@@ -68,7 +68,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             var command = _fixture.Create<UpdateAmenityCommand>();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invaild token");
             //Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", command);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", command);
             //Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -81,7 +81,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             var command = _fixture.Create<UpdateAmenityCommand>();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             //Act
-            var response = await _client.PutAsJsonAsync($"/api/amenities/0", command);
+            var response = await _client.PutAsJsonAsync($"/api/v1/amenities/0", command);
             //Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -97,7 +97,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PutAsJsonAsync("/api/amenities/1", command);
+            var response = await _client.PutAsJsonAsync("/api/v1/amenities/1", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -114,7 +114,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PutAsJsonAsync("/api/amenities/1", command);
+            var response = await _client.PutAsJsonAsync("/api/v1/amenities/1", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -131,7 +131,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PutAsJsonAsync("/api/amenities/1", command);
+            var response = await _client.PutAsJsonAsync("/api/v1/amenities/1", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -148,7 +148,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PutAsJsonAsync("/api/amenities/1", command);
+            var response = await _client.PutAsJsonAsync("/api/v1/amenities/1", command);
 
             // Assert
             response.Should().NotBeNull();
@@ -162,7 +162,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();

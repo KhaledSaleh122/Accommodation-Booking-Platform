@@ -76,7 +76,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
             var topSpecialOffers = specialOffers.Where(sp => sp.OfferType == OfferType.FeatureDeal)
                 .OrderByDescending(sp => sp.DiscountPercentage).ToList();
             // Act
-            var response = await _client.GetAsync("/api/special-offers");
+            var response = await _client.GetAsync("/api/v1/special-offers");
             var featuredDeals = await response.Content.ReadFromJsonAsync<IEnumerable<FeaturedDealsDto>>();
 
             // Assert
@@ -91,7 +91,7 @@ namespace ABP.Presentation.IntegrationTests.SpecialOfferControllerTests
         public async Task GetTopSpecialFeatureDealOffers_Should_ReturnEmpty_WhenNoFeatureDealsExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/special-offers");
+            var response = await _client.GetAsync("/api/v1/special-offers");
 
             // Assert
             response.Should().NotBeNull();

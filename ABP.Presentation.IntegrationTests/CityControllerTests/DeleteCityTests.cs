@@ -51,7 +51,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/{city.Id}");
+            var response = await _client.DeleteAsync($"/api/v1/cities/{city.Id}");
             var deletedCity = await response.Content.ReadFromJsonAsync<CityDto>();
 
             // Assert
@@ -71,7 +71,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/0");
+            var response = await _client.DeleteAsync($"/api/v1/cities/0");
 
             // Assert
             response.Should().NotBeNull();
@@ -85,7 +85,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();
@@ -99,7 +99,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();

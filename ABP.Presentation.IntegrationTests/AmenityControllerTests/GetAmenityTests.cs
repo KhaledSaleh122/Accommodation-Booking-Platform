@@ -33,7 +33,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             await _dbContext.Amenities.AddAsync(amenity);
             await _dbContext.SaveChangesAsync();
             // Act
-            var response = await _client.GetAsync($"/api/amenities/{amenity.Id}");
+            var response = await _client.GetAsync($"/api/v1/amenities/{amenity.Id}");
             var returnedAmenity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<AmenityDto>() : null;
 
@@ -50,7 +50,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
         public async Task GetAmenity_Should_ReturnNotFound_WhenAmenityDoesNotExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/amenities/0");
+            var response = await _client.GetAsync("/api/v1/amenities/0");
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

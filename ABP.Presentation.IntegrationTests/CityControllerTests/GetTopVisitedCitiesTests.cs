@@ -49,7 +49,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cities/top-visited-cities");
+            var response = await _client.GetAsync("/api/v1/cities/top-visited-cities");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<IEnumerable<CityTopDto>>() : null;
 
@@ -66,7 +66,7 @@ namespace ABP.Presentation.IntegrationTests.CityControllerTests
         public async Task GetTopVisitedCities_Should_ReturnEmptyList_WhenNoCitiesExist()
         {
             // Act
-            var response = await _client.GetAsync("/api/cities/top-visited-cities");
+            var response = await _client.GetAsync("/api/v1/cities/top-visited-cities");
             var result = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<IEnumerable<CityTopDto>>() : null;
 

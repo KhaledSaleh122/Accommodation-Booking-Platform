@@ -44,7 +44,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             var createAmenityCommand = _fixture.Create<CreateAmenityCommand>();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
             //Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", createAmenityCommand);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", createAmenityCommand);
             var createdAmenity = response.Content.Headers.ContentType?.MediaType == "application/json" ?
                 await response.Content.ReadFromJsonAsync<AmenityDto>() : null;
             //Assert
@@ -65,7 +65,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             var createAmenityCommand = _fixture.Create<CreateAmenityCommand>();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invaild token");
             //Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", createAmenityCommand);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", createAmenityCommand);
             //Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -81,7 +81,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", createAmenityCommand);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", createAmenityCommand);
 
             // Assert
             response.Should().NotBeNull();
@@ -98,7 +98,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", createAmenityCommand);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", createAmenityCommand);
 
             // Assert
             response.Should().NotBeNull();
@@ -115,7 +115,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", createAmenityCommand);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", createAmenityCommand);
 
             // Assert
             response.Should().NotBeNull();
@@ -132,7 +132,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/amenities", createAmenityCommand);
+            var response = await _client.PostAsJsonAsync("/api/v1/amenities", createAmenityCommand);
 
             // Assert
             response.Should().NotBeNull();
@@ -146,7 +146,7 @@ namespace ABP.Presentation.IntegrationTests.AmenityControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cities/1");
+            var response = await _client.DeleteAsync($"/api/v1/cities/1");
 
             // Assert
             response.Should().NotBeNull();

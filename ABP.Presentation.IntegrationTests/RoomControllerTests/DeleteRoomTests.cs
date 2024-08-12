@@ -68,7 +68,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/{hotel.Id}/rooms/{room.RoomNumber}");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/{hotel.Id}/rooms/{room.RoomNumber}");
             var deletedRoom = await response.Content.ReadFromJsonAsync<RoomDto>();
 
             // Assert
@@ -87,7 +87,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "invalid token");
             // Act
-            var response = await _client.DeleteAsync($"/api/hotels/1/rooms/01");
+            var response = await _client.DeleteAsync($"/api/v1/hotels/1/rooms/01");
 
             // Assert
             response.Should().NotBeNull();
@@ -101,7 +101,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _userToken);
 
             // Act
-            var response = await _client.DeleteAsync("/api/hotels/1/rooms/01");
+            var response = await _client.DeleteAsync("/api/v1/hotels/1/rooms/01");
 
             // Assert
             response.Should().NotBeNull();
@@ -113,7 +113,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
-            var url = $"/api/hotels/0/rooms/01";
+            var url = $"/api/v1/hotels/0/rooms/01";
 
             // Act
             var response = await _client.DeleteAsync(url);
@@ -131,7 +131,7 @@ namespace ABP.Presentation.IntegrationTests.RoomControllerTests
             await _dbContext.Hotels.AddAsync(hotel);
             await _dbContext.SaveChangesAsync();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _adminToken);
-            var url = $"/api/hotels/{hotel.Id}/rooms/01";
+            var url = $"/api/v1/hotels/{hotel.Id}/rooms/01";
 
             // Act
             var response = await _client.DeleteAsync(url);

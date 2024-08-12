@@ -27,6 +27,10 @@ namespace ABP.Application.Tests.ReviewTests.Commands
             _userManagerMock = new Mock<UserManager<User>>(
                 store.Object, null, null, null, null, null, null, null, null);
             _fixture = new Fixture();
+            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
             _command = new CreateReviewCommand()
             {
                 Comment = _fixture.Create<string>(),
@@ -41,6 +45,7 @@ namespace ABP.Application.Tests.ReviewTests.Commands
         public async Task Handler_Should_ReturnCreatedReview_WhenSuccess()
         {
             //Act
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(new User());
             _hotelRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((new Hotel(), default));
             _reviewRepositoryMock.Setup(x => x.DoesUserReviewedAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(false);
             _reviewRepositoryMock.Setup(x => x.AddHotelReviewAsync(It.IsAny<Review>())).ReturnsAsync(new Review());
@@ -54,6 +59,7 @@ namespace ABP.Application.Tests.ReviewTests.Commands
         public async Task Handler_Should_ThrowsErrorException_WhenUserAlreadyMadeAReviewToTheHotel()
         {
             //Arrange
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(new User());
             _hotelRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((new Hotel(), default));
             _reviewRepositoryMock.Setup(x => x.DoesUserReviewedAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
             //Act
@@ -78,6 +84,7 @@ namespace ABP.Application.Tests.ReviewTests.Commands
         public async Task Handler_Should_ThrowsException_WhenFail()
         {
             //Arrange
+            _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(new User());
             _hotelRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((new Hotel(), default));
             _reviewRepositoryMock.Setup(x => x.DoesUserReviewedAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(false);
             _reviewRepositoryMock.Setup(x =>
