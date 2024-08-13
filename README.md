@@ -102,7 +102,6 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
     - `pageSize` (optional): Number of results per page.
   - **Responses**:
     - `200 OK`: Returns the list of hotels with pagination.
-    - `400 Bad Request`: The request is invalid.
 
 - **Retrieve Hotel by ID**: `GET /api/v1/hotels/{hotelId}`
   - **Description**: Retrieves the details of a specific hotel by its ID.
@@ -266,7 +265,6 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
       - `pageSize` (optional): Number of results per page.
     - **Responses**:
       - `200 OK`: Returns the list of amenities with pagination.
-      - `400 Bad Request`: The request is invalid.
 
   - **By ID**: `GET /api/v1/amenities/{amenityId}`
     - **Description**: Retrieves an amenity by its ID.
@@ -333,7 +331,6 @@ For detailed API documentation, please refer to the [Swagger Documentation](http
       - `pageSize` (optional): Number of results per page.
     - **Responses**:
       - `200 OK`: Returns the list of cities.
-      - `400 Bad Request`: The request is invalid.
 
   - **By ID**: `GET /api/v1/cities/{cityId}`
     - **Description**: Retrieves details of a specific city by its ID.
