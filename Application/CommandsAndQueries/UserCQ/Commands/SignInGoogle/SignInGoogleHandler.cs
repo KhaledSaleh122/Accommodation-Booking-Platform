@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.UserDtos;
 using Application.Execptions;
+using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,11 +14,13 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
-        public SignInGoogleHandler(UserManager<User> userManager, IConfiguration configuration)
+        public SignInGoogleHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
         public async Task<UserSignInDto> Handle(SignInGoogleCommand request, CancellationToken cancellationToken)
         {
@@ -53,9 +56,8 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
                     userRoles.Add("User");
                 }
 
-                var signHandler = new SignInTokenHandler(_configuration);
-                var tokenInfo = signHandler.SignIn(userAccount ?? user, userRoles);
-                return tokenInfo;
+                var (token,expireDate) = _tokenService.GenerateUserToken(userAccount ?? user, userRoles);
+                return new UserSignInDto() { Token = token, Expiration = expireDate };
             }
             catch (ErrorException)
             {

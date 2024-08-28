@@ -1,4 +1,4 @@
-﻿using Application.Dtos.UserDtos;
+﻿using Domain.Abstractions;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -6,17 +6,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Application.CommandsAndQueries.UserCQ.Commands
+namespace Infrastructure.Services
 {
-    public class SignInTokenHandler
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
-        public SignInTokenHandler(IConfiguration configuration)
-        {
+
+        public TokenService(IConfiguration configuration) {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-
-        public UserSignInDto SignIn(User user, IList<String> roles)
+        public (string Token, DateTime ExpireDate) GenerateUserToken(User user, IEnumerable<string> roles)
         {
             var tokenhandler = new JwtSecurityTokenHandler();
             var tkey = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTToken:Key")!);
@@ -42,7 +41,7 @@ namespace Application.CommandsAndQueries.UserCQ.Commands
                 )
             };
             var token = tokenhandler.CreateToken(TokenDescp);
-            return new UserSignInDto() { Token = tokenhandler.WriteToken(token), Expiration = expireDate };
+            return (tokenhandler.WriteToken(token), expireDate );
         }
     }
 }

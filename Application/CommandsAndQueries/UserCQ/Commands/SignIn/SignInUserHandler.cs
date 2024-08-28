@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.UserDtos;
+using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,15 +12,18 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
         public SignInUserHandler(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ITokenService tokenService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
         public async Task<UserSignInDto?> Handle(SignInUserCommand request, CancellationToken cancellationToken)
@@ -32,8 +36,8 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignIn
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var tokenHandler = new SignInTokenHandler(_configuration);
-            return tokenHandler.SignIn(user, roles);
+            var (token, expireDate) = _tokenService.GenerateUserToken(user, roles);
+            return new UserSignInDto() { Token = token, Expiration = expireDate }; 
         }
     }
 }
