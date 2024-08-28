@@ -1,6 +1,7 @@
 ﻿using Application.CommandsAndQueries.UserCQ.Commands.SignIn;
 using Application.Dtos.UserDtos;
 using AutoFixture;
+using Domain.Abstractions;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Stripe;
 
 namespace ABP.Application.Tests.UserTests.Commands
 {
@@ -17,6 +19,7 @@ namespace ABP.Application.Tests.UserTests.Commands
         private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly Mock<SignInManager<User>> _signInManagerMock;
         private readonly Mock<IConfiguration> _configurationMock;
+        private readonly Mock<ITokenService> _tokenServiceMock;
         private readonly SignInUserCommand _command;
         private readonly SignInUserHandler _handler;
         private readonly IFixture _fixture;
@@ -24,6 +27,7 @@ namespace ABP.Application.Tests.UserTests.Commands
         public SignInUserHandlerTests()
         {
             var store = new Mock<IUserStore<User>>();
+            _tokenServiceMock = new Mock<ITokenService>();
             _userManagerMock = new Mock<UserManager<User>>(
                 store.Object, null, null, null, null, null, null, null, null);
             var contextAccessor = new Mock<IHttpContextAccessor>();
@@ -42,7 +46,7 @@ namespace ABP.Application.Tests.UserTests.Commands
             };
 
             _handler = new SignInUserHandler(
-                _userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+                _userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _tokenServiceMock.Object);
             _configurationMock.Setup(c => c.GetSection("JWTToken:Key").Value).Returns("This is Secret key do not share it");
             _configurationMock.Setup(c => c.GetSection("JWTToken:Issuer").Value).Returns("Issuer");
             _configurationMock.Setup(c => c.GetSection("JWTToken:Audience").Value).Returns("Audience");
