@@ -1,7 +1,6 @@
 using Accommodation_Booking_Platform.Configurations;
 using Accommodation_Booking_Platform.Middleware;
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Booking_API_Project.Configurations;
 using Booking_API_Project.Middleware;
 using Domain.Entities;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;

@@ -38,15 +38,19 @@ namespace Booking_API_Project.Configurations
             string email,
             string password
             ) {
-            var user = await userManager.FindByNameAsync(name);
+            string id = "Admin";
+            var user = await userManager.FindByIdAsync(id);
             var user_ = await userManager.FindByEmailAsync(email);
-            if (user is null && user_ is not null)
-                throw new Exception("There is account with this email");
+            if (user_ is not null && user_.Id != id)
+                throw new Exception("There is an account with this email");
+            var adminUser = new User { Id = id, UserName = name, Email = email, Thumbnail = "admin.jpg" };
             if (user is null)
             {
-                user = new User { UserName = name, Email = email , Thumbnail = "admin.jpg"};
-                await userManager.CreateAsync(user, password);
-                await userManager.AddToRoleAsync(user, "Admin");
+                await userManager.CreateAsync(adminUser, password);
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+            else {
+                await userManager.UpdateAsync(adminUser);
             }
         }
 
