@@ -4,7 +4,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using System.Net.Mail;
@@ -14,7 +13,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
     public class ConfirmBookingHandler : IRequestHandler<ConfirmBookingCommand>
     {
         private readonly IBookingRepository _bookingRepository;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
         private readonly IConfiguration _configuration;
         private readonly IHotelRepository _hotelRepository;
         private readonly IEmailService _emailService;
@@ -22,7 +21,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Confirm
         public ConfirmBookingHandler(
             IBookingRepository bookingRepository,
             IConfiguration configuration,
-            UserManager<User> userManager,
+            IUserManager userManager,
             IHotelRepository hotelRepository,
             IEmailService emailService)
         {

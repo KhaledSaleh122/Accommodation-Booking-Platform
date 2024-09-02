@@ -101,7 +101,7 @@ namespace Accommodation_Booking_Platform
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddIdentity<User, IdentityRole>(option =>
+            services.AddIdentity<User, Role>(option =>
             {
                 option.Password.RequiredLength = 6;
                 option.Password.RequireNonAlphanumeric = false;
@@ -109,7 +109,7 @@ namespace Accommodation_Booking_Platform
                 option.Password.RequireLowercase = false;
                 option.Password.RequireUppercase = false;
             })
-            .AddRoleManager<RoleManager<IdentityRole>>()
+            .AddRoleManager<RoleManager<Role>>()
             .AddUserManager<UserManager<User>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();

@@ -13,12 +13,12 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
 {
     internal class CreateUserHandler : IRequestHandler<CreateUserCommand, UserDto>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
         private readonly IMapper _mapper;
         private readonly ITransactionService _transactionService;
         private readonly IImageService _imageRepository;
         public CreateUserHandler(
-            UserManager<User> userManager,
+            IUserManager userManager,
             ITransactionService transactionService,
             IImageService imageRepository)
         {
@@ -56,22 +56,22 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.Create
                         StatusCode = StatusCodes.Status409Conflict
                     };
                 await _transactionService.BeginTransactionAsync();
-                var result = await _userManager.CreateAsync(user, request.Password);
-                if (!result.Succeeded)
+                var (sucess,errors) = await _userManager.CreateAsync(user, request.Password);
+                if (!sucess)
                 {
                     throw new ValidationException(
                         $"Error during creating new User.",
-                        result.Errors.Select(x =>
+                        errors.Select(x =>
                         {
                             string? name = null;
-                            if (x.Code.Contains("UserName", StringComparison.CurrentCultureIgnoreCase))
+                            if (x.Field.Contains("UserName", StringComparison.CurrentCultureIgnoreCase))
                                 name = "Username";
-                            else if (x.Code.Contains("Password", StringComparison.CurrentCultureIgnoreCase))
+                            else if (x.Field.Contains("Password", StringComparison.CurrentCultureIgnoreCase))
                                 name = "Password";
-                            else if (x.Code.Contains("Email", StringComparison.CurrentCultureIgnoreCase))
+                            else if (x.Field.Contains("Email", StringComparison.CurrentCultureIgnoreCase))
                                 name = "Email";
 
-                            return new ValidationFailure() { PropertyName = name ?? x.Code, ErrorMessage = x.Description };
+                            return new ValidationFailure() { PropertyName = name ?? x.Field, ErrorMessage = x.Description };
                         })
                    );
                 }

@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Domain.Abstractions;
+using Domain.Entities;
 
 namespace Booking_API_Project.Configurations
 {
@@ -8,8 +8,8 @@ namespace Booking_API_Project.Configurations
         public async static Task<IServiceProvider> AddRoleBasedAccessControl(
             this IServiceProvider services, IConfiguration configuration)
         {
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = services.GetRequiredService<UserManager<User>>();
+            var roleManager = services.GetRequiredService<IRoleManager>();
+            var userManager = services.GetRequiredService<IUserManager>();
             await EnsureRolesAsync(roleManager);
             var adminName = configuration.GetValue<string>("Admin:Name");
             var adminEmail = configuration.GetValue<string>("Admin:Email");
@@ -20,24 +20,25 @@ namespace Booking_API_Project.Configurations
             return services;
         }
 
-       private static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager)
+        private static async Task EnsureRolesAsync(IRoleManager roleManager)
         {
             var roles = new[] { "Admin", "User" };
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                    await roleManager.CreateAsync(new Role() { Name = role });
                 }
             }
         }
 
         private static async Task CreateAdminAccount(
-            UserManager<User> userManager,
+            IUserManager userManager,
             string name,
             string email,
             string password
-            ) {
+            )
+        {
             string id = "Admin";
             var user = await userManager.FindByIdAsync(id);
             var user_ = await userManager.FindByEmailAsync(email);
@@ -49,7 +50,8 @@ namespace Booking_API_Project.Configurations
                 await userManager.CreateAsync(adminUser, password);
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
-            else {
+            else
+            {
                 await userManager.UpdateAsync(adminUser);
             }
         }

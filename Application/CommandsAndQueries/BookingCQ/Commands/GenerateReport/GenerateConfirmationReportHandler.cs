@@ -1,11 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Execptions;
 using Domain.Abstractions;
-using Domain.Entities;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
@@ -14,13 +10,13 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IHotelRepository _hotelRepository;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
         private readonly IPaymentService<PaymentIntent, PaymentIntentCreateOptions> _paymentService;
         private readonly IInvoiceGeneraterService _invoiceGeneraterService;
 
         public GenerateConfirmationReportHandler(IBookingRepository bookingRepository,
             IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService,
-            UserManager<User> userManager,
+            IUserManager userManager,
             IHotelRepository hotelRepository,
             IInvoiceGeneraterService invoiceGeneraterService)
         {
@@ -55,7 +51,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.GenerateReport
                     ?? throw new ErrorException("Hotel not found") { StatusCode = 500 };
 
 
-                return _invoiceGeneraterService.GenerateInvoicePdf(booking,user,hotel);
+                return _invoiceGeneraterService.GenerateInvoicePdf(booking, user, hotel);
             }
             catch (NotFoundException)
             {

@@ -13,13 +13,13 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Delete
     {
         private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
         private readonly IMapper _mapper;
 
         public DeleteReviewHandler(
             IReviewHotelRepository reviewRepository,
             IHotelRepository hotelRepository,
-            UserManager<User> userManager)
+            IUserManager userManager)
         {
             _reviewRepository = reviewRepository ?? throw new ArgumentNullException(nameof(reviewRepository));
             var configuration = new MapperConfiguration(cfg =>

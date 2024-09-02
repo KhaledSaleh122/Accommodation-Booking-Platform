@@ -4,7 +4,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
@@ -12,11 +11,11 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
 {
     internal class SignInGoogleHandler : IRequestHandler<SignInGoogleCommand, UserSignInDto>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
 
-        public SignInGoogleHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService)
+        public SignInGoogleHandler(IUserManager userManager, IConfiguration configuration, ITokenService tokenService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -51,12 +50,17 @@ namespace Application.CommandsAndQueries.UserCQ.Commands.SignInGoogle
                         {
                             StatusCode = StatusCodes.Status409Conflict
                         };
-                    var result = await _userManager.CreateAsync(user);
+                    var (success, errors) = await _userManager.CreateAsync(user);
+                    if(!success)
+                        throw new ErrorException("An error occurred while creating the account")
+                        {
+                            StatusCode = StatusCodes.Status500InternalServerError
+                        };
                     await _userManager.AddToRoleAsync(user, "User");
-                    userRoles.Add("User");
+                    userRoles = [.. userRoles, "User"];
                 }
 
-                var (token,expireDate) = _tokenService.GenerateUserToken(userAccount ?? user, userRoles);
+                var (token, expireDate) = _tokenService.GenerateUserToken(userAccount ?? user, userRoles);
                 return new UserSignInDto() { Token = token, Expiration = expireDate };
             }
             catch (ErrorException)

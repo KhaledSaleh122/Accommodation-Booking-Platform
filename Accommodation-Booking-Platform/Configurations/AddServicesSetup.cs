@@ -43,6 +43,9 @@ namespace Accommodation_Booking_Platform.Configurations
             services.AddScoped<IPaymentService<PaymentIntent, PaymentIntentCreateOptions>, StripePaymentService>();
             services.AddScoped<ITokenService,Infrastructure.Services.TokenService>();
             services.AddScoped<IInvoiceGeneraterService,InvoiceGeneraterService>();
+            services.AddScoped<IUserManager,UserManager>();
+            services.AddScoped<ISignInManager,SignInManager>();
+            services.AddScoped<IRoleManager,RoleManager>();
 
             return services;
         }

@@ -6,7 +6,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
 {
@@ -15,9 +14,9 @@ namespace Application.CommandsAndQueries.ReviewCQ.Commands.Create
         private readonly IReviewHotelRepository _reviewRepository;
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
 
-        public CreateReviewHandler(IReviewHotelRepository reviewRepository, IHotelRepository hotelRepository, UserManager<User> userManager)
+        public CreateReviewHandler(IReviewHotelRepository reviewRepository, IHotelRepository hotelRepository, IUserManager userManager)
         {
             _reviewRepository = reviewRepository ?? throw new ArgumentNullException(nameof(reviewRepository));
             var configuration = new MapperConfiguration(cfg =>

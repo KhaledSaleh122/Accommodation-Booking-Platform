@@ -6,7 +6,6 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Stripe;
 
 namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
@@ -18,7 +17,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
         private readonly IHotelRoomRepository _hotelRoomRepository;
         private readonly ISpecialOfferRepository _specialOfferRepository;
         private readonly IPaymentService<PaymentIntent, PaymentIntentCreateOptions> _paymentService;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserManager _userManager;
         private readonly IMapper _mapper;
 
         public CreateRoomBookingHandler(
@@ -28,7 +27,7 @@ namespace Application.CommandsAndQueries.BookingCQ.Commands.Create
             IHotelRepository hotelRepository,
             ISpecialOfferRepository specialOfferRepository,
             IPaymentService<PaymentIntent, PaymentIntentCreateOptions> paymentService,
-            UserManager<User> userManager)
+            IUserManager userManager)
         {
             var configuration = new MapperConfiguration(cfg =>
             {
